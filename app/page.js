@@ -28,7 +28,23 @@ import {
   CheckCircle2,
   AlertTriangle,
   X,
+  Lock,
+  Unlock,
+  ShieldAlert,
+  ShieldCheck,
+  FileEdit,
+  Check,
+  CalendarDays,
+  Clock,
 } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import {
   LineChart,
   Line,
@@ -758,6 +774,343 @@ function DemandPage({ data }) {
 }
 
 // =============== PAGE: DISTRIBUTOR ORDERS ===============
+// ---- Helpers shared by OrdersPage + OrderEditDialog --------------------
+const LOCK_STYLES = {
+  editable:   { icon: Unlock,      chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', iconCls: 'text-emerald-600' },
+  restricted: { icon: ShieldAlert, chip: 'bg-amber-50 text-amber-700 border-amber-200',       iconCls: 'text-amber-600'   },
+  locked:     { icon: Lock,        chip: 'bg-rose-50 text-rose-700 border-rose-200',          iconCls: 'text-rose-600'    },
+}
+const STATUS_STYLES = {
+  Pending:            'bg-slate-100 text-slate-700',
+  Amended:            'bg-blue-50 text-blue-700',
+  'Pending Approval': 'bg-violet-50 text-violet-700',
+  Approved:           'bg-emerald-50 text-emerald-700',
+  Rejected:           'bg-rose-50 text-rose-700',
+  Locked:             'bg-rose-50 text-rose-700',
+}
+const LockBadge = ({ lockState, size = 'sm' }) => {
+  if (!lockState) return null
+  const s = LOCK_STYLES[lockState.state] || LOCK_STYLES.editable
+  const Icon = s.icon
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-md border px-2 ${size === 'sm' ? 'py-0.5 text-xs' : 'py-1 text-sm'} font-medium ${s.chip}`}>
+      <Icon className="h-3.5 w-3.5" />
+      {lockState.label}
+    </span>
+  )
+}
+
+// -----------------------------------------------------------------------
+// OrderEditDialog — honours freeze rules:
+//   editable   → all inputs open, "Save Changes"
+//   restricted → inputs open, violations highlighted, save blocked if > ±10%
+//   locked     → inputs disabled; "Request Approval" button triggers mock workflow
+//   Pending Approval → reviewer sees pending change + Approve / Reject
+// -----------------------------------------------------------------------
+function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
+  const [qtyMap, setQtyMap] = useState({})
+  const [note, setNote] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (order) {
+      const m = {}
+      for (const l of order.lines || []) m[l.skuId] = String(l.qty)
+      setQtyMap(m)
+      setNote('')
+      setError(null)
+    }
+  }, [order?.orderId, open])
+
+  if (!order) return null
+
+  const lockState = order.lockState || { state: 'editable', label: 'Editable', maxDeltaPct: null, day: null, hint: '' }
+  const isLocked = lockState.state === 'locked'
+  const isRestricted = lockState.state === 'restricted'
+  const isPending = order.status === 'Pending Approval' && order.pendingApproval?.status === 'pending'
+
+  // Per-line delta %
+  const deltas = (order.lines || []).map((l) => {
+    const newQty = Number(qtyMap[l.skuId] || 0)
+    const pct = l.qty ? ((newQty - l.qty) / l.qty) * 100 : newQty > 0 ? Infinity : 0
+    return { ...l, newQty, pct }
+  })
+  const maxAbsDelta = deltas.reduce((m, d) => {
+    const p = d.pct === Infinity ? 999 : Math.abs(d.pct)
+    return Math.max(m, p)
+  }, 0)
+  const violatesRestricted = isRestricted && maxAbsDelta > 10
+  const hasChanges = deltas.some((d) => d.newQty !== d.qty)
+
+  const projTotalQty = deltas.reduce((s, d) => s + Math.max(0, d.newQty), 0)
+  const projTotalVal = deltas.reduce((s, d) => {
+    const eff = (d.effectivePrice != null) ? d.effectivePrice : d.unitPrice
+    return s + Math.max(0, d.newQty) * (eff || 0)
+  }, 0)
+
+  const submit = async (action) => {
+    setBusy(true)
+    setError(null)
+    try {
+      const lines = deltas
+        .filter((d) => d.newQty > 0)
+        .map((d) => ({ skuId: d.skuId, qty: d.newQty }))
+      const res = await fetch('/api/orders/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order.orderId,
+          lines,
+          action,
+          note: note || null,
+          simDay: simDay || null,
+        }),
+      })
+      const j = await res.json()
+      if (!res.ok) throw new Error(j.error || 'Update failed')
+      onSaved?.(j)
+      onOpenChange(false)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const approve = async () => {
+    setBusy(true); setError(null)
+    try {
+      const res = await fetch('/api/orders/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.orderId, action: 'approve', note: note || null, simDay: simDay || null, lines: [] }),
+      })
+      const j = await res.json()
+      if (!res.ok) throw new Error(j.error || 'Approve failed')
+      onSaved?.(j); onOpenChange(false)
+    } catch (e) { setError(e.message) } finally { setBusy(false) }
+  }
+  const reject = async () => {
+    setBusy(true); setError(null)
+    try {
+      const res = await fetch('/api/orders/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.orderId, action: 'reject', note: note || null, simDay: simDay || null, lines: [] }),
+      })
+      const j = await res.json()
+      if (!res.ok) throw new Error(j.error || 'Reject failed')
+      onSaved?.(j); onOpenChange(false)
+    } catch (e) { setError(e.message) } finally { setBusy(false) }
+  }
+
+  // Banner colour matches the rule state
+  const bannerCls = isLocked
+    ? 'bg-rose-50 border-rose-200 text-rose-800'
+    : isRestricted
+    ? 'bg-amber-50 border-amber-200 text-amber-800'
+    : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+        <DialogHeader>
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div>
+              <DialogTitle className="flex items-center gap-2">
+                <FileEdit className="h-5 w-5 text-slate-500" />
+                {isPending ? 'Review Pending Approval' : 'Edit Order'}
+                <span className="font-mono text-xs text-slate-500 ml-2">{order.orderId}</span>
+              </DialogTitle>
+              <DialogDescription>
+                {order.distributorName} · {order.region} · placed {new Date(order.createdAt).toLocaleString()}
+              </DialogDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <LockBadge lockState={lockState} />
+              <Badge variant="secondary" className={`${STATUS_STYLES[order.status] || 'bg-slate-100 text-slate-700'} hover:${STATUS_STYLES[order.status]}`}>
+                {order.status}
+              </Badge>
+            </div>
+          </div>
+        </DialogHeader>
+
+        {/* Rule banner */}
+        <div className={`border rounded-lg p-3 text-sm flex items-start gap-2 ${bannerCls}`}>
+          <ShieldCheck className="h-4 w-4 mt-0.5 shrink-0" />
+          <div className="flex-1">
+            <div className="font-medium">{lockState.hint}</div>
+            <div className="text-xs opacity-90 mt-0.5">
+              {isLocked
+                ? 'Changes to a locked order require a mock governance approval.'
+                : isRestricted
+                ? 'You may increase or decrease any line, but no single line may move more than ±10%.'
+                : 'Freely change any quantities. Save will update the order.'}
+            </div>
+          </div>
+        </div>
+
+        {/* Pending approval banner for reviewer */}
+        {isPending && (
+          <div className="border border-violet-200 bg-violet-50 rounded-lg p-3 text-sm">
+            <div className="flex items-center gap-2 text-violet-800 font-medium">
+              <Clock className="h-4 w-4" />
+              Approval requested by {order.pendingApproval.requestedBy}
+              <span className="text-xs font-normal text-violet-600">
+                {new Date(order.pendingApproval.requestedAt).toLocaleString()}
+              </span>
+            </div>
+            {order.pendingApproval.note && (
+              <div className="mt-1 text-violet-700 italic">"{order.pendingApproval.note}"</div>
+            )}
+            <div className="mt-2 text-violet-700">
+              Requested totals: <span className="font-semibold tabular-nums">{fmtNum(order.pendingApproval.requestedTotalQty)}</span> units ·{' '}
+              <span className="font-semibold tabular-nums">{fmtMoney(order.pendingApproval.requestedTotalValue)}</span>
+              {' '}(vs current {fmtNum(order.totalQty)} / {fmtMoney(order.totalValue)})
+            </div>
+          </div>
+        )}
+
+        {/* Lines table */}
+        <div className="overflow-auto border border-slate-200 rounded-lg">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow className="hover:bg-slate-50">
+                <TableHead className="text-xs uppercase tracking-wide text-slate-600">SKU</TableHead>
+                <TableHead className="text-xs uppercase tracking-wide text-slate-600 text-right">Original</TableHead>
+                <TableHead className="text-xs uppercase tracking-wide text-slate-600 text-right">New Qty</TableHead>
+                <TableHead className="text-xs uppercase tracking-wide text-slate-600 text-right">Δ%</TableHead>
+                <TableHead className="text-xs uppercase tracking-wide text-slate-600 text-right">Line Value</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {(isPending ? order.pendingApproval.requestedLines : deltas).map((row) => {
+                const orig = order.lines.find((x) => x.skuId === row.skuId)
+                const origQty = orig?.qty || 0
+                const newQty = isPending ? row.qty : row.newQty
+                const pct = origQty ? ((newQty - origQty) / origQty) * 100 : (newQty > 0 ? Infinity : 0)
+                const eff = row.effectivePrice ?? row.unitPrice ?? orig?.effectivePrice ?? 0
+                const lineVal = Math.max(0, newQty) * eff
+                const pctCls = pct === 0 ? 'text-slate-500' :
+                  isRestricted && Math.abs(pct === Infinity ? 999 : pct) > 10 ? 'text-rose-600 font-semibold' :
+                  pct > 0 ? 'text-emerald-700' : 'text-slate-700'
+                return (
+                  <TableRow key={row.skuId}>
+                    <TableCell className="py-2.5">
+                      <div className="font-medium text-slate-900 text-sm">{row.skuName}</div>
+                      <div className="text-xs text-slate-500 font-mono">{row.skuId}</div>
+                    </TableCell>
+                    <TableCell className="py-2.5 text-right tabular-nums text-sm text-slate-600">{fmtNum(origQty)}</TableCell>
+                    <TableCell className="py-2.5 text-right">
+                      {isPending ? (
+                        <span className="tabular-nums font-medium">{fmtNum(newQty)}</span>
+                      ) : (
+                        <Input
+                          type="number"
+                          min="0"
+                          value={qtyMap[row.skuId] ?? ''}
+                          onChange={(e) => setQtyMap({ ...qtyMap, [row.skuId]: e.target.value })}
+                          disabled={isLocked || busy}
+                          className="h-8 w-24 text-right tabular-nums ml-auto"
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell className={`py-2.5 text-right tabular-nums text-sm ${pctCls}`}>
+                      {origQty === 0 && newQty > 0 ? 'NEW'
+                        : pct === 0 ? '—'
+                        : `${pct > 0 ? '+' : ''}${pct.toFixed(1)}%`}
+                    </TableCell>
+                    <TableCell className="py-2.5 text-right tabular-nums text-sm">
+                      {newQty > 0 ? fmtMoney(lineVal) : <span className="text-slate-400">—</span>}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Summary + note */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="rounded-lg border border-slate-200 p-3">
+            <div className="text-xs text-slate-500">New Total Qty</div>
+            <div className="text-lg font-semibold tabular-nums">
+              {fmtNum(isPending ? order.pendingApproval.requestedTotalQty : projTotalQty)}
+            </div>
+          </div>
+          <div className="rounded-lg border border-slate-200 p-3">
+            <div className="text-xs text-slate-500">New Order Value</div>
+            <div className="text-lg font-semibold tabular-nums">
+              {fmtMoney(isPending ? order.pendingApproval.requestedTotalValue : projTotalVal)}
+            </div>
+          </div>
+          <div className="rounded-lg border border-slate-200 p-3">
+            <div className="text-xs text-slate-500">Max Δ%</div>
+            <div className={`text-lg font-semibold tabular-nums ${violatesRestricted ? 'text-rose-600' : 'text-slate-900'}`}>
+              {isPending ? '—' : maxAbsDelta === 999 ? '>100%' : `${maxAbsDelta.toFixed(1)}%`}
+            </div>
+          </div>
+        </div>
+
+        {!isPending && (
+          <Input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder={isLocked ? 'Reason for approval request (optional)' : 'Notes (optional)'}
+            disabled={busy}
+          />
+        )}
+
+        {error && (
+          <div className="flex items-start gap-2 bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm text-rose-800">
+            <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <DialogFooter className="flex-wrap gap-2">
+          {isPending ? (
+            <>
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Close</Button>
+              <Button variant="outline" className="border-rose-200 text-rose-700 hover:bg-rose-50" onClick={reject} disabled={busy}>
+                <X className="h-4 w-4 mr-1" />Reject
+              </Button>
+              <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={approve} disabled={busy}>
+                <Check className="h-4 w-4 mr-1" />{busy ? 'Working…' : 'Approve & Apply'}
+              </Button>
+            </>
+          ) : isLocked ? (
+            <>
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
+              <Button
+                onClick={() => submit('request_approval')}
+                disabled={busy || !hasChanges}
+                className="bg-violet-600 hover:bg-violet-700 text-white"
+              >
+                <ShieldAlert className="h-4 w-4 mr-1" />
+                {busy ? 'Submitting…' : 'Request Approval'}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
+              <Button
+                onClick={() => submit('edit')}
+                disabled={busy || violatesRestricted || !hasChanges}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Check className="h-4 w-4 mr-1" />
+                {busy ? 'Saving…' : violatesRestricted ? 'Exceeds ±10% limit' : 'Save Changes'}
+              </Button>
+            </>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 // Distributor Order Portal
 //   • Pull per-distributor suggested order lines from /api/orders/suggest
 //   • Editable table with: current stock, secondary sales, suggested qty,
@@ -776,6 +1129,16 @@ function OrdersPage({ data }) {
   const [savedOrders, setSavedOrders] = useState([])
   const [errorMsg, setErrorMsg] = useState(null)
 
+  // Order Freeze Logic controls ------------------------------------------------
+  // demoDay === '' → use real today; otherwise override (1..31)
+  const [demoDay, setDemoDay] = useState('')
+  const [orderLock, setOrderLock] = useState(null)  // { state, label, day, hint, maxDeltaPct }
+  const [editingOrder, setEditingOrder] = useState(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const simParam = demoDay ? `&simDay=${demoDay}` : ''
+  const simParamFirst = demoDay ? `?simDay=${demoDay}` : ''
+
   // Default to first distributor once master data arrives
   useEffect(() => {
     if (!selectedDist && data.distributors?.length) {
@@ -783,7 +1146,27 @@ function OrdersPage({ data }) {
     }
   }, [data.distributors, selectedDist])
 
-  // Load suggestion + saved orders whenever distributor changes
+  // Fetch current lock-state rules whenever the demo day changes
+  useEffect(() => {
+    fetch(`/api/orders/rules${simParamFirst}`)
+      .then((r) => r.json())
+      .then((j) => setOrderLock(j.lockState))
+      .catch(() => setOrderLock(null))
+  }, [demoDay])
+
+  // Reload saved orders helper (used after place/edit/approve)
+  const reloadOrders = async (distId = selectedDist) => {
+    if (!distId) return
+    try {
+      const r = await fetch(`/api/orders?distributorId=${distId}${simParam}`)
+      const j = await r.json()
+      setSavedOrders(j.orders || [])
+    } catch {
+      setSavedOrders([])
+    }
+  }
+
+  // Load suggestion + saved orders whenever distributor OR demo day changes
   useEffect(() => {
     if (!selectedDist) return
     let cancelled = false
@@ -795,14 +1178,14 @@ function OrdersPage({ data }) {
       .then((s) => { if (!cancelled) { setSuggestion(s); setQtyMap({}); setSuccess(null) } })
       .catch((e) => !cancelled && setErrorMsg(e.message))
 
-    const loadHistory = fetch(`/api/orders?distributorId=${selectedDist}`)
+    const loadHistory = fetch(`/api/orders?distributorId=${selectedDist}${simParam}`)
       .then((r) => r.json())
       .then((j) => !cancelled && setSavedOrders(j.orders || []))
       .catch(() => !cancelled && setSavedOrders([]))
 
     Promise.all([loadSuggestion, loadHistory]).finally(() => !cancelled && setLoading(false))
     return () => { cancelled = true }
-  }, [selectedDist])
+  }, [selectedDist, demoDay])
 
   const lines = suggestion?.lines || []
   const selectedDistObj = data.distributors?.find((d) => d.id === selectedDist)
@@ -860,16 +1243,19 @@ function OrdersPage({ data }) {
       const res = await fetch('/api/orders/place', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ distributorId: selectedDist, lines: payloadLines, notes: notes || null }),
+        body: JSON.stringify({
+          distributorId: selectedDist,
+          lines: payloadLines,
+          notes: notes || null,
+          simDay: demoDay || null,
+        }),
       })
       const j = await res.json()
       if (!res.ok) throw new Error(j.error || 'Failed to place order')
       setSuccess(j.order)
       setQtyMap({})
       setNotes('')
-      // Refresh recent orders panel
-      const hist = await fetch(`/api/orders?distributorId=${selectedDist}`).then((r) => r.json())
-      setSavedOrders(hist.orders || [])
+      await reloadOrders(selectedDist)
     } catch (e) {
       setErrorMsg(e.message)
     } finally {
@@ -892,6 +1278,25 @@ function OrdersPage({ data }) {
         }
         actions={
           <>
+            <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-md px-2 py-1 text-xs">
+              <CalendarDays className="h-3.5 w-3.5 text-slate-500" />
+              <span className="text-slate-500">Demo day:</span>
+              <Select value={demoDay || 'today'} onValueChange={(v) => setDemoDay(v === 'today' ? '' : v)}>
+                <SelectTrigger className="h-6 w-[100px] border-0 text-xs px-1 focus:ring-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="10">Day 10 · Editable</SelectItem>
+                  <SelectItem value="24">Day 24 · Editable</SelectItem>
+                  <SelectItem value="26">Day 26 · Restricted</SelectItem>
+                  <SelectItem value="28">Day 28 · Restricted</SelectItem>
+                  <SelectItem value="29">Day 29 · Locked</SelectItem>
+                  <SelectItem value="30">Day 30 · Locked</SelectItem>
+                </SelectContent>
+              </Select>
+              {orderLock && <LockBadge lockState={orderLock} />}
+            </div>
             <Select value={selectedDist} onValueChange={setSelectedDist}>
               <SelectTrigger className="w-[240px]"><SelectValue placeholder="Choose distributor" /></SelectTrigger>
               <SelectContent>
@@ -985,11 +1390,16 @@ function OrdersPage({ data }) {
               <CheckCircle2 className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-emerald-900">Order placed successfully</p>
+              <p className="font-medium text-emerald-900">
+                {success._flash || 'Order placed successfully'}
+              </p>
               <p className="text-sm text-emerald-800 mt-0.5">
-                <span className="font-mono">{success.orderId}</span> · {success.totalQty} units ·{' '}
+                <span className="font-mono">{success.orderId}</span> · {fmtNum(success.totalQty)} units ·{' '}
                 {fmtMoney(success.totalValue)} · ETA {success.tentativeDeliveryDate} ·{' '}
                 <span className="capitalize">{success.cashflow}</span> cashflow
+                {success.status && success.status !== 'Pending' && (
+                  <> · status <span className="font-semibold">{success.status}</span></>
+                )}
               </p>
             </div>
             <button onClick={() => setSuccess(null)} className="text-emerald-700 hover:text-emerald-900">
@@ -1196,40 +1606,88 @@ function OrdersPage({ data }) {
               <CardTitle className="text-base">Recent Orders · {selectedDistObj?.name || '—'}</CardTitle>
               <CardDescription>
                 {savedOrders.length
-                  ? `${savedOrders.length} saved order${savedOrders.length !== 1 ? 's' : ''} (most recent first)`
+                  ? `${savedOrders.length} saved order${savedOrders.length !== 1 ? 's' : ''} · click any row to amend · governance enforced by current window (${orderLock?.label || '—'})`
                   : 'No orders placed yet for this distributor'}
               </CardDescription>
             </div>
+            {orderLock && (
+              <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                <CalendarDays className="h-3.5 w-3.5" />Day {orderLock.day} · {orderLock.hint}
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent>
           {savedOrders.length ? (
-            <DataTable
-              columns={[
-                { key: 'orderId', label: 'Order ID' },
-                { key: 'createdAt', label: 'Placed' },
-                { key: 'totalQty', label: 'Units' },
-                { key: 'totalValue', label: 'Value' },
-                { key: 'cashflow', label: 'Cashflow' },
-                { key: 'tentativeDeliveryDate', label: 'ETA' },
-                { key: 'status', label: 'Status' },
-              ]}
-              rows={savedOrders.slice(0, 10)}
-              renderCell={(col, row) => {
-                if (col.key === 'orderId') return <span className="font-mono text-xs text-slate-700">{row.orderId}</span>
-                if (col.key === 'createdAt') return <span className="text-xs text-slate-600">{new Date(row.createdAt).toLocaleString()}</span>
-                if (col.key === 'totalQty') return <span className="tabular-nums">{fmtNum(row.totalQty)}</span>
-                if (col.key === 'totalValue') return <span className="font-medium tabular-nums">{fmtMoney(row.totalValue)}</span>
-                if (col.key === 'cashflow') {
-                  const m = { low: 'bg-emerald-50 text-emerald-700', medium: 'bg-amber-50 text-amber-700', high: 'bg-rose-50 text-rose-700' }
-                  return <Badge variant="secondary" className={`${m[row.cashflow] || 'bg-slate-100 text-slate-700'} hover:${m[row.cashflow]} capitalize`}>{row.cashflow}</Badge>
-                }
-                if (col.key === 'status') {
-                  return <Badge variant="secondary" className="bg-amber-50 text-amber-700 hover:bg-amber-50">{row.status}</Badge>
-                }
-                return row[col.key]
-              }}
-            />
+            <div className="rounded-lg border border-slate-200 overflow-hidden bg-white">
+              <Table>
+                <TableHeader className="bg-slate-50">
+                  <TableRow className="hover:bg-slate-50">
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Order</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Placed</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Units</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Value</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Cashflow</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Lock</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Status</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {savedOrders.slice(0, 10).map((o) => {
+                    const cfm = { low: 'bg-emerald-50 text-emerald-700', medium: 'bg-amber-50 text-amber-700', high: 'bg-rose-50 text-rose-700' }
+                    const isPendingApproval = o.status === 'Pending Approval'
+                    const canAct = (o.lockState?.state !== 'locked') || isPendingApproval
+                    return (
+                      <TableRow key={o.orderId} className="hover:bg-slate-50/60">
+                        <TableCell className="py-3">
+                          <span className="font-mono text-xs text-slate-700">{o.orderId}</span>
+                        </TableCell>
+                        <TableCell className="py-3 text-xs text-slate-600">
+                          {new Date(o.createdAt).toLocaleString()}
+                          {o.lastUpdatedAt && (
+                            <div className="text-[10px] text-slate-400">upd {new Date(o.lastUpdatedAt).toLocaleTimeString()}</div>
+                          )}
+                        </TableCell>
+                        <TableCell className="py-3 text-right tabular-nums text-sm">{fmtNum(o.totalQty)}</TableCell>
+                        <TableCell className="py-3 text-right tabular-nums text-sm font-medium">{fmtMoney(o.totalValue)}</TableCell>
+                        <TableCell className="py-3">
+                          <Badge variant="secondary" className={`${cfm[o.cashflow] || 'bg-slate-100 text-slate-700'} hover:${cfm[o.cashflow]} capitalize`}>
+                            {o.cashflow}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <LockBadge lockState={o.lockState} />
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <Badge variant="secondary" className={`${STATUS_STYLES[o.status] || 'bg-slate-100 text-slate-700'} hover:${STATUS_STYLES[o.status]}`}>
+                            {o.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-3 text-right">
+                          <Button
+                            size="sm"
+                            variant={isPendingApproval ? 'default' : 'outline'}
+                            className={`gap-1.5 ${isPendingApproval ? 'bg-violet-600 hover:bg-violet-700 text-white' : ''}`}
+                            onClick={() => { setEditingOrder(o); setDialogOpen(true) }}
+                          >
+                            {isPendingApproval ? (
+                              <><ShieldCheck className="h-3.5 w-3.5" />Review</>
+                            ) : o.lockState?.state === 'locked' ? (
+                              <><Lock className="h-3.5 w-3.5" />Request</>
+                            ) : o.lockState?.state === 'restricted' ? (
+                              <><ShieldAlert className="h-3.5 w-3.5" />Edit</>
+                            ) : (
+                              <><FileEdit className="h-3.5 w-3.5" />Edit</>
+                            )}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           ) : (
             <div className="py-8 text-center text-sm text-slate-500">
               Place your first order above to see it here.
@@ -1237,6 +1695,27 @@ function OrdersPage({ data }) {
           )}
         </CardContent>
       </Card>
+
+      {/* ---------- EDIT / APPROVAL DIALOG ---------- */}
+      <OrderEditDialog
+        order={editingOrder}
+        open={dialogOpen}
+        onOpenChange={(v) => { setDialogOpen(v); if (!v) setEditingOrder(null) }}
+        simDay={demoDay}
+        onSaved={async (resp) => {
+          // Show a light banner about what happened
+          setSuccess(null)
+          setErrorMsg(null)
+          const labels = {
+            edited: 'Order amended successfully.',
+            approval_requested: 'Approval request submitted. Status set to Pending Approval.',
+            approved: 'Pending change approved & applied.',
+            rejected: 'Pending change rejected.',
+          }
+          setSuccess({ ...(resp.order || {}), _flash: labels[resp.action] || 'Order updated.' })
+          await reloadOrders(selectedDist)
+        }}
+      />
     </div>
   )
 }

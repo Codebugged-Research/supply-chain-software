@@ -115,6 +115,64 @@ user_problem_statement: |
     • Backend endpoint POST /orders/place saves orders
 
 backend:
+  - task: "PATCH /api/orders/update enforces freeze logic (editable/restricted/locked) with approval workflow"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: |
+            New endpoint PATCH /api/orders/update. Body: {orderId, lines, action?, note?, simDay?}.
+            action ∈ {edit(default), request_approval, approve, reject}.
+            Uses simDay override if provided (1-31) else today's UTC day of month.
+            Window rules:
+              • day <25 → editable: any change allowed, status → 'Amended'
+              • 25-28  → restricted: per-line |Δqty%| ≤ 10%, else 400
+              • ≥29    → locked: action=edit → 403; action=request_approval → 202, status='Pending Approval', pendingApproval saved
+              • action=approve: applies pendingApproval, status='Approved'
+              • action=reject: clears pendingApproval, status='Rejected'
+            Validations: missing orderId → 400; unknown orderId → 404; all-zero lines → 400.
+        - working: true
+          agent: "testing"
+          comment: |
+            ✅ PASSED: All freeze logic tests successful. Editable state (simDay=20): allows any changes, status→'Amended'. Restricted state (simDay=26): allows ±10% changes, rejects >10% with proper error message mentioning "±10%" and "Your change was X%". Locked state (simDay=30): blocks edits with 403, allows request_approval→202 with pendingApproval object, approve→200 applies changes with status='Approved', reject→200 sets status='Rejected'. All error handling works: missing orderId→400, unknown orderId→404, zero lines→400, approve without pending→400, request_approval when not locked→400. Full approval workflow tested successfully.
+
+  - task: "GET /api/orders/rules?simDay=N returns current lockState + window rule schema"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Exposes {lockState:{state,label,day,maxDeltaPct,hint}, rules:[3 windows]} so the UI can render badges/hints consistently."
+        - working: true
+          agent: "testing"
+          comment: |
+            ✅ PASSED: All rules endpoint tests successful. GET /api/orders/rules (no query) returns correct lockState for today's UTC day with proper structure. simDay parameter works correctly: simDay=10→editable with maxDeltaPct=null, simDay=26→restricted with maxDeltaPct=10, simDay=30→locked with maxDeltaPct=0. Edge cases handled: simDay=99 clamped to 31 (locked), simDay=0 clamped to 1 (editable). Response includes 3 rules array with proper window definitions.
+
+  - task: "GET /api/orders?simDay=N decorates every order with current lockState"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Each order in the list now carries a lockState object derived from simDay (or today) so the UI can show per-order lock badge + disable editing accordingly."
+        - working: true
+          agent: "testing"
+          comment: |
+            ✅ PASSED: Orders list endpoint with lockState decoration working correctly. GET /api/orders?distributorId=DST-001&simDay=26 returns response with top-level lockState.state='restricted' and each individual order decorated with the same lockState object. All orders in the list have consistent lockState matching the simDay parameter. Response structure includes count, lockState, and orders array with proper lockState decoration.
+
   - task: "GET /api/orders/suggest?distributorId=X returns enriched suggestion with lines, leadTimeDays, tentativeDeliveryDate"
     implemented: true
     working: true
@@ -195,10 +253,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "GET /api/orders/suggest?distributorId=X returns enriched suggestion with lines, leadTimeDays, tentativeDeliveryDate"
-    - "POST /api/orders/place saves order, enriches lines with scheme/pricing, persists to MongoDB, returns {ok:true, order}"
-    - "GET /api/orders?distributorId=X lists saved orders filtered by distributor, newest first, max 50"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -206,14 +261,41 @@ test_plan:
 agent_communication:
     - agent: "main"
       message: |
-        Distributor Order Portal frontend is built and visually verified. Backend endpoints
-        (GET /api/orders/suggest, POST /api/orders/place, GET /api/orders) were built in the
-        previous turn and are unchanged. Please test the 3 order endpoints end-to-end:
-          1) GET /api/orders/suggest?distributorId=DST-001 → expect lines[], leadTimeDays, tentativeDeliveryDate
-          2) POST /api/orders/place with a valid distributor + 2-3 lines → expect 201 with order.orderId + cashflow
-             Also verify: missing distributorId → 400, empty lines → 400, unknown distributor → 404, all-zero qty → 400
-          3) GET /api/orders?distributorId=DST-001 → the order just placed should appear (newest first)
-        Also verify dataset endpoints still respond OK: /api/data/meta, /api/data/skus, /api/data/distributors, /api/data/regions, /api/data/kpis
+        Added Order Freeze Logic. Please test the three new/updated endpoints thoroughly.
+
+        Freeze rules (based on current UTC day of month, overridable via `simDay` in URL/body):
+          • day < 25  → state="editable"   · any edit allowed
+          • 25 ≤ day ≤ 28 → state="restricted" · per-line |Δqty%| ≤ 10%
+          • day ≥ 29  → state="locked"     · edits forbidden; approval workflow
+
+        Test flow:
+          1) GET /api/orders/rules                   → lockState for today
+             GET /api/orders/rules?simDay=10         → editable
+             GET /api/orders/rules?simDay=26         → restricted, maxDeltaPct=10
+             GET /api/orders/rules?simDay=30         → locked
+          2) POST /api/orders/place (any valid order) to seed an order, capture orderId.
+          3) GET /api/orders?distributorId=DST-001&simDay=26 → each order has lockState.state="restricted"
+          4) PATCH /api/orders/update
+             - editable:
+                 {orderId, simDay:20, lines:[{skuId:"SKU-10842",qty:ORIG*1.5}]} → 200, status "Amended"
+             - restricted OK (within ±10%):
+                 {orderId, simDay:26, lines:[{skuId:"SKU-10842",qty: round(ORIG*1.05)}]} → 200
+             - restricted VIOLATION (>10%):
+                 {orderId, simDay:26, lines:[{skuId:"SKU-10842",qty:ORIG*2}]} → 400, error mentions ±10%, includes maxDeltaPct
+             - locked edit blocked:
+                 {orderId, simDay:30, lines:[...]} → 403, error mentions "locked", includes lockState
+             - locked request_approval:
+                 {orderId, simDay:30, action:"request_approval", lines:[...], note:"urgent"} → 202,
+                 order.status="Pending Approval", pendingApproval.status="pending", pendingApproval.requestedLines populated
+             - approve:
+                 {orderId, simDay:30, action:"approve"} → 200, status="Approved", lines updated to the pending lines
+             - reject (after requesting another approval first):
+                 {orderId, simDay:30, action:"reject"} → 200, status="Rejected"
+             - errors: missing orderId → 400; unknown orderId → 404; all zero-qty lines → 400
+          5) POST /api/orders/place still works and response includes lockState for today.
+          6) Dataset endpoints still return the expected counts (15/5/3/26/1950) — nothing should have regressed.
+
+        Don't fix anything — just report. Update test_result.md with working:true/false per task.
     - agent: "testing"
       message: |
         ✅ BACKEND TESTING COMPLETED SUCCESSFULLY - All 4 backend tasks are now working correctly:
@@ -227,3 +309,21 @@ agent_communication:
         4. List orders endpoint: GET /api/orders returns orders correctly filtered by distributor, sorted newest first, with immediate persistence verification.
         
         All endpoints tested comprehensively using external URL. MongoDB integration working. No critical issues found.
+    - agent: "testing"
+      message: |
+        ✅ ORDER FREEZE LOGIC TESTING COMPLETED SUCCESSFULLY - All 3 freeze logic backend tasks are now working perfectly:
+        
+        1. GET /api/orders/rules: Returns correct lockState for current day and simDay parameter. All edge cases work (clamping simDay 0→1, 99→31). Proper structure with lockState and 3 rules array.
+        
+        2. GET /api/orders with simDay: Correctly decorates all orders with lockState matching the simDay parameter. Response includes top-level lockState and per-order lockState decoration.
+        
+        3. PATCH /api/orders/update: Complete freeze logic implementation working flawlessly:
+           - Editable state (day <25): Allows any changes, status→'Amended'
+           - Restricted state (day 25-28): Enforces ±10% limit, proper error messages with maxDeltaPct
+           - Locked state (day ≥29): Blocks edits (403), enables approval workflow
+           - Full approval workflow: request_approval→202, approve→200, reject→200
+           - All error handling: missing orderId→400, unknown orderId→404, invalid lines→400
+        
+        Regression tests passed: All pre-existing endpoints (data/meta, orders/suggest, orders/place) still work correctly with expected data counts (15/5/3/26/1950).
+        
+        All 22 test scenarios executed successfully with strict HTTP code validation. No critical issues found.
