@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import {
   LayoutDashboard,
   TrendingUp,
@@ -2144,110 +2144,551 @@ function ScenarioPage({ data }) {
 }
 
 // =============== PAGE: CHATBOT ===============
+// =============== PAGE: CHATBOT — S&OP AI ASSISTANT ===============
+// Three-column layout:
+//   ┌─── Alerts + Suggestions ─┬── Chat thread ──────┬── Context panel ──┐
+//   │ Exception alert cards     │ user/assistant bubbles│ KPIs the bot sees │
+//   │ Curated questions by cat  │ structured cards      │ active session id │
+//   └───────────────────────────┴───────────────────────┴────────────────────┘
+// Uses POST /api/chat/message (Groq Llama 3.1-8B) + /api/chat/insights + /api/chat/suggestions.
+
+// Severity → colour helper used in several places
+const SEVERITY_STYLES = {
+  high:   { chip: 'bg-rose-50 text-rose-700 border-rose-200',       icon: 'text-rose-600',   dot: 'bg-rose-500' },
+  medium: { chip: 'bg-amber-50 text-amber-700 border-amber-200',    icon: 'text-amber-600',  dot: 'bg-amber-500' },
+  low:    { chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'text-emerald-600', dot: 'bg-emerald-500' },
+}
+const INSIGHT_ICON = {
+  overstock: Package,
+  stockout: AlertTriangle,
+  demand_exceeds_supply: TrendingUp,
+  demand_spike: Flame,
+  demand_growth: ArrowUpRight,
+  scheme_roi: Sparkles,
+  distributor_underperform: ArrowDownRight,
+}
+const CARD_ACCENTS = {
+  rose:    { bar: 'border-rose-400 bg-rose-50/40',     title: 'text-rose-900' },
+  amber:   { bar: 'border-amber-400 bg-amber-50/40',   title: 'text-amber-900' },
+  blue:    { bar: 'border-blue-400 bg-blue-50/40',     title: 'text-blue-900' },
+  violet:  { bar: 'border-violet-400 bg-violet-50/40', title: 'text-violet-900' },
+  emerald: { bar: 'border-emerald-400 bg-emerald-50/40', title: 'text-emerald-900' },
+  slate:   { bar: 'border-slate-300 bg-slate-50/50',   title: 'text-slate-900' },
+}
+
+// Lightweight markdown-ish renderer for the bot reply:
+//   **bold**  · *italic*  · bullets ("- " / "* ")  · paragraphs split on blank lines
+const renderBotText = (text) => {
+  const lines = (text || '').split('\n')
+  const blocks = []
+  let buf = []
+  const flushParagraph = () => {
+    if (buf.length) {
+      blocks.push({ kind: 'p', content: buf.join(' ') })
+      buf = []
+    }
+  }
+  let bulletBuf = null
+  for (const raw of lines) {
+    const line = raw.trimEnd()
+    if (/^\s*[-*]\s+/.test(line)) {
+      flushParagraph()
+      if (!bulletBuf) bulletBuf = []
+      bulletBuf.push(line.replace(/^\s*[-*]\s+/, ''))
+    } else if (line === '') {
+      flushParagraph()
+      if (bulletBuf) { blocks.push({ kind: 'ul', items: bulletBuf }); bulletBuf = null }
+    } else {
+      if (bulletBuf) { blocks.push({ kind: 'ul', items: bulletBuf }); bulletBuf = null }
+      buf.push(line)
+    }
+  }
+  flushParagraph()
+  if (bulletBuf) blocks.push({ kind: 'ul', items: bulletBuf })
+
+  // Inline markdown (bold/italic) — simple regex
+  const inline = (str) => {
+    const parts = []
+    let i = 0
+    const push = (el) => parts.push(el)
+    const src = str
+    const re = /(\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`)/g
+    let last = 0
+    let m
+    let key = 0
+    while ((m = re.exec(src)) !== null) {
+      if (m.index > last) push(src.slice(last, m.index))
+      if (m[2]) push(<strong key={'b' + key++}>{m[2]}</strong>)
+      else if (m[3]) push(<em key={'i' + key++}>{m[3]}</em>)
+      else if (m[4]) push(<code key={'c' + key++} className="px-1 bg-slate-200 rounded text-xs font-mono">{m[4]}</code>)
+      last = m.index + m[0].length
+    }
+    if (last < src.length) push(src.slice(last))
+    return parts.length ? parts : [src]
+  }
+
+  return blocks.map((b, idx) => {
+    if (b.kind === 'ul') {
+      return (
+        <ul key={idx} className="list-disc pl-5 space-y-1 my-2">
+          {b.items.map((it, j) => <li key={j}>{inline(it)}</li>)}
+        </ul>
+      )
+    }
+    return <p key={idx} className="my-2 leading-relaxed">{inline(b.content)}</p>
+  })
+}
+
+// Structured card renderer for bot replies
+const ChatCard = ({ card }) => {
+  const accent = CARD_ACCENTS[card.accent] || CARD_ACCENTS.blue
+  if (card.kind === 'risk_table' || card.kind === 'rank_table') {
+    return (
+      <div className={`rounded-lg border-l-4 ${accent.bar} p-0 overflow-hidden mt-3 border border-slate-200`}>
+        <div className="px-4 py-2.5 bg-white/70 border-b border-slate-200">
+          <div className={`text-sm font-semibold ${accent.title}`}>{card.title}</div>
+        </div>
+        <div className="bg-white overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow className="hover:bg-slate-50">
+                {card.columns.map((c) => (
+                  <TableHead key={c} className="text-slate-600 font-medium text-xs uppercase tracking-wide whitespace-nowrap">{c}</TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {card.rows.map((row, idx) => (
+                <TableRow key={idx} className="hover:bg-slate-50/50">
+                  {Object.values(row).map((v, j) => {
+                    const s = String(v)
+                    const isSeverity = ['high', 'medium', 'low'].includes(s)
+                    const isStatus = ['watch', 'healthy', 'overstock'].includes(s)
+                    return (
+                      <TableCell key={j} className="py-2.5 text-sm">
+                        {isSeverity ? (
+                          <Badge variant="secondary" className={`${SEVERITY_STYLES[s].chip} hover:${SEVERITY_STYLES[s].chip} capitalize`}>{s}</Badge>
+                        ) : isStatus ? (
+                          <Badge variant="secondary" className={`capitalize ${s === 'watch' ? 'bg-amber-50 text-amber-700' : s === 'healthy' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>{s}</Badge>
+                        ) : s}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    )
+  }
+  if (card.kind === 'rec_list') {
+    return (
+      <div className={`rounded-lg border-l-4 ${accent.bar} p-0 mt-3 border border-slate-200 bg-white`}>
+        <div className="px-4 py-2.5 border-b border-slate-200">
+          <div className={`text-sm font-semibold ${accent.title}`}>{card.title}</div>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {card.items.map((it, idx) => {
+            const sevStyle = SEVERITY_STYLES[it.severity] || SEVERITY_STYLES.medium
+            return (
+              <div key={idx} className="px-4 py-3 flex gap-3">
+                <div className={`h-2 w-2 rounded-full mt-2 shrink-0 ${sevStyle.dot}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="font-medium text-slate-900 text-sm">{it.title}</div>
+                    <Badge variant="secondary" className={`${sevStyle.chip} hover:${sevStyle.chip} capitalize text-[10px]`}>{it.severity}</Badge>
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">{it.detail}</div>
+                  {it.action && (
+                    <div className="mt-1.5 text-xs text-slate-700 flex items-start gap-1.5">
+                      <ArrowUpRight className="h-3 w-3 text-blue-600 mt-0.5 shrink-0" />
+                      <span>{it.action}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
 function ChatbotPage({ data }) {
-  const [messages, setMessages] = useState([
-    { role: 'assistant', text: "Hi! I'm your S&OP planning assistant. Ask me anything about your forecast, supply plan, or financials." },
-  ])
+  const [sessionId, setSessionId] = useState(null)
+  const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
+  const [thinking, setThinking] = useState(false)
+  const [insights, setInsights] = useState([])
+  const [insightsBySeverity, setInsightsBySeverity] = useState({ high: 0, medium: 0, low: 0 })
+  const [suggestions, setSuggestions] = useState([])
+  const [health, setHealth] = useState(null)
+  const [chatError, setChatError] = useState(null)
+  const scrollerRef = useRef(null)
 
-  const suggestions = [
-    'Total revenue across all distributors?',
-    'Which SKU has the highest growth?',
-    'Forecast bias this period?',
-    'Top distributor by volume',
-  ]
+  // Load insights + suggestions + health on mount
+  useEffect(() => {
+    fetch('/api/chat/insights').then((r) => r.json()).then((j) => {
+      setInsights(j.insights || [])
+      setInsightsBySeverity(j.bySeverity || { high: 0, medium: 0, low: 0 })
+    }).catch(() => {})
+    fetch('/api/chat/suggestions').then((r) => r.json()).then((j) => {
+      setSuggestions(j.suggestions || [])
+    }).catch(() => {})
+    fetch('/api/chat/health').then((r) => r.json()).then((j) => setHealth(j)).catch(() => {})
+    // Greet user
+    setMessages([{
+      role: 'assistant',
+      text: "Hi — I'm your S&OP AI analyst. I have live access to your 15 SKUs, 5 distributors, 3 regions and 6 months of weekly data. Ask me anything about stock risk, production planning, distributor performance, scheme ROI, or run a what-if scenario.",
+      cards: [],
+      intent: 'greeting',
+      ts: new Date().toISOString(),
+    }])
+  }, [])
 
-  const respond = (q) => {
-    const k = data.kpis || {}
-    const lower = q.toLowerCase()
-    if (lower.includes('revenue') || lower.includes('sales')) {
-      return `Across the ${data.meta?.weekCount || 0}-week window, total sell-in revenue is ${fmtMoney(k.totalRevenue)} with a ${k.gmPct}% gross margin ( ${fmtMoney(k.totalGm)} GM value).`
+  // Auto-scroll
+  useEffect(() => {
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight
     }
-    if (lower.includes('growth') || lower.includes('best') || lower.includes('highest')) {
-      const bySku = data.bySku || []
-      const top = [...bySku].sort((a, b) => b.revenue - a.revenue)[0]
-      const name = (data.skus || []).find((s) => s.id === top?.key)?.name
-      return `Top SKU by revenue is ${top?.key} – ${name || ''} at ${fmtMoney(top?.revenue || 0)}.`
-    }
-    if (lower.includes('bias') || lower.includes('forecast')) {
-      const s = (data.weekly || []).reduce((a, b) => a + b.secondary, 0)
-      const t = (data.weekly || []).reduce((a, b) => a + b.tertiary, 0)
-      const bias = t ? ((s - t) / t) * 100 : 0
-      return `Current forecast bias (secondary vs tertiary) is ${bias >= 0 ? '+' : ''}${bias.toFixed(1)}%. ${bias > 1 ? 'Slight over-forecast.' : bias < -1 ? 'Slight under-forecast.' : 'Well balanced.'}`
-    }
-    if (lower.includes('distributor')) {
-      const byDist = data.byDistributor || []
-      const top = [...byDist].sort((a, b) => b.revenue - a.revenue)[0]
-      const name = (data.distributors || []).find((d) => d.id === top?.key)?.name
-      return `Top distributor is ${name} contributing ${fmtMoney(top?.revenue || 0)} over ${data.meta?.weekCount || 0} weeks.`
-    }
-    return `I see ${data.meta?.skuCount || 0} SKUs across ${data.meta?.distributorCount || 0} distributors and ${data.meta?.regionCount || 0} regions. Total revenue is ${fmtMoney(k.totalRevenue)}. Ask me about growth, bias, or distributors for more detail.`
-  }
+  }, [messages, thinking])
 
-  const handleSend = (text) => {
-    const msg = (text ?? input).trim()
-    if (!msg) return
-    setMessages((m) => [...m, { role: 'user', text: msg }])
+  const send = async (txt) => {
+    const msg = (txt ?? input).trim()
+    if (!msg || thinking) return
     setInput('')
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: 'assistant', text: respond(msg) }])
-    }, 400)
+    setChatError(null)
+    setMessages((prev) => [...prev, { role: 'user', text: msg, ts: new Date().toISOString() }])
+    setThinking(true)
+    try {
+      const res = await fetch('/api/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, message: msg }),
+      })
+      const j = await res.json()
+      if (!res.ok) throw new Error(j.error || 'Chat failed')
+      if (j.sessionId && !sessionId) setSessionId(j.sessionId)
+      setMessages((prev) => [...prev, {
+        role: 'assistant',
+        text: j.reply,
+        cards: j.cards || [],
+        intent: j.intent,
+        insightsUsed: j.insightsUsed || [],
+        llmError: j.llmError,
+        model: j.model,
+        usage: j.llmUsage,
+        ts: j.timestamp,
+      }])
+    } catch (e) {
+      setChatError(e.message)
+    } finally {
+      setThinking(false)
+    }
   }
+
+  const resetSession = async () => {
+    try {
+      const res = await fetch('/api/chat/session/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+      const j = await res.json()
+      setSessionId(j.sessionId || null)
+    } catch { /* noop */ }
+    setMessages([{
+      role: 'assistant',
+      text: "Fresh session. What would you like to explore?",
+      cards: [], intent: 'greeting', ts: new Date().toISOString(),
+    }])
+  }
+
+  // Group insights by type for alerts panel (show top 6 by severity)
+  const topAlerts = insights.slice(0, 6)
+  // Group suggestions by category
+  const suggestionsByCategory = useMemo(() => {
+    const m = {}
+    for (const s of suggestions) {
+      if (!m[s.category]) m[s.category] = []
+      m[s.category].push(s)
+    }
+    return m
+  }, [suggestions])
+
+  const kpis = data.kpis || {}
+  const categories = useMemo(() => [...new Set((data.skus || []).map((s) => s.category))], [data.skus])
 
   return (
     <div className="h-full flex flex-col">
       <SectionHeader
-        title="Planning Assistant"
-        description="Ask questions about your S&OP plan in natural language"
+        title="S&OP AI Assistant"
+        description="Ask natural-language questions. Answers are grounded in live data — no hallucinations."
+        actions={
+          <>
+            <Badge variant="secondary" className="bg-violet-50 text-violet-700 hover:bg-violet-50 gap-1.5">
+              <Bot className="h-3.5 w-3.5" />
+              {health?.model || 'Llama 3.1 8B'}
+            </Badge>
+            {sessionId && (
+              <span className="text-xs text-slate-500 font-mono">{sessionId}</span>
+            )}
+            <Button variant="outline" size="sm" className="gap-2" onClick={resetSession}>
+              <RotateCw className="h-4 w-4" />New Chat
+            </Button>
+          </>
+        }
       />
 
-      <Card className="border-slate-200/70 shadow-sm flex-1 flex flex-col min-h-[560px]">
-        <CardContent className="flex-1 p-6 overflow-y-auto space-y-4">
-          {messages.map((m, i) => (
-            <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : ''}`}>
-              {m.role === 'assistant' && (
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shrink-0">
-                  <Bot className="h-4 w-4 text-white" />
+      <div className="grid grid-cols-12 gap-4 flex-1 min-h-[640px]">
+        {/* =============== LEFT COLUMN: ALERTS + SUGGESTIONS =============== */}
+        <aside className="col-span-12 xl:col-span-3 flex flex-col gap-4 order-2 xl:order-1">
+          <Card className="border-slate-200/70 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-500" />
+                    Exception Alerts
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    {insights.length} alerts · {insightsBySeverity.high || 0} high · {insightsBySeverity.medium || 0} med
+                  </CardDescription>
                 </div>
-              )}
-              <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-slate-100 text-slate-800 rounded-bl-sm'}`}>
-                {m.text}
               </div>
-              {m.role === 'user' && (
-                <div className="h-8 w-8 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
-                  <CircleUser className="h-4 w-4 text-slate-600" />
-                </div>
+            </CardHeader>
+            <CardContent className="space-y-2 max-h-[360px] overflow-y-auto">
+              {topAlerts.length === 0 && (
+                <div className="text-xs text-slate-500 py-4 text-center">No exceptions detected.</div>
               )}
-            </div>
-          ))}
-
-          {messages.length === 1 && (
-            <div className="pt-4">
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Try asking</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {suggestions.map((s) => (
-                  <button key={s} onClick={() => handleSend(s)} className="text-left text-sm px-3 py-2.5 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors text-slate-700">
-                    {s}
+              {topAlerts.map((a) => {
+                const Icon = INSIGHT_ICON[a.type] || AlertTriangle
+                const s = SEVERITY_STYLES[a.severity] || SEVERITY_STYLES.medium
+                return (
+                  <button
+                    key={a.id}
+                    onClick={() => send(`Tell me more about ${a.title}`)}
+                    className="w-full text-left rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50/30 transition-colors p-2.5 group"
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className={`mt-0.5 ${s.icon}`}><Icon className="h-3.5 w-3.5" /></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
+                          <span className="text-xs font-medium text-slate-900 truncate">{a.title}</span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{a.message}</div>
+                      </div>
+                    </div>
                   </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </CardContent>
+                )
+              })}
+            </CardContent>
+          </Card>
 
-        <div className="border-t border-slate-200 p-4">
-          <form onSubmit={(e) => { e.preventDefault(); handleSend() }} className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about forecasts, supply, financials..."
-              className="flex-1"
-            />
-            <Button type="submit" className="gap-2"><Send className="h-4 w-4" />Send</Button>
-          </form>
-          <p className="text-xs text-slate-400 mt-2">Demo responses · connect an LLM to enable live answers.</p>
-        </div>
-      </Card>
+          <Card className="border-slate-200/70 shadow-sm flex-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-500" />
+                Suggested Questions
+              </CardTitle>
+              <CardDescription className="text-xs">Click to auto-fill the chat</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
+              {Object.entries(suggestionsByCategory).map(([cat, items]) => (
+                <div key={cat}>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1.5">{cat}</div>
+                  <div className="space-y-1">
+                    {items.map((s, i) => (
+                      <button
+                        key={i}
+                        onClick={() => send(s.q)}
+                        disabled={thinking}
+                        className="w-full text-left text-xs px-2.5 py-1.5 rounded-md bg-slate-50 hover:bg-blue-50 hover:text-blue-700 text-slate-700 transition-colors"
+                      >
+                        {s.q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </aside>
+
+        {/* =============== CENTER COLUMN: CHAT THREAD =============== */}
+        <main className="col-span-12 xl:col-span-6 order-1 xl:order-2">
+          <Card className="border-slate-200/70 shadow-sm flex flex-col h-full min-h-[640px]">
+            <CardHeader className="pb-2 border-b border-slate-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center">
+                    <Bot className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900 text-sm">Planning Intelligence</div>
+                    <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      {health?.hasGroqKey ? 'LLM online' : 'LLM unavailable'}
+                      {insights.length > 0 && <> · tracking <span className="font-medium text-slate-700">{insights.length}</span> exceptions</>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent ref={scrollerRef} className="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-slate-50/40 to-white">
+              {messages.map((m, i) => (
+                <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : ''}`}>
+                  {m.role === 'assistant' && (
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0">
+                      <Bot className="h-4 w-4 text-white" />
+                    </div>
+                  )}
+                  <div className={`${m.role === 'user' ? 'max-w-[80%]' : 'max-w-[92%]'} flex-1`}>
+                    <div className={`rounded-2xl px-4 py-3 text-sm ${
+                      m.role === 'user'
+                        ? 'bg-blue-600 text-white rounded-br-sm ml-auto w-fit'
+                        : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'
+                    }`}>
+                      {m.role === 'user' ? m.text : renderBotText(m.text)}
+                      {m.role === 'assistant' && m.llmError && (
+                        <div className="mt-2 text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 flex items-start gap-1.5">
+                          <AlertTriangle className="h-3 w-3 mt-0.5" />
+                          <span>LLM fallback engaged: {m.llmError}</span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Structured cards */}
+                    {m.role === 'assistant' && m.cards?.map((c, idx) => <ChatCard key={idx} card={c} />)}
+                    {/* Insights used (thinking reveal) */}
+                    {m.role === 'assistant' && m.insightsUsed && m.insightsUsed.length > 0 && (
+                      <details className="mt-2 text-xs text-slate-500">
+                        <summary className="cursor-pointer hover:text-slate-700">
+                          Grounded in {m.insightsUsed.length} live insight{m.insightsUsed.length !== 1 ? 's' : ''} · intent: <span className="font-mono">{m.intent}</span>
+                        </summary>
+                        <div className="mt-1 space-y-0.5 pl-3">
+                          {m.insightsUsed.map((i) => (
+                            <div key={i.id} className="flex items-center gap-1.5">
+                              <span className={`h-1.5 w-1.5 rounded-full ${SEVERITY_STYLES[i.severity]?.dot || 'bg-slate-400'}`} />
+                              <span className="text-[11px]">{i.title}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    )}
+                  </div>
+                  {m.role === 'user' && (
+                    <div className="h-8 w-8 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
+                      <CircleUser className="h-4 w-4 text-slate-600" />
+                    </div>
+                  )}
+                </div>
+              ))}
+              {thinking && (
+                <div className="flex gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0">
+                    <Bot className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="bg-white border border-slate-200 text-slate-500 text-sm rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-2 shadow-sm">
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-400 animate-pulse" />
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                    <span className="text-xs ml-1">Analyzing data…</span>
+                  </div>
+                </div>
+              )}
+              {chatError && (
+                <div className="flex items-start gap-2 bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm text-rose-800">
+                  <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+                  <span>{chatError}</span>
+                </div>
+              )}
+            </CardContent>
+            <div className="border-t border-slate-200 p-3 bg-white">
+              <form onSubmit={(e) => { e.preventDefault(); send() }} className="flex gap-2">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask about stock risk, production, distributors, schemes…"
+                  disabled={thinking}
+                  className="flex-1"
+                />
+                <Button type="submit" className="gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:opacity-95" disabled={thinking || !input.trim()}>
+                  <Send className="h-4 w-4" />Send
+                </Button>
+              </form>
+            </div>
+          </Card>
+        </main>
+
+        {/* =============== RIGHT COLUMN: CONTEXT PANEL =============== */}
+        <aside className="col-span-12 xl:col-span-3 flex flex-col gap-4 order-3">
+          <Card className="border-slate-200/70 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Database className="h-4 w-4 text-blue-500" />
+                Data the Bot Sees
+              </CardTitle>
+              <CardDescription className="text-xs">Live from dummy S&OP dataset</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg border border-slate-200 p-2">
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500">Revenue</div>
+                  <div className="text-sm font-semibold tabular-nums">${((kpis.totalRevenue || 0) / 1e6).toFixed(2)}M</div>
+                </div>
+                <div className="rounded-lg border border-slate-200 p-2">
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500">GM%</div>
+                  <div className="text-sm font-semibold tabular-nums">{(kpis.gmPct || 0).toFixed(1)}%</div>
+                </div>
+                <div className="rounded-lg border border-slate-200 p-2">
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500">Demand</div>
+                  <div className="text-sm font-semibold tabular-nums">{fmtNum(kpis.totalDemand || 0)}</div>
+                </div>
+                <div className="rounded-lg border border-slate-200 p-2">
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500">WoW</div>
+                  <div className={`text-sm font-semibold tabular-nums ${(kpis.demandWoW || 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                    {(kpis.demandWoW || 0) >= 0 ? '+' : ''}{((kpis.demandWoW || 0) * 100).toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+              <div className="border-t border-slate-100 pt-2 space-y-1 text-xs text-slate-600">
+                <div className="flex justify-between"><span className="text-slate-500">SKUs</span><span className="font-medium">{data.skus?.length || 0}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Categories</span><span className="font-medium">{categories.length}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Distributors</span><span className="font-medium">{data.distributors?.length || 0}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Regions</span><span className="font-medium">{data.regions?.length || 0}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Weeks tracked</span><span className="font-medium">{data.meta?.weekCount || 0}</span></div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-slate-200/70 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Bot className="h-4 w-4 text-violet-500" />
+                How I think
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-xs text-slate-600">
+              <div className="flex items-start gap-2">
+                <span className="h-4 w-4 rounded bg-blue-100 text-blue-700 text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span>Run <span className="font-medium text-slate-800">7 rule engines</span> on live data (overstock, stockout, demand vs supply, WoW spikes, scheme ROI, distributor rank, growth).</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="h-4 w-4 rounded bg-violet-100 text-violet-700 text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span>Classify your intent and pull the relevant data slice into context.</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="h-4 w-4 rounded bg-emerald-100 text-emerald-700 text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span>Llama 3.1 8B answers in executive tone, then the UI overlays structured cards from the same rules.</span>
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
     </div>
   )
 }
