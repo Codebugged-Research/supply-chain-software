@@ -419,79 +419,114 @@ function DashboardPage({ data }) {
 }
 
 // =============== PAGE: DEMAND PLANNING ===============
+// Concepts:
+//   • Actual demand   = tertiary (consumer sell-out, what really sold)
+//   • Forecast        = secondary (the plan / consensus forecast)
+//   • Adjusted        = Forecast × (1 + adj%)   (planner override)
+//   • Accuracy (MAPE) = 100 − mean(|forecast − actual| / actual × 100)
+//   • Growth          = (recent half actual − earlier half actual) / earlier half
 function DemandPage({ data }) {
   const [region, setRegion] = useState('all')
+  const [skuFilter, setSkuFilter] = useState('all')
+  const [adj, setAdj] = useState([0]) // forecast adjustment % (−30 to +30)
+  const adjPct = adj[0]
+  const adjMult = 1 + adjPct / 100
 
-  // Build per-week forecast view from weekly rows, filtered by region
-  const forecast = useMemo(() => {
-    const rows = (data.weekly || []).filter((r) => region === 'all' || r.region === region)
+  // Filter rows by region + SKU once
+  const rows = useMemo(() => {
+    return (data.weekly || []).filter((r) => {
+      if (region !== 'all' && r.region !== region) return false
+      if (skuFilter !== 'all' && r.skuId !== skuFilter) return false
+      return true
+    })
+  }, [data.weekly, region, skuFilter])
+
+  // Weekly rollup → Actual vs Forecast series
+  const weeklySeries = useMemo(() => {
     const byWeek = new Map()
     for (const r of rows) {
-      if (!byWeek.has(r.weekId)) byWeek.set(r.weekId, { label: r.weekLabel, tertiary: 0, secondary: 0, primary: 0 })
+      if (!byWeek.has(r.weekId)) byWeek.set(r.weekId, { label: r.weekLabel, actual: 0, forecast: 0 })
       const w = byWeek.get(r.weekId)
-      w.tertiary += r.tertiary
-      w.secondary += r.secondary
-      w.primary += r.primary
+      w.actual += r.tertiary
+      w.forecast += r.secondary
     }
     const arr = Array.from(byWeek.entries()).sort(([a], [b]) => (a > b ? 1 : -1))
-    return arr.map(([, v], i) => ({
+    return arr.map(([, v]) => ({
       w: v.label,
-      baseline: Math.round(v.tertiary / 1000),          // baseline = tertiary (sell-out)
-      forecast: Math.round(v.secondary / 1000),         // consensus = secondary
-      actual: i < arr.length - 4 ? Math.round(v.primary / 1000) : null, // actual = primary (last 4 wk still open)
+      actual: Math.round(v.actual / 1000),
+      forecast: Math.round(v.forecast / 1000),
+      adjusted: Math.round((v.forecast * adjMult) / 1000),
     }))
-  }, [data.weekly, region])
+  }, [rows, adjMult])
 
-  // SKU-level detail table (last 4-week consensus vs baseline)
+  // SKU-level aggregations incl. growth, accuracy, weekly mini trend
   const skuDetail = useMemo(() => {
-    const rows = (data.weekly || []).filter((r) => region === 'all' || r.region === region)
     const byKey = new Map()
     for (const r of rows) {
-      if (!byKey.has(r.skuId)) byKey.set(r.skuId, { name: r.skuName, tertiary: 0, secondary: 0, cnt: 0, recent: 0, earlier: 0, i: 0 })
+      if (!byKey.has(r.skuId)) {
+        byKey.set(r.skuId, { name: r.skuName, category: r.category, actual: 0, forecast: 0, wk: [] })
+      }
       const e = byKey.get(r.skuId)
-      e.tertiary += r.tertiary
-      e.secondary += r.secondary
-      e.cnt += 1
-    }
-    // Split halves for trend
-    for (const r of rows) {
-      const e = byKey.get(r.skuId)
-      if (e.i < e.cnt / 2) e.earlier += r.secondary
-      else e.recent += r.secondary
-      e.i += 1
+      e.actual += r.tertiary
+      e.forecast += r.secondary
+      e.wk.push({ weekId: r.weekId, weekLabel: r.weekLabel, actual: r.tertiary, forecast: r.secondary })
     }
     return Array.from(byKey.entries()).map(([id, e]) => {
-      const growth = e.earlier ? ((e.recent - e.earlier) / e.earlier) * 100 : 0
-      const accuracy = Math.max(70, Math.min(99, Math.round(100 - Math.abs((e.secondary - e.tertiary) / Math.max(e.tertiary, 1)) * 100)))
-      const trend = growth > 2 ? '↗' : growth < -2 ? '↘' : '→'
+      // Sort weekly rows chronologically
+      e.wk.sort((a, b) => (a.weekId > b.weekId ? 1 : -1))
+      // Aggregate by weekId across distributors (filtered set)
+      const weekAgg = new Map()
+      for (const w of e.wk) {
+        if (!weekAgg.has(w.weekId)) weekAgg.set(w.weekId, { weekLabel: w.weekLabel, actual: 0, forecast: 0 })
+        const g = weekAgg.get(w.weekId)
+        g.actual += w.actual
+        g.forecast += w.forecast
+      }
+      const weekly = Array.from(weekAgg.values())
+
+      // Growth = second half vs first half (actual/tertiary)
+      const half = Math.floor(weekly.length / 2) || 1
+      const earlier = weekly.slice(0, half).reduce((s, w) => s + w.actual, 0)
+      const recent = weekly.slice(half).reduce((s, w) => s + w.actual, 0)
+      const growth = earlier ? ((recent - earlier) / earlier) * 100 : 0
+
+      // MAPE-style accuracy per week then averaged
+      const mape = weekly.reduce((s, w) => s + (w.actual ? Math.abs(w.forecast - w.actual) / w.actual : 0), 0)
+      const accuracy = Math.max(50, Math.min(99, Math.round(100 - (mape / weekly.length) * 100)))
+
+      const adjustedForecast = Math.round(e.forecast * adjMult)
       return {
         sku: id,
         name: e.name,
-        baseline: fmtNum(e.tertiary),
-        consensus: fmtNum(e.secondary),
+        category: e.category,
+        actual: e.actual,
+        forecast: e.forecast,
+        adjusted: adjustedForecast,
         accuracy,
-        trend,
+        growth,
+        trend: growth > 2 ? '↗' : growth < -2 ? '↘' : '→',
+        sparkline: weekly.map((w) => ({ w: w.weekLabel, a: w.actual, f: w.forecast })),
       }
-    }).sort((a, b) => parseFloat(b.consensus.replace(/,/g, '')) - parseFloat(a.consensus.replace(/,/g, '')))
-  }, [data.weekly, region])
+    }).sort((a, b) => b.actual - a.actual)
+  }, [rows, adjMult])
 
   // KPIs
-  const totalForecast = forecast.reduce((s, r) => s + (r.forecast || 0), 0) // already in K units
+  const totalActual = skuDetail.reduce((s, r) => s + r.actual, 0)
+  const totalForecast = skuDetail.reduce((s, r) => s + r.forecast, 0)
+  const totalAdjusted = skuDetail.reduce((s, r) => s + r.adjusted, 0)
   const meanAcc = skuDetail.length ? Math.round(skuDetail.reduce((s, r) => s + r.accuracy, 0) / skuDetail.length) : 0
-  const biasRows = (data.weekly || []).filter((r) => region === 'all' || r.region === region)
-  const biasTotalS = biasRows.reduce((s, r) => s + r.secondary, 0)
-  const biasTotalT = biasRows.reduce((s, r) => s + r.tertiary, 0)
-  const biasPct = biasTotalT ? ((biasTotalS - biasTotalT) / biasTotalT) * 100 : 0
+  const avgGrowth = skuDetail.length ? skuDetail.reduce((s, r) => s + r.growth, 0) / skuDetail.length : 0
+  const bias = totalActual ? ((totalForecast - totalActual) / totalActual) * 100 : 0
 
   return (
     <div>
       <SectionHeader
         title="Demand Planning"
-        description="Consensus forecast built from tertiary sell-out, secondary sell-in, and statistical baseline"
+        description={`Forecast planning for ${skuDetail.length} SKU${skuDetail.length !== 1 ? 's' : ''} · ${region === 'all' ? 'all regions' : region}`}
         actions={
           <>
             <Select value={region} onValueChange={setRegion}>
-              <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Regions</SelectItem>
                 {(data.regions || []).map((r) => (
@@ -499,67 +534,212 @@ function DemandPage({ data }) {
                 ))}
               </SelectContent>
             </Select>
-            <Button size="sm" className="gap-2"><Sparkles className="h-4 w-4" />Re-forecast</Button>
+            <Select value={skuFilter} onValueChange={setSkuFilter}>
+              <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All SKUs</SelectItem>
+                {(data.skus || []).map((s) => (
+                  <SelectItem key={s.id} value={s.id}>{s.id} · {s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button size="sm" className="gap-2" onClick={() => setAdj([0])}>
+              <Sparkles className="h-4 w-4" />Reset
+            </Button>
           </>
         }
       />
 
+      {/* ---------- KPI ROW ---------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <KpiCard title="Forecast Accuracy" value={`${meanAcc}%`} subtitle={`${skuDetail.length} SKUs`} icon={TrendingUp} accent="blue" />
-        <KpiCard title="Forecast Bias" value={`${biasPct >= 0 ? '+' : ''}${biasPct.toFixed(1)}%`} trend={biasPct >= 0 ? 'up' : 'down'} subtitle={biasPct >= 0 ? 'slight over-forecast' : 'slight under-forecast'} icon={GitBranch} accent="amber" />
-        <KpiCard title={`Total Forecast (${forecast.length}W)`} value={`${fmtNum(totalForecast)}K units`} icon={Package} accent="green" />
-        <KpiCard title="SKUs in Scope" value={`${skuDetail.length}`} subtitle={region === 'all' ? 'all regions' : region} icon={Plus} accent="purple" />
+        <KpiCard
+          title="Total Demand (Actual)"
+          value={`${fmtNum(totalActual / 1000)}K units`}
+          subtitle={`${data.meta?.weekCount || 0}w window`}
+          icon={Package}
+          accent="blue"
+        />
+        <KpiCard
+          title="Total Forecast"
+          value={`${fmtNum(totalForecast / 1000)}K units`}
+          change={adjPct !== 0 ? `Adjusted: ${fmtNum(totalAdjusted / 1000)}K` : undefined}
+          trend={adjPct >= 0 ? 'up' : 'down'}
+          subtitle={adjPct !== 0 ? `${adjPct > 0 ? '+' : ''}${adjPct}% lift applied` : 'baseline'}
+          icon={TrendingUp}
+          accent="green"
+        />
+        <KpiCard
+          title="Forecast Accuracy"
+          value={`${meanAcc}%`}
+          subtitle={`bias ${bias >= 0 ? '+' : ''}${bias.toFixed(1)}%`}
+          trend={meanAcc >= 85 ? 'up' : 'down'}
+          change={meanAcc >= 90 ? 'Healthy' : meanAcc >= 80 ? 'Acceptable' : 'Needs review'}
+          icon={GitBranch}
+          accent={meanAcc >= 90 ? 'green' : meanAcc >= 80 ? 'amber' : 'rose'}
+        />
+        <KpiCard
+          title="Growth Trend"
+          value={`${avgGrowth >= 0 ? '+' : ''}${avgGrowth.toFixed(1)}%`}
+          trend={avgGrowth >= 0 ? 'up' : 'down'}
+          subtitle="avg across SKUs"
+          change="half-vs-half"
+          icon={avgGrowth >= 0 ? ArrowUpRight : ArrowDownRight}
+          accent={avgGrowth >= 0 ? 'purple' : 'rose'}
+        />
       </div>
 
+      {/* ---------- ADJUSTMENT SLIDER ---------- */}
       <Card className="border-slate-200/70 shadow-sm mb-6">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Weekly Demand Signals</CardTitle>
-          <CardDescription>Tertiary (baseline) · Secondary (consensus) · Primary (actual) · 000 units</CardDescription>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-blue-600" />
+                Forecast Adjustment
+              </CardTitle>
+              <CardDescription>Apply a percentage lift/cut to the baseline forecast for sensitivity analysis</CardDescription>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-500">Lift</span>
+              <div className={`text-2xl font-semibold min-w-[80px] text-right ${adjPct > 0 ? 'text-emerald-600' : adjPct < 0 ? 'text-rose-600' : 'text-slate-900'}`}>
+                {adjPct > 0 ? '+' : ''}{adjPct}%
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Slider value={adj} onValueChange={setAdj} min={-30} max={30} step={1} />
+          <div className="flex justify-between text-xs text-slate-500 mt-2">
+            <span>-30%</span>
+            <span>-15%</span>
+            <span className="text-slate-700 font-medium">baseline</span>
+            <span>+15%</span>
+            <span>+30%</span>
+          </div>
+          {adjPct !== 0 && (
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-600">
+              <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+                Δ {fmtNum(Math.abs(totalAdjusted - totalForecast) / 1000)}K units
+              </Badge>
+              <span>
+                {adjPct > 0 ? 'Forecast lifted by' : 'Forecast reduced by'} {Math.abs(adjPct)}% — flows into the chart and table below.
+              </span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ---------- CHART: ACTUAL VS FORECAST ---------- */}
+      <Card className="border-slate-200/70 shadow-sm mb-6">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base">Actual vs Forecast</CardTitle>
+              <CardDescription>Weekly demand · 000 units · {skuFilter === 'all' ? 'all SKUs' : skuFilter}</CardDescription>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-slate-600">
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-500" />Actual</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-blue-500" />Forecast</span>
+              {adjPct !== 0 && <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-500" />Adjusted</span>}
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={320}>
-            <LineChart data={forecast}>
+            <LineChart data={weeklySeries}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
               <XAxis dataKey="w" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
               <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="baseline" stroke="#94a3b8" strokeWidth={2} strokeDasharray="4 4" dot={false} />
-              <Line type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 2 }} />
-              <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2.5} dot={{ r: 2 }} />
+              <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2.5} dot={{ r: 2 }} name="Actual" />
+              <Line type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 2 }} name="Forecast" />
+              {adjPct !== 0 && (
+                <Line type="monotone" dataKey="adjusted" stroke="#8b5cf6" strokeWidth={2.5} strokeDasharray="6 4" dot={false} name="Adjusted" />
+              )}
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
+      {/* ---------- SKU DETAIL TABLE ---------- */}
       <Card className="border-slate-200/70 shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Forecast Detail by SKU</CardTitle>
-          <CardDescription>{skuDetail.length} SKUs · {region === 'all' ? 'all regions' : region}</CardDescription>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <CardTitle className="text-base">Forecast Detail by SKU</CardTitle>
+              <CardDescription>{skuDetail.length} SKU{skuDetail.length !== 1 ? 's' : ''} · {data.meta?.weekCount || 0}-week actuals vs forecast · adjusted column reflects slider</CardDescription>
+            </div>
+            {adjPct !== 0 && (
+              <Badge variant="secondary" className="bg-violet-50 text-violet-700 hover:bg-violet-50">
+                {adjPct > 0 ? '+' : ''}{adjPct}% lift active
+              </Badge>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable
             columns={[
               { key: 'sku', label: 'SKU' },
               { key: 'name', label: 'Product' },
-              { key: 'baseline', label: 'Baseline' },
-              { key: 'consensus', label: 'Consensus' },
+              { key: 'category', label: 'Category' },
+              { key: 'actual', label: 'Actual' },
+              { key: 'forecast', label: 'Forecast' },
+              { key: 'adjusted', label: 'Adjusted' },
+              { key: 'spark', label: 'Trend' },
               { key: 'accuracy', label: 'Accuracy' },
-              { key: 'trend', label: 'Trend' },
+              { key: 'growth', label: 'Growth' },
             ]}
             rows={skuDetail}
             renderCell={(col, row) => {
-              if (col.key === 'accuracy') {
+              if (col.key === 'sku') return <span className="font-mono text-xs text-slate-700">{row.sku}</span>
+              if (col.key === 'actual') return <span className="font-medium">{fmtNum(row.actual)}</span>
+              if (col.key === 'forecast') return fmtNum(row.forecast)
+              if (col.key === 'adjusted') {
+                const delta = row.adjusted - row.forecast
                 return (
                   <div className="flex items-center gap-2">
-                    <Progress value={row.accuracy} className="h-1.5 w-20" />
-                    <span className="text-xs text-slate-600 font-medium">{row.accuracy}%</span>
+                    <span className="font-medium">{fmtNum(row.adjusted)}</span>
+                    {adjPct !== 0 && (
+                      <span className={`text-xs ${delta >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        {delta >= 0 ? '+' : ''}{fmtNum(delta)}
+                      </span>
+                    )}
                   </div>
                 )
               }
-              if (col.key === 'trend') {
-                const color = row.trend === '↗' ? 'text-emerald-600' : row.trend === '↘' ? 'text-rose-600' : 'text-slate-500'
-                return <span className={`text-lg font-semibold ${color}`}>{row.trend}</span>
+              if (col.key === 'spark') {
+                return (
+                  <div className="w-24 h-8">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={row.sparkline}>
+                        <Line type="monotone" dataKey="a" stroke="#10b981" strokeWidth={1.5} dot={false} />
+                        <Line type="monotone" dataKey="f" stroke="#3b82f6" strokeWidth={1.5} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                )
+              }
+              if (col.key === 'accuracy') {
+                const color = row.accuracy >= 90 ? 'bg-emerald-500' : row.accuracy >= 80 ? 'bg-amber-500' : 'bg-rose-500'
+                return (
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-20 bg-slate-100 rounded-full overflow-hidden">
+                      <div className={`h-full ${color}`} style={{ width: `${row.accuracy}%` }} />
+                    </div>
+                    <span className="text-xs text-slate-600 font-medium w-8">{row.accuracy}%</span>
+                  </div>
+                )
+              }
+              if (col.key === 'growth') {
+                const color = row.growth > 2 ? 'text-emerald-600' : row.growth < -2 ? 'text-rose-600' : 'text-slate-500'
+                const Icon = row.growth > 2 ? ArrowUpRight : row.growth < -2 ? ArrowDownRight : null
+                return (
+                  <span className={`font-medium flex items-center gap-1 ${color}`}>
+                    {Icon && <Icon className="h-3.5 w-3.5" />}
+                    {row.growth >= 0 ? '+' : ''}{row.growth.toFixed(1)}%
+                  </span>
+                )
               }
               return row[col.key]
             }}
