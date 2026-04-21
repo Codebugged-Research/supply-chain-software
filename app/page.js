@@ -36,6 +36,15 @@ import {
   Check,
   CalendarDays,
   Clock,
+  Activity,
+  Zap,
+  MapPin,
+  Target,
+  Users,
+  ToggleLeft,
+  ToggleRight,
+  TrendingDown,
+  Megaphone,
 } from 'lucide-react'
 import {
   Dialog,
@@ -84,6 +93,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'demand', label: 'Demand Planning', icon: TrendingUp },
+  { id: 'factors', label: 'Demand Factors', icon: Activity },
   { id: 'orders', label: 'Distributor Orders', icon: Package },
   { id: 'supply', label: 'Supply Planning', icon: Factory },
   { id: 'financial', label: 'Financial Planning', icon: DollarSign },
@@ -2143,6 +2153,493 @@ function ScenarioPage({ data }) {
   )
 }
 
+
+// =============== PAGE: DEMAND FACTORS ===============
+// Interactive visualization of factors impacting demand forecasting
+// Features: PLC stages, Seasonality patterns, Promotions, Location factors, Competitor comparison
+function DemandFactorsPage({ data }) {
+  // Featured SKUs for dropdown selection
+  const featuredSkus = [
+    { id: 'SKU-30220', name: 'Greek Yogurt Multipack 4x', category: 'Dairy', plc: 'Growth', baseDemand: 3500 },
+    { id: 'SKU-10842', name: 'Sparkling Water 500ml', category: 'Beverages', plc: 'Mature', baseDemand: 8200 },
+    { id: 'SKU-30118', name: 'Vanilla Ice Cream 1L', category: 'Frozen', plc: 'Decline', baseDemand: 3600 },
+  ]
+
+  const [selectedSku, setSelectedSku] = useState(featuredSkus[0].id)
+  const [factors, setFactors] = useState({
+    plc: true,
+    seasonality: true,
+    promotions: true,
+    location: false,
+  })
+
+  const currentSku = featuredSkus.find(s => s.id === selectedSku)
+
+  // PLC multipliers
+  const plcMultipliers = {
+    'New': 1.2,
+    'Growth': 1.5,
+    'Mature': 1.0,
+    'Decline': 0.7,
+  }
+
+  // Seasonality patterns by category (12 months)
+  const seasonalityPatterns = {
+    'Dairy': [0.95, 0.92, 0.98, 1.02, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 0.98, 1.05], // Slight summer peak
+    'Beverages': [0.75, 0.80, 0.90, 1.05, 1.25, 1.40, 1.45, 1.40, 1.20, 1.00, 0.85, 0.80], // Strong summer peak
+    'Frozen': [1.10, 1.15, 1.05, 0.95, 0.85, 0.80, 0.75, 0.78, 0.90, 1.00, 1.15, 1.25], // Winter peak
+    'Snacks': [0.98, 0.95, 0.97, 1.00, 1.02, 1.00, 0.98, 0.97, 1.00, 1.05, 1.10, 1.20], // Holiday bump
+  }
+
+  // Promotion schedule (weeks with active promotions)
+  const promotionWeeks = [8, 9, 15, 16, 22, 23] // Roughly 3 campaigns per 6 months
+  const promotionUplift = 1.4 // +40%
+
+  // Regional multipliers
+  const regionMultipliers = {
+    'North': { 'Dairy': 1.1, 'Beverages': 0.9, 'Frozen': 1.2, 'Snacks': 1.0 },
+    'South': { 'Dairy': 0.9, 'Beverages': 1.3, 'Frozen': 0.8, 'Snacks': 1.1 },
+    'West': { 'Dairy': 1.0, 'Beverages': 1.1, 'Frozen': 1.0, 'Snacks': 0.95 },
+  }
+
+  // Generate 26 weeks of demand data with factors
+  const generateDemandData = () => {
+    const weeks = []
+    const baseDemand = currentSku.baseDemand
+
+    for (let i = 0; i < 26; i++) {
+      const weekId = `W${(i + 7).toString().padStart(2, '0')}`
+      const monthIndex = Math.floor((i + 6) / 4) % 12 // Map to month
+
+      let demand = baseDemand
+
+      // Apply PLC
+      let plcAdjusted = demand
+      if (factors.plc) {
+        plcAdjusted = demand * plcMultipliers[currentSku.plc]
+      }
+
+      // Apply Seasonality
+      let seasonalAdjusted = plcAdjusted
+      if (factors.seasonality) {
+        const seasonalFactor = seasonalityPatterns[currentSku.category][monthIndex]
+        seasonalAdjusted = plcAdjusted * seasonalFactor
+      }
+
+      // Apply Promotions
+      let promoAdjusted = seasonalAdjusted
+      if (factors.promotions && promotionWeeks.includes(i)) {
+        promoAdjusted = seasonalAdjusted * promotionUplift
+      }
+
+      // Apply Location (using North as default)
+      let locationAdjusted = promoAdjusted
+      if (factors.location) {
+        locationAdjusted = promoAdjusted * regionMultipliers['North'][currentSku.category]
+      }
+
+      weeks.push({
+        week: weekId,
+        base: Math.round(demand),
+        adjusted: Math.round(locationAdjusted),
+        plcOnly: Math.round(plcAdjusted),
+        withSeasonal: Math.round(seasonalAdjusted),
+        hasPromo: promotionWeeks.includes(i),
+      })
+    }
+
+    return weeks
+  }
+
+  const demandData = generateDemandData()
+
+  // Competitor mock data
+  const competitorData = [
+    { name: 'Your Company', value: currentSku.baseDemand * 1.2, color: '#3b82f6' },
+    { name: 'Competitor A', value: currentSku.baseDemand * 1.1, color: '#f59e0b' },
+    { name: 'Competitor B', value: currentSku.baseDemand * 0.9, color: '#8b5cf6' },
+  ]
+
+  // Calculate impact percentages
+  const calculateImpact = () => {
+    const base = demandData.reduce((sum, d) => sum + d.base, 0)
+    const adjusted = demandData.reduce((sum, d) => sum + d.adjusted, 0)
+    const diff = ((adjusted - base) / base * 100).toFixed(1)
+    return { base, adjusted, diff }
+  }
+
+  const impact = calculateImpact()
+
+  const toggleFactor = (factor) => {
+    setFactors(prev => ({ ...prev, [factor]: !prev[factor] }))
+  }
+
+  const plcColors = {
+    'New': 'bg-cyan-50 text-cyan-700 border-cyan-300',
+    'Growth': 'bg-emerald-50 text-emerald-700 border-emerald-300',
+    'Mature': 'bg-blue-50 text-blue-700 border-blue-300',
+    'Decline': 'bg-rose-50 text-rose-700 border-rose-300',
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-slate-900">Demand Factors Analysis</h2>
+          <p className="text-sm text-slate-500 mt-1">Visualize how PLC, seasonality, promotions, and location impact demand forecasting</p>
+        </div>
+        <Badge className={`${plcColors[currentSku.plc]} text-xs font-semibold px-3 py-1.5`}>
+          {currentSku.plc} Stage · {(plcMultipliers[currentSku.plc] * 100).toFixed(0)}% multiplier
+        </Badge>
+      </div>
+
+      {/* SKU Selector & Factor Toggles */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* SKU Selection */}
+        <Card className="border-slate-200">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Package className="h-4 w-4 text-blue-500" />
+              Select SKU to Analyze
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select value={selectedSku} onValueChange={setSelectedSku}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {featuredSkus.map(sku => (
+                  <SelectItem key={sku.id} value={sku.id}>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{sku.name}</span>
+                      <Badge variant="secondary" className="text-xs">{sku.category}</Badge>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="mt-3 p-3 bg-slate-50 rounded-lg">
+              <div className="text-xs text-slate-500 mb-1">Base Weekly Demand</div>
+              <div className="text-2xl font-bold text-slate-900">{currentSku.baseDemand.toLocaleString()}</div>
+              <div className="text-xs text-slate-500 mt-1">units/week</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Factor Toggles */}
+        <Card className="border-slate-200">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Zap className="h-4 w-4 text-amber-500" />
+              Active Demand Factors
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {/* PLC Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <Target className="h-4 w-4 text-emerald-600" />
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">Product Life Cycle</div>
+                    <div className="text-xs text-slate-500">{currentSku.plc} · {(plcMultipliers[currentSku.plc] * 100).toFixed(0)}% impact</div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleFactor('plc')}
+                  className="p-1 h-8"
+                >
+                  {factors.plc ? (
+                    <ToggleRight className="h-6 w-6 text-blue-600" />
+                  ) : (
+                    <ToggleLeft className="h-6 w-6 text-slate-400" />
+                  )}
+                </Button>
+              </div>
+
+              {/* Seasonality Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <CalendarDays className="h-4 w-4 text-violet-600" />
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">Seasonality</div>
+                    <div className="text-xs text-slate-500">{currentSku.category} seasonal pattern</div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleFactor('seasonality')}
+                  className="p-1 h-8"
+                >
+                  {factors.seasonality ? (
+                    <ToggleRight className="h-6 w-6 text-blue-600" />
+                  ) : (
+                    <ToggleLeft className="h-6 w-6 text-slate-400" />
+                  )}
+                </Button>
+              </div>
+
+              {/* Promotions Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <Megaphone className="h-4 w-4 text-rose-600" />
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">Promotions</div>
+                    <div className="text-xs text-slate-500">+40% uplift during campaigns</div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleFactor('promotions')}
+                  className="p-1 h-8"
+                >
+                  {factors.promotions ? (
+                    <ToggleRight className="h-6 w-6 text-blue-600" />
+                  ) : (
+                    <ToggleLeft className="h-6 w-6 text-slate-400" />
+                  )}
+                </Button>
+              </div>
+
+              {/* Location Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-4 w-4 text-blue-600" />
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">Location</div>
+                    <div className="text-xs text-slate-500">Regional demand variations</div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleFactor('location')}
+                  className="p-1 h-8"
+                >
+                  {factors.location ? (
+                    <ToggleRight className="h-6 w-6 text-blue-600" />
+                  ) : (
+                    <ToggleLeft className="h-6 w-6 text-slate-400" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Impact Summary */}
+      <Card className="border-blue-200 bg-blue-50/30">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="text-xs text-slate-500 mb-1">Base Demand (26 weeks)</div>
+              <div className="text-2xl font-bold text-slate-900">{impact.base.toLocaleString()}</div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-500 mb-1">Adjusted Demand</div>
+              <div className="text-2xl font-bold text-blue-600">{impact.adjusted.toLocaleString()}</div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-500 mb-1">Total Impact</div>
+              <div className={`text-2xl font-bold ${impact.diff >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {impact.diff >= 0 ? '+' : ''}{impact.diff}%
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Main Chart */}
+      <Card className="border-slate-200">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Activity className="h-4 w-4 text-blue-500" />
+            Demand Forecast with Active Factors (26 Weeks)
+          </CardTitle>
+          <CardDescription>
+            {factors.plc && <span className="mr-2">✓ PLC</span>}
+            {factors.seasonality && <span className="mr-2">✓ Seasonality</span>}
+            {factors.promotions && <span className="mr-2">✓ Promotions</span>}
+            {factors.location && <span className="mr-2">✓ Location</span>}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={350}>
+            <LineChart data={demandData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="week" stroke="#64748b" style={{ fontSize: '12px' }} />
+              <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
+              <Tooltip
+                contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                labelStyle={{ color: '#0f172a', fontWeight: 600 }}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="base"
+                stroke="#94a3b8"
+                strokeWidth={2}
+                dot={false}
+                name="Base Demand"
+              />
+              <Line
+                type="monotone"
+                dataKey="adjusted"
+                stroke="#3b82f6"
+                strokeWidth={3}
+                dot={(props) => {
+                  const { cx, cy, payload } = props
+                  if (payload.hasPromo && factors.promotions) {
+                    return (
+                      <circle cx={cx} cy={cy} r={5} fill="#ef4444" stroke="#fff" strokeWidth={2} />
+                    )
+                  }
+                  return null
+                }}
+                name="Adjusted Demand"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          {factors.promotions && (
+            <div className="mt-4 flex items-center gap-2 text-xs text-slate-600">
+              <div className="flex items-center gap-1.5">
+                <div className="h-3 w-3 rounded-full bg-rose-500" />
+                <span>Promotion Period (+40%)</span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Factor Breakdown & Competitor Comparison */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Factor Impact Breakdown */}
+        <Card className="border-slate-200">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-emerald-500" />
+              Factor Impact Breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
+                <div className="flex items-center gap-2">
+                  <Target className={`h-4 w-4 ${factors.plc ? 'text-emerald-600' : 'text-slate-400'}`} />
+                  <span className="text-sm font-medium">Product Life Cycle</span>
+                </div>
+                <span className={`text-sm font-semibold ${factors.plc ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {factors.plc ? `${((plcMultipliers[currentSku.plc] - 1) * 100).toFixed(0)}%` : '—'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className={`h-4 w-4 ${factors.seasonality ? 'text-violet-600' : 'text-slate-400'}`} />
+                  <span className="text-sm font-medium">Seasonality</span>
+                </div>
+                <span className={`text-sm font-semibold ${factors.seasonality ? 'text-violet-600' : 'text-slate-400'}`}>
+                  {factors.seasonality ? '±20-40%' : '—'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
+                <div className="flex items-center gap-2">
+                  <Megaphone className={`h-4 w-4 ${factors.promotions ? 'text-rose-600' : 'text-slate-400'}`} />
+                  <span className="text-sm font-medium">Promotions</span>
+                </div>
+                <span className={`text-sm font-semibold ${factors.promotions ? 'text-rose-600' : 'text-slate-400'}`}>
+                  {factors.promotions ? '+40%' : '—'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
+                <div className="flex items-center gap-2">
+                  <MapPin className={`h-4 w-4 ${factors.location ? 'text-blue-600' : 'text-slate-400'}`} />
+                  <span className="text-sm font-medium">Location (North)</span>
+                </div>
+                <span className={`text-sm font-semibold ${factors.location ? 'text-blue-600' : 'text-slate-400'}`}>
+                  {factors.location ? `${((regionMultipliers['North'][currentSku.category] - 1) * 100).toFixed(0)}%` : '—'}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Competitor Comparison */}
+        <Card className="border-slate-200">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Users className="h-4 w-4 text-amber-500" />
+              Competitor Demand Comparison
+            </CardTitle>
+            <CardDescription>Average weekly demand (same category)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={competitorData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis type="number" stroke="#64748b" style={{ fontSize: '12px' }} />
+                <YAxis dataKey="name" type="category" stroke="#64748b" style={{ fontSize: '12px' }} width={100} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                />
+                <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+                  {competitorData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-blue-900">
+                <Sparkles className="h-4 w-4" />
+                <span className="font-medium">Market Position:</span>
+                <span>Leading in {currentSku.category} category</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Regional Comparison (when location factor is active) */}
+      {factors.location && (
+        <Card className="border-slate-200">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-blue-500" />
+              Regional Demand Variations
+            </CardTitle>
+            <CardDescription>How demand varies across different regions for {currentSku.category} products</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              {Object.entries(regionMultipliers).map(([region, multipliers]) => {
+                const multiplier = multipliers[currentSku.category]
+                const adjustedDemand = Math.round(currentSku.baseDemand * multiplier)
+                const diff = ((multiplier - 1) * 100).toFixed(0)
+                return (
+                  <div key={region} className="p-4 rounded-lg border border-slate-200 bg-slate-50">
+                    <div className="text-sm font-semibold text-slate-900 mb-2">{region}</div>
+                    <div className="text-2xl font-bold text-blue-600 mb-1">{adjustedDemand.toLocaleString()}</div>
+                    <div className={`text-sm font-medium ${diff >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {diff >= 0 ? '+' : ''}{diff}% vs baseline
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
+
 // =============== PAGE: CHATBOT ===============
 // =============== PAGE: CHATBOT — S&OP AI ASSISTANT ===============
 // Three-column layout:
@@ -2702,6 +3199,7 @@ function App() {
     switch (active) {
       case 'dashboard': return <DashboardPage data={data} />
       case 'demand': return <DemandPage data={data} />
+      case 'factors': return <DemandFactorsPage data={data} />
       case 'orders': return <OrdersPage data={data} />
       case 'supply': return <SupplyPage data={data} />
       case 'financial': return <FinancialPage data={data} />
