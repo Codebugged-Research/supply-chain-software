@@ -101,3 +101,129 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  S&OP Enterprise Planning System (Next.js + MongoDB). Continuation task: Build the
+  Distributor Order Portal module. Must reuse the existing dummy dataset (15 SKUs ×
+  5 distributors × 3 regions × 26 weeks) so every module stays consistent. Features:
+    • Editable table: SKU, Current Stock, Secondary Sales, Suggested Qty, Scheme/Promotion
+    • Distributor inputs order qty
+    • Show Distributor→Dealer gap
+    • Tentative delivery date calculation
+    • Cashflow indicator (based on order value)
+    • Highlight high-demand SKUs · clean dashboard style
+    • Backend endpoint POST /orders/place saves orders
+
+backend:
+  - task: "GET /api/orders/suggest?distributorId=X returns enriched suggestion with lines, leadTimeDays, tentativeDeliveryDate"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented in previous turn. Should return {distributor, leadTimeDays, tentativeDeliveryDate, lastWeekId, lines:[...]} for a valid distributor id and 404 for unknown id; 400 when distributorId missing."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED: All tests successful. Valid distributorId=DST-001 returns correct structure with distributor{id,name,region}, leadTimeDays=3 for North region, tentativeDeliveryDate in YYYY-MM-DD format, 15 lines with all required fields (skuId, skuName, category, price, cost, currentStock, retailStock, weeklySecondary, suggestedQty, coverWeeks, dealerGap, scheme, isHighDemand, estimatedValue). Error handling works: missing distributorId→400 'distributorId required', unknown distributorId=DST-999→404."
+
+  - task: "POST /api/orders/place saves order, enriches lines with scheme/pricing, persists to MongoDB, returns {ok:true, order}"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Saves to 'orders' collection with generated orderId (ORD-<uuid>), totalQty, totalValue, cashflow (low|medium|high), leadTimeDays, tentativeDeliveryDate. Validations: distributorId+non-empty lines required; invalid skuIds skipped; all zero qty → 400."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED: All tests successful. Happy path works: returns 201 with {ok:true, order} containing orderId matching /^ORD-[A-Z0-9]+$/, distributorName='NorthStar Foods', region='North', status='Pending', correct totalQty/totalValue, cashflow thresholds working (low<$25K, medium$25K-$75K, high≥$75K). Line enrichment works with skuName, category, unitPrice, effectivePrice, lineValue, scheme, discountPct. Scheme pricing verified: Beverage SKUs get 9% 'Buy 10 Get 1 Free' discount. All validations work: missing distributorId→400, empty lines→400, unknown distributor→404, all-zero/invalid qty→400 'All order lines were empty/invalid'. Orders persist to MongoDB successfully."
+
+  - task: "GET /api/orders?distributorId=X lists saved orders filtered by distributor, newest first, max 50"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Reads from MongoDB 'orders' collection. Projection strips _id. Must return the order just placed."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED: All tests successful. GET /api/orders?distributorId=DST-001 returns correct structure with {count, orders} where orders contain orderId, totalQty, totalValue, cashflow, lines, tentativeDeliveryDate, createdAt. Orders sorted newest first confirmed. Persistence verified: orders placed via POST immediately appear in GET results. Unfiltered GET /api/orders works. Unknown distributor filter DST-999 returns count:0, orders:[] correctly."
+
+  - task: "Dummy data endpoints (meta, skus, distributors, regions, weeks, kpis, weekly, aggregate) remain consistent and deterministic"
+    implemented: true
+    working: true
+    file: "lib/dummyData.js, app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Deterministic (seeded PRNG). Used by all 7 pages in the frontend."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED: All dataset endpoints working correctly. GET /api/data/meta returns exact expected values: skuCount=15, distributorCount=5, regionCount=3, weekCount=26, rowCount=1950. All other endpoints return correct counts and structures: /api/data/skus (15 items), /api/data/distributors (5 items with id,name,region,tier), /api/data/regions (3 items), /api/data/weeks (26 items), /api/data/kpis (has totalRevenue, totalGm, gmPct, totalDemand, demandWoW), /api/data/aggregate?by=skuId (15 rows), /api/data/weekly (1950 rows). Data is deterministic and consistent."
+
+frontend:
+  - task: "Distributor Order Portal (editable table + place order flow)"
+    implemented: true
+    working: "NA"
+    file: "app/page.js (OrdersPage)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Rewrote OrdersPage: distributor selector, 4 KPI cards, cashflow meter, editable SKU table with Suggested click-to-accept, Dist→Dealer gap badge, violet scheme badges, high-demand amber-tinted rows + flame icon, Apply Suggestions button, Clear, Notes, Place Order button, Recent Orders panel filtered by distributor. Calls /api/orders/suggest, /api/orders, POST /api/orders/place. Visual check passed."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "GET /api/orders/suggest?distributorId=X returns enriched suggestion with lines, leadTimeDays, tentativeDeliveryDate"
+    - "POST /api/orders/place saves order, enriches lines with scheme/pricing, persists to MongoDB, returns {ok:true, order}"
+    - "GET /api/orders?distributorId=X lists saved orders filtered by distributor, newest first, max 50"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: |
+        Distributor Order Portal frontend is built and visually verified. Backend endpoints
+        (GET /api/orders/suggest, POST /api/orders/place, GET /api/orders) were built in the
+        previous turn and are unchanged. Please test the 3 order endpoints end-to-end:
+          1) GET /api/orders/suggest?distributorId=DST-001 → expect lines[], leadTimeDays, tentativeDeliveryDate
+          2) POST /api/orders/place with a valid distributor + 2-3 lines → expect 201 with order.orderId + cashflow
+             Also verify: missing distributorId → 400, empty lines → 400, unknown distributor → 404, all-zero qty → 400
+          3) GET /api/orders?distributorId=DST-001 → the order just placed should appear (newest first)
+        Also verify dataset endpoints still respond OK: /api/data/meta, /api/data/skus, /api/data/distributors, /api/data/regions, /api/data/kpis
+    - agent: "testing"
+      message: |
+        ✅ BACKEND TESTING COMPLETED SUCCESSFULLY - All 4 backend tasks are now working correctly:
+        
+        1. Dataset endpoints: All 8 endpoints (/api/data/meta, skus, distributors, regions, weeks, kpis, weekly, aggregate) return exact expected data counts and structures.
+        
+        2. Order suggestion endpoint: GET /api/orders/suggest works perfectly with proper validation (400 for missing distributorId, 404 for unknown distributor), returns all required fields including 15 enriched lines with scheme pricing.
+        
+        3. Place order endpoint: POST /api/orders/place works with full validation, cashflow thresholds (low/medium/high), scheme pricing (9% discount for beverages), line enrichment, and MongoDB persistence.
+        
+        4. List orders endpoint: GET /api/orders returns orders correctly filtered by distributor, sorted newest first, with immediate persistence verification.
+        
+        All endpoints tested comprehensively using external URL. MongoDB integration working. No critical issues found.

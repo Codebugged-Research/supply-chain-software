@@ -21,6 +21,13 @@ import {
   Plus,
   CircleUser,
   Database,
+  Truck,
+  Wallet,
+  Flame,
+  RotateCw,
+  CheckCircle2,
+  AlertTriangle,
+  X,
 } from 'lucide-react'
 import {
   LineChart,
@@ -751,129 +758,483 @@ function DemandPage({ data }) {
 }
 
 // =============== PAGE: DISTRIBUTOR ORDERS ===============
+// Distributor Order Portal
+//   • Pull per-distributor suggested order lines from /api/orders/suggest
+//   • Editable table with: current stock, secondary sales, suggested qty,
+//     distributor→dealer gap, scheme/promo, order qty input, line value
+//   • Highlight high-demand SKUs (amber row + flame icon)
+//   • Live KPIs: lines, order value, tentative delivery, cashflow indicator
+//   • POST /api/orders/place to persist, then refresh recent-orders list
 function OrdersPage({ data }) {
-  // Generate orders from last 4 weeks of primary shipments × distributors × top SKUs
-  const orders = useMemo(() => {
-    const weekly = data.weekly || []
-    const weeks = data.weeks || []
-    if (!weeks.length) return []
-    const lastWeeks = weeks.slice(-4).map((w) => w.weekId)
-    // Roll up primary + revenue per (distributor, weekId)
-    const m = new Map()
-    for (const r of weekly) {
-      if (!lastWeeks.includes(r.weekId)) continue
-      const k = `${r.distributorId}|${r.weekId}`
-      if (!m.has(k)) {
-        m.set(k, { distributorId: r.distributorId, dist: r.distributor, region: r.region, weekId: r.weekId, weekStart: r.weekStart, items: 0, value: 0 })
-      }
-      const o = m.get(k)
-      o.items += r.primary
-      o.value += r.revenue
-    }
-    const statuses = ['Delivered', 'In Transit', 'Approved', 'Pending']
-    return Array.from(m.values())
-      .sort((a, b) => (a.weekId < b.weekId ? 1 : -1))
-      .map((o, i) => ({
-        id: `ORD-${48200 + i}`,
-        dist: o.dist,
-        region: o.region,
-        items: o.items,
-        value: fmtMoney(o.value),
-        eta: o.weekStart,
-        status: statuses[Math.min(Math.floor(i / 5), 3)], // most recent = pending, oldest = delivered
-      }))
-  }, [data.weekly, data.weeks])
+  const [selectedDist, setSelectedDist] = useState('')
+  const [suggestion, setSuggestion] = useState(null)
+  const [qtyMap, setQtyMap] = useState({}) // { skuId: qty }
+  const [notes, setNotes] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [placing, setPlacing] = useState(false)
+  const [success, setSuccess] = useState(null) // { order }
+  const [savedOrders, setSavedOrders] = useState([])
+  const [errorMsg, setErrorMsg] = useState(null)
 
-  const statusMap = {
-    Pending: 'bg-amber-50 text-amber-700',
-    Approved: 'bg-blue-50 text-blue-700',
-    'In Transit': 'bg-violet-50 text-violet-700',
-    Delivered: 'bg-emerald-50 text-emerald-700',
-    Backorder: 'bg-rose-50 text-rose-700',
+  // Default to first distributor once master data arrives
+  useEffect(() => {
+    if (!selectedDist && data.distributors?.length) {
+      setSelectedDist(data.distributors[0].id)
+    }
+  }, [data.distributors, selectedDist])
+
+  // Load suggestion + saved orders whenever distributor changes
+  useEffect(() => {
+    if (!selectedDist) return
+    let cancelled = false
+    setLoading(true)
+    setErrorMsg(null)
+
+    const loadSuggestion = fetch(`/api/orders/suggest?distributorId=${selectedDist}`)
+      .then((r) => r.json())
+      .then((s) => { if (!cancelled) { setSuggestion(s); setQtyMap({}); setSuccess(null) } })
+      .catch((e) => !cancelled && setErrorMsg(e.message))
+
+    const loadHistory = fetch(`/api/orders?distributorId=${selectedDist}`)
+      .then((r) => r.json())
+      .then((j) => !cancelled && setSavedOrders(j.orders || []))
+      .catch(() => !cancelled && setSavedOrders([]))
+
+    Promise.all([loadSuggestion, loadHistory]).finally(() => !cancelled && setLoading(false))
+    return () => { cancelled = true }
+  }, [selectedDist])
+
+  const lines = suggestion?.lines || []
+  const selectedDistObj = data.distributors?.find((d) => d.id === selectedDist)
+
+  // Derived totals (react to input edits instantly)
+  const { totalQty, totalValue, nonZeroLines } = useMemo(() => {
+    let tq = 0, tv = 0, n = 0
+    for (const l of lines) {
+      const raw = qtyMap[l.skuId]
+      const q = Number(raw || 0)
+      if (q > 0) {
+        n += 1
+        tq += q
+        const eff = l.price * (1 - (l.scheme?.discountPct || 0) / 100)
+        tv += q * eff
+      }
+    }
+    return { totalQty: tq, totalValue: Math.round(tv * 100) / 100, nonZeroLines: n }
+  }, [lines, qtyMap])
+
+  // Cashflow classification mirrors the backend thresholds (see route.js)
+  const cashflow = totalValue >= 75000 ? 'high' : totalValue >= 25000 ? 'medium' : 'low'
+  const cashflowMeta = {
+    low: { label: 'Low burn', accent: 'green', barColor: 'bg-emerald-500', pct: 28, hint: 'Comfortable working capital' },
+    medium: { label: 'Moderate', accent: 'amber', barColor: 'bg-amber-500', pct: 62, hint: 'Watch receivables timing' },
+    high: { label: 'High burn', accent: 'rose', barColor: 'bg-rose-500', pct: 92, hint: 'Review credit & terms before confirming' },
+  }
+  const cf = cashflowMeta[cashflow]
+
+  const setQty = (skuId, value) => {
+    setQtyMap((prev) => {
+      const next = { ...prev }
+      if (!value || Number(value) <= 0) delete next[skuId]
+      else next[skuId] = value
+      return next
+    })
   }
 
-  // KPIs derived from live data
-  const openOrders = orders.filter((o) => o.status !== 'Delivered').length
-  const totalValue = (data.weekly || []).slice(-(data.weekly?.length || 0)).reduce((s, r) => s + r.revenue, 0)
-  const byDistRows = data.byDistributor || []
-  const topDistCount = byDistRows.length
+  const applySuggestions = () => {
+    const map = {}
+    for (const l of lines) if (l.suggestedQty > 0) map[l.skuId] = String(l.suggestedQty)
+    setQtyMap(map)
+  }
+  const clearAll = () => setQtyMap({})
+
+  const handlePlace = async () => {
+    const payloadLines = Object.entries(qtyMap)
+      .map(([skuId, qty]) => ({ skuId, qty: Number(qty) }))
+      .filter((l) => l.qty > 0)
+    if (!payloadLines.length) return
+
+    setPlacing(true)
+    setErrorMsg(null)
+    try {
+      const res = await fetch('/api/orders/place', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ distributorId: selectedDist, lines: payloadLines, notes: notes || null }),
+      })
+      const j = await res.json()
+      if (!res.ok) throw new Error(j.error || 'Failed to place order')
+      setSuccess(j.order)
+      setQtyMap({})
+      setNotes('')
+      // Refresh recent orders panel
+      const hist = await fetch(`/api/orders?distributorId=${selectedDist}`).then((r) => r.json())
+      setSavedOrders(hist.orders || [])
+    } catch (e) {
+      setErrorMsg(e.message)
+    } finally {
+      setPlacing(false)
+    }
+  }
+
+  const highDemandCount = lines.filter((l) => l.isHighDemand).length
+  const schemeCount = lines.filter((l) => l.scheme).length
+  const shortCount = lines.filter((l) => l.dealerGap > 0).length
 
   return (
     <div>
       <SectionHeader
-        title="Distributor Orders"
-        description={`Live orders from ${topDistCount} distributors across ${data.regions?.length || 0} regions`}
+        title="Distributor Order Portal"
+        description={
+          selectedDistObj
+            ? `Placing order for ${selectedDistObj.name} · ${selectedDistObj.region} · Tier ${selectedDistObj.tier}`
+            : 'Select a distributor to begin'
+        }
         actions={
           <>
-            <Button variant="outline" size="sm" className="gap-2"><Filter className="h-4 w-4" />Filter</Button>
-            <Button size="sm" className="gap-2"><Plus className="h-4 w-4" />New Order</Button>
+            <Select value={selectedDist} onValueChange={setSelectedDist}>
+              <SelectTrigger className="w-[240px]"><SelectValue placeholder="Choose distributor" /></SelectTrigger>
+              <SelectContent>
+                {(data.distributors || []).map((d) => (
+                  <SelectItem key={d.id} value={d.id}>
+                    {d.name} · {d.region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="sm" className="gap-2" onClick={clearAll} disabled={!nonZeroLines}>
+              <RotateCw className="h-4 w-4" />Clear
+            </Button>
+            <Button size="sm" className="gap-2" onClick={applySuggestions} disabled={!lines.length}>
+              <Sparkles className="h-4 w-4" />Apply Suggestions
+            </Button>
           </>
         }
       />
 
+      {/* ---------- KPI STRIP ---------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <KpiCard title="Open Orders" value={fmtNum(openOrders)} subtitle={`of ${orders.length} last 4w`} icon={Package} accent="blue" />
-        <KpiCard title="Order Value" value={fmtMoney(totalValue)} subtitle={`${data.meta?.weekCount || 0}w window`} icon={DollarSign} accent="green" />
-        <KpiCard title="Distributors" value={`${topDistCount}`} subtitle="active network" icon={TrendingUp} accent="purple" />
-        <KpiCard title="Regions" value={`${data.regions?.length || 0}`} subtitle="coverage" icon={Factory} accent="amber" />
+        <KpiCard
+          title="Lines Selected"
+          value={`${nonZeroLines} / ${lines.length}`}
+          subtitle={`${fmtNum(totalQty)} units`}
+          icon={Package}
+          accent="blue"
+        />
+        <KpiCard
+          title="Order Value"
+          value={fmtMoney(totalValue)}
+          subtitle={nonZeroLines ? `${nonZeroLines} SKU${nonZeroLines !== 1 ? 's' : ''}` : 'no lines yet'}
+          icon={DollarSign}
+          accent="green"
+        />
+        <KpiCard
+          title="Tentative Delivery"
+          value={suggestion?.tentativeDeliveryDate || '—'}
+          subtitle={suggestion ? `${suggestion.leadTimeDays}-day lead time` : 'awaiting data'}
+          icon={Truck}
+          accent="purple"
+        />
+        <KpiCard
+          title="Cashflow Impact"
+          value={cf.label}
+          subtitle={cf.hint}
+          icon={Wallet}
+          accent={cf.accent}
+        />
       </div>
 
+      {/* ---------- Cashflow meter ---------- */}
       <Card className="border-slate-200/70 shadow-sm mb-6">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">Revenue by Distributor</CardTitle>
-          <CardDescription>Total revenue contribution · 6 month window</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={(byDistRows || []).map((r) => {
-              const d = (data.distributors || []).find((x) => x.id === r.key)
-              return { name: d?.name || r.key, value: +(r.revenue / 1_000_000).toFixed(2), region: d?.region }
-            })}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-              <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} formatter={(v) => [`$${v}M`, 'Revenue']} />
-              <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 text-sm">
+              <Wallet className="h-4 w-4 text-slate-500" />
+              <span className="font-medium text-slate-700">Order Cashflow Meter</span>
+              <Badge variant="secondary" className={
+                cashflow === 'high' ? 'bg-rose-50 text-rose-700 hover:bg-rose-50' :
+                cashflow === 'medium' ? 'bg-amber-50 text-amber-700 hover:bg-amber-50' :
+                'bg-emerald-50 text-emerald-700 hover:bg-emerald-50'
+              }>{cf.label}</Badge>
+            </div>
+            <div className="text-xs text-slate-500">
+              Thresholds: Low &lt; $25K · Moderate $25K–75K · High ≥ $75K
+            </div>
+          </div>
+          <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className={`h-full ${cf.barColor} transition-all duration-500`}
+              style={{ width: `${Math.max(4, Math.min(100, (totalValue / 100000) * 100))}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-slate-400 mt-1.5">
+            <span>$0</span>
+            <span>$25K</span>
+            <span>$50K</span>
+            <span>$75K</span>
+            <span>$100K+</span>
+          </div>
         </CardContent>
       </Card>
 
-      <Card className="border-slate-200/70 shadow-sm">
+      {/* ---------- SUCCESS / ERROR BANNERS ---------- */}
+      {success && (
+        <Card className="border-emerald-200 bg-emerald-50/60 shadow-sm mb-6">
+          <CardContent className="p-4 flex items-start gap-3">
+            <div className="h-9 w-9 rounded-lg bg-emerald-500 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-emerald-900">Order placed successfully</p>
+              <p className="text-sm text-emerald-800 mt-0.5">
+                <span className="font-mono">{success.orderId}</span> · {success.totalQty} units ·{' '}
+                {fmtMoney(success.totalValue)} · ETA {success.tentativeDeliveryDate} ·{' '}
+                <span className="capitalize">{success.cashflow}</span> cashflow
+              </p>
+            </div>
+            <button onClick={() => setSuccess(null)} className="text-emerald-700 hover:text-emerald-900">
+              <X className="h-4 w-4" />
+            </button>
+          </CardContent>
+        </Card>
+      )}
+      {errorMsg && (
+        <Card className="border-rose-200 bg-rose-50/60 shadow-sm mb-6">
+          <CardContent className="p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
+            <div className="flex-1 text-sm text-rose-800">{errorMsg}</div>
+            <button onClick={() => setErrorMsg(null)} className="text-rose-700 hover:text-rose-900">
+              <X className="h-4 w-4" />
+            </button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ---------- EDITABLE SKU TABLE ---------- */}
+      <Card className="border-slate-200/70 shadow-sm mb-6">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <CardTitle className="text-base">Recent Orders</CardTitle>
-              <CardDescription>Showing {orders.length} of {orders.length} orders (last 4 weeks)</CardDescription>
+              <CardTitle className="text-base">SKU Order Sheet</CardTitle>
+              <CardDescription>
+                {lines.length} SKUs ·{' '}
+                <span className="text-amber-700 font-medium">{highDemandCount} high-demand</span> ·{' '}
+                <span className="text-violet-700 font-medium">{schemeCount} with scheme</span> ·{' '}
+                <span className="text-rose-700 font-medium">{shortCount} dealer-short</span>
+              </CardDescription>
             </div>
-            <div className="relative w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input placeholder="Search order or distributor..." className="pl-9" />
+            <div className="flex items-center gap-4 text-xs text-slate-500">
+              <span className="flex items-center gap-1.5"><Flame className="h-3.5 w-3.5 text-amber-500" />High demand</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-violet-400" />Scheme</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-rose-400" />Dealer gap</span>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <DataTable
-            columns={[
-              { key: 'id', label: 'Order ID' },
-              { key: 'dist', label: 'Distributor' },
-              { key: 'region', label: 'Region' },
-              { key: 'items', label: 'Items' },
-              { key: 'value', label: 'Value' },
-              { key: 'eta', label: 'Week' },
-              { key: 'status', label: 'Status' },
-            ]}
-            rows={orders.slice(0, 10)}
-            renderCell={(col, row) => {
-              if (col.key === 'status') {
-                return <Badge variant="secondary" className={`${statusMap[row.status]} hover:${statusMap[row.status]}`}>{row.status}</Badge>
-              }
-              if (col.key === 'id') return <span className="font-mono text-xs text-slate-700">{row.id}</span>
-              if (col.key === 'value') return <span className="font-medium">{row.value}</span>
-              if (col.key === 'items') return fmtNum(row.items)
-              return row[col.key]
-            }}
-          />
+          {loading ? (
+            <div className="py-12 text-center text-sm text-slate-500">Loading order sheet…</div>
+          ) : !lines.length ? (
+            <div className="py-12 text-center text-sm text-slate-500">No suggestion available yet.</div>
+          ) : (
+            <div className="rounded-lg border border-slate-200 overflow-hidden bg-white">
+              <Table>
+                <TableHeader className="bg-slate-50">
+                  <TableRow className="hover:bg-slate-50">
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">SKU</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Product</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Current Stock</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Secondary (wk avg)</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Suggested</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Dist→Dealer Gap</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Scheme</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Order Qty</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Line Value</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {lines.map((l) => {
+                    const qtyRaw = qtyMap[l.skuId] ?? ''
+                    const qtyNum = Number(qtyRaw || 0)
+                    const eff = l.price * (1 - (l.scheme?.discountPct || 0) / 100)
+                    const lineVal = qtyNum * eff
+                    const rowCls = l.isHighDemand
+                      ? 'bg-amber-50/50 hover:bg-amber-50'
+                      : qtyNum > 0
+                      ? 'bg-blue-50/30 hover:bg-blue-50/60'
+                      : 'hover:bg-slate-50/60'
+                    return (
+                      <TableRow key={l.skuId} className={rowCls}>
+                        <TableCell className="py-3">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono text-xs text-slate-700">{l.skuId}</span>
+                            {l.isHighDemand && (
+                              <Flame className="h-3.5 w-3.5 text-amber-500" />
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <div className="font-medium text-slate-900 text-sm">{l.skuName}</div>
+                          <div className="text-xs text-slate-500">{l.category} · ${l.price.toFixed(2)}/unit</div>
+                        </TableCell>
+                        <TableCell className="py-3 text-right text-sm tabular-nums">
+                          {fmtNum(l.currentStock)}
+                        </TableCell>
+                        <TableCell className="py-3 text-right text-sm tabular-nums">
+                          {fmtNum(l.weeklySecondary)}
+                        </TableCell>
+                        <TableCell className="py-3 text-right">
+                          {l.suggestedQty > 0 ? (
+                            <button
+                              onClick={() => setQty(l.skuId, String(l.suggestedQty))}
+                              className="text-blue-600 hover:text-blue-800 hover:underline font-medium text-sm tabular-nums"
+                              title="Click to accept suggested quantity"
+                            >
+                              {fmtNum(l.suggestedQty)}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-slate-400">covered</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="py-3">
+                          {l.dealerGap > 0 ? (
+                            <Badge variant="secondary" className="bg-rose-50 text-rose-700 hover:bg-rose-50">
+                              -{fmtNum(l.dealerGap)} short
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
+                              +{fmtNum(Math.abs(l.dealerGap))} cover
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="py-3">
+                          {l.scheme ? (
+                            <Badge variant="secondary" className="bg-violet-50 text-violet-700 hover:bg-violet-50">
+                              {l.scheme.label}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-slate-400">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="py-3 text-right">
+                          <Input
+                            type="number"
+                            min="0"
+                            value={qtyRaw}
+                            onChange={(e) => setQty(l.skuId, e.target.value)}
+                            placeholder="0"
+                            className="h-8 w-24 text-right tabular-nums ml-auto"
+                          />
+                        </TableCell>
+                        <TableCell className="py-3 text-right tabular-nums">
+                          {qtyNum > 0 ? (
+                            <div className="text-sm font-medium text-slate-900">{fmtMoney(lineVal)}</div>
+                          ) : (
+                            <span className="text-xs text-slate-400">—</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ---------- PLACE ORDER FOOTER ---------- */}
+      <Card className="border-blue-200 bg-gradient-to-br from-blue-50/60 to-violet-50/40 shadow-sm mb-6">
+        <CardContent className="p-5">
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-end">
+            <div className="flex-1">
+              <label className="text-xs font-medium text-slate-500 uppercase tracking-wide block mb-1.5">
+                Notes to supplier (optional)
+              </label>
+              <Input
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="e.g. please prioritize Beverages for weekend promo"
+                className="bg-white"
+              />
+            </div>
+            <div className="flex items-end gap-6">
+              <div>
+                <div className="text-xs text-slate-500">Total Order</div>
+                <div className="text-xl font-semibold text-slate-900 tabular-nums">
+                  {fmtNum(totalQty)} <span className="text-sm font-normal text-slate-500">units</span>
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-slate-500">Order Value</div>
+                <div className="text-2xl font-bold text-slate-900 tabular-nums">{fmtMoney(totalValue)}</div>
+              </div>
+              <div>
+                <div className="text-xs text-slate-500">ETA</div>
+                <div className="text-sm font-semibold text-slate-900">
+                  {suggestion?.tentativeDeliveryDate || '—'}
+                </div>
+              </div>
+              <Button
+                size="lg"
+                onClick={handlePlace}
+                disabled={!nonZeroLines || placing}
+                className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Send className="h-4 w-4" />
+                {placing ? 'Placing…' : 'Place Order'}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ---------- RECENT ORDERS FOR DISTRIBUTOR ---------- */}
+      <Card className="border-slate-200/70 shadow-sm">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <CardTitle className="text-base">Recent Orders · {selectedDistObj?.name || '—'}</CardTitle>
+              <CardDescription>
+                {savedOrders.length
+                  ? `${savedOrders.length} saved order${savedOrders.length !== 1 ? 's' : ''} (most recent first)`
+                  : 'No orders placed yet for this distributor'}
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {savedOrders.length ? (
+            <DataTable
+              columns={[
+                { key: 'orderId', label: 'Order ID' },
+                { key: 'createdAt', label: 'Placed' },
+                { key: 'totalQty', label: 'Units' },
+                { key: 'totalValue', label: 'Value' },
+                { key: 'cashflow', label: 'Cashflow' },
+                { key: 'tentativeDeliveryDate', label: 'ETA' },
+                { key: 'status', label: 'Status' },
+              ]}
+              rows={savedOrders.slice(0, 10)}
+              renderCell={(col, row) => {
+                if (col.key === 'orderId') return <span className="font-mono text-xs text-slate-700">{row.orderId}</span>
+                if (col.key === 'createdAt') return <span className="text-xs text-slate-600">{new Date(row.createdAt).toLocaleString()}</span>
+                if (col.key === 'totalQty') return <span className="tabular-nums">{fmtNum(row.totalQty)}</span>
+                if (col.key === 'totalValue') return <span className="font-medium tabular-nums">{fmtMoney(row.totalValue)}</span>
+                if (col.key === 'cashflow') {
+                  const m = { low: 'bg-emerald-50 text-emerald-700', medium: 'bg-amber-50 text-amber-700', high: 'bg-rose-50 text-rose-700' }
+                  return <Badge variant="secondary" className={`${m[row.cashflow] || 'bg-slate-100 text-slate-700'} hover:${m[row.cashflow]} capitalize`}>{row.cashflow}</Badge>
+                }
+                if (col.key === 'status') {
+                  return <Badge variant="secondary" className="bg-amber-50 text-amber-700 hover:bg-amber-50">{row.status}</Badge>
+                }
+                return row[col.key]
+              }}
+            />
+          ) : (
+            <div className="py-8 text-center text-sm text-slate-500">
+              Place your first order above to see it here.
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
