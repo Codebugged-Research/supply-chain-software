@@ -6,11 +6,19 @@ import {
   aggregate,
   kpis,
   suggestOrders,
+  buildDispatchVisibilityRows,
+  buildDealerActivationGap,
   REGIONS,
   DISTRIBUTORS,
   SKUS,
 } from '@/lib/dummyData'
 import { getOrdersCollection } from '@/lib/mongodb'
+import {
+  fmtInrMoney,
+  fmtInrInteger,
+  CASHFLOW_ORDER_LOW_INR,
+  CASHFLOW_ORDER_HIGH_INR,
+} from '@/lib/utils'
 
 function q(request) {
   const url = new URL(request.url)
@@ -67,7 +75,7 @@ function enrichLines(distributorId, inputLines) {
     })
   }
   totalValue = Math.round(totalValue * 100) / 100
-  const cashflow = totalValue >= 75000 ? 'high' : totalValue >= 25000 ? 'medium' : 'low'
+  const cashflow = totalValue >= CASHFLOW_ORDER_HIGH_INR ? 'high' : totalValue >= CASHFLOW_ORDER_LOW_INR ? 'medium' : 'low'
   return { lines: enriched, totalQty, totalValue, cashflow }
 }
 
@@ -142,7 +150,7 @@ function buildInsights() {
         skuName: sku.name,
         category: sku.category,
         title: `${sku.name} overstocked`,
-        message: `${coverWeeks.toFixed(1)} wks cover (target 3-5) · ${Math.round(currentStock).toLocaleString()} units · $${tied.toLocaleString()} tied capital`,
+        message: `${coverWeeks.toFixed(1)} wks cover (target 3-5) · ${Math.round(currentStock).toLocaleString('en-IN')} units · ${fmtInrInteger(tied)} tied capital`,
         metric: Math.round(coverWeeks * 10) / 10,
         metricLabel: 'weeks cover',
         action: 'Reduce next production run 20-30%; route surplus to higher-demand regions.',
@@ -286,7 +294,7 @@ function buildInsights() {
         severity: gap > 40 ? 'medium' : 'low',
         skuId: null,
         title: `${d?.name || bottom.distributorId} underperforming`,
-        message: `$${Math.round(bottom.revenue).toLocaleString()} revenue · ${gap.toFixed(0)}% behind top distributor`,
+        message: `${fmtInrInteger(bottom.revenue)} revenue · ${gap.toFixed(0)}% behind top distributor`,
         metric: Math.round(gap),
         metricLabel: '% gap to leader',
         action: 'Audit secondary sales coverage, visit frequency, and scheme uptake with this partner.',
@@ -373,7 +381,7 @@ function buildCards(intent, insights, dataset) {
     if (rows.length) cards.push({
       kind: 'risk_table', title: 'Top Overstock Alerts', accent: 'amber',
       columns: ['SKU', 'Cover (wks)', 'Tied Capital', 'Severity', 'Recommended Action'],
-      rows: rows.map((i) => ({ sku: i.skuName, cover: i.metric.toFixed(1), capital: '$' + (i.tiedCapital || 0).toLocaleString(), severity: i.severity, action: i.action })),
+      rows: rows.map((i) => ({ sku: i.skuName, cover: i.metric.toFixed(1), capital: fmtInrInteger(i.tiedCapital || 0), severity: i.severity, action: i.action })),
     })
   } else if (intent === 'production_increase') {
     const rows = byType('demand_exceeds_supply', 5)
@@ -412,7 +420,7 @@ function buildCards(intent, insights, dataset) {
       columns: ['Rank', 'Distributor', 'Region', 'Revenue', 'Demand (units)'],
       rows: ranked.map((r, idx) => {
         const d = (dataset.distributors || []).find((x) => x.id === r.key) || {}
-        return { rank: idx + 1, distributor: d.name || r.key, region: d.region, revenue: '$' + Math.round(r.revenue).toLocaleString(), demand: Math.round(r.demand || 0).toLocaleString() }
+        return { rank: idx + 1, distributor: d.name || r.key, region: d.region, revenue: fmtInrInteger(r.revenue), demand: Math.round(r.demand || 0).toLocaleString('en-IN') }
       }),
     })
     const underperform = byType('distributor_underperform', 2)
@@ -434,7 +442,7 @@ function buildCards(intent, insights, dataset) {
       rows: byReg.sort((a, b) => b.revenue - a.revenue).map((r) => {
         const reg = (dataset.regions || []).find((x) => x.id === r.key)
         const total = byReg.reduce((s, x) => s + x.revenue, 0)
-        return { region: reg?.name || r.key, revenue: '$' + Math.round(r.revenue).toLocaleString(), demand: Math.round(r.demand || 0).toLocaleString(), share: ((r.revenue / total) * 100).toFixed(1) + '%' }
+        return { region: reg?.name || r.key, revenue: fmtInrInteger(r.revenue), demand: Math.round(r.demand || 0).toLocaleString('en-IN'), share: ((r.revenue / total) * 100).toFixed(1) + '%' }
       }),
     })
   } else {
@@ -454,7 +462,7 @@ function buildCards(intent, insights, dataset) {
 // -----------------------------------------------------------------------
 const SUGGESTED_QUESTIONS = [
   { category: 'Stock Risk',    q: 'Which SKU has the highest stock risk right now?' },
-  { category: 'Stock Risk',    q: 'Show me all overstock alerts with tied capital over $50K.' },
+  { category: 'Stock Risk',    q: 'Show me all overstock alerts with tied capital over ₹40 lakh.' },
   { category: 'Production',    q: 'What should we increase production for?' },
   { category: 'Production',    q: 'Which SKUs have demand outpacing supply?' },
   { category: 'Distribution',  q: 'Rank distributors by revenue and highlight laggards.' },
@@ -498,9 +506,9 @@ function buildChatSystemPrompt(dataset, insights, intent) {
 
   const ctx = []
   ctx.push(`## Network KPIs (last ${dataset.meta?.weekCount || 26} weeks)
-- Total Revenue: $${(k.totalRevenue / 1e6).toFixed(2)}M
-- Gross Margin: $${(k.totalGm / 1e6).toFixed(2)}M (${k.gmPct.toFixed(1)}%)
-- Total Demand: ${Math.round(k.totalDemand).toLocaleString()} units (${(k.demandWoW * 100).toFixed(1)}% WoW)`)
+- Total Revenue: ${fmtInrMoney(k.totalRevenue)}
+- Gross Margin: ${fmtInrMoney(k.totalGm)} (${k.gmPct.toFixed(1)}%)
+- Total Demand: ${Math.round(k.totalDemand).toLocaleString('en-IN')} units (${(k.demandWoW || 0).toFixed(1)}% WoW)`)
 
   const topInsights = insights.slice(0, 10)
   if (topInsights.length) {
@@ -521,7 +529,7 @@ function buildChatSystemPrompt(dataset, insights, intent) {
     ctx.push(`## Distributor Revenue Ranking\n` +
       ranked.map((r, idx) => {
         const d = (dataset.distributors || []).find((x) => x.id === r.key) || {}
-        return `${idx + 1}. ${d.name || r.key} (${d.region}) — $${Math.round(r.revenue).toLocaleString()}`
+        return `${idx + 1}. ${d.name || r.key} (${d.region}) — ${fmtInrInteger(r.revenue)}`
       }).join('\n'))
   }
 
@@ -545,7 +553,7 @@ function buildChatSystemPrompt(dataset, insights, intent) {
 - Use bullets or very short paragraphs. Hard limit ~160 words.
 - Cite SKU names, numbers, and actions **only from the context below**. If the data doesn't contain what's asked, say so plainly.
 - Prioritize the 2–3 highest-impact actions when recommending.
-- Use $ for money; never introduce currencies that aren't shown.
+- Use ₹ (INR) for money; never introduce other currencies.
 - No emojis. No filler like "I hope this helps".
 - If the question is off-topic, briefly say you focus on S&OP insights.
 
@@ -598,6 +606,20 @@ export async function GET(request, { params }) {
     return NextResponse.json(suggestion)
   }
 
+  // GET /api/orders/dealer-activation-gap?distributorId=DST-001
+  // SKU-wise "stocked dealers vs active dealers last week" opportunity view.
+  if (path === 'orders/dealer-activation-gap') {
+    const { distributorId } = q(request)
+    if (!distributorId) {
+      return NextResponse.json({ error: 'distributorId required' }, { status: 400 })
+    }
+    const payload = buildDealerActivationGap(distributorId)
+    if (!payload.distributor) {
+      return NextResponse.json({ error: `Unknown distributor ${distributorId}` }, { status: 404 })
+    }
+    return NextResponse.json(payload)
+  }
+
   // -------- CHATBOT endpoints (GET) -----------------------------------
   if (path === 'chat/insights') {
     const insights = buildInsights()
@@ -632,6 +654,91 @@ export async function GET(request, { params }) {
         { window: 'Day 25–28', state: 'restricted', label: 'Max ±10% per-line change',  maxDeltaPct: 10 },
         { window: 'Day 29+',   state: 'locked',     label: 'Locked · approval required', maxDeltaPct: 0 },
       ],
+    })
+  }
+
+  // GET /api/orders/dispatch-visibility?distributorId=DST-001
+  // Rolls up placed order lines per SKU, simulates dispatch vs order (rule + stable jitter).
+  // When no saved orders exist, uses suggested pipeline qtys so the module is never empty.
+  if (path === 'orders/dispatch-visibility') {
+    const query = q(request)
+    const { distributorId } = query
+    if (!distributorId) {
+      return NextResponse.json({ error: 'distributorId required' }, { status: 400 })
+    }
+    const distributor = DISTRIBUTORS.find((d) => d.id === distributorId)
+    if (!distributor) {
+      return NextResponse.json({ error: `Unknown distributor ${distributorId}` }, { status: 404 })
+    }
+
+    let dataSource = 'placed_orders'
+    let orderedInputs = []
+
+    try {
+      const col = await getOrdersCollection()
+      const orders = await col
+        .find({ distributorId }, { projection: { _id: 0, status: 1, lines: 1 } })
+        .sort({ createdAt: -1 })
+        .limit(80)
+        .toArray()
+
+      const skip = new Set(['Rejected'])
+      const agg = new Map()
+      for (const o of orders) {
+        if (skip.has(o.status)) continue
+        for (const ln of o.lines || []) {
+          const qn = Math.max(0, Math.round(Number(ln.qty) || 0))
+          if (qn <= 0) continue
+          const prev = agg.get(ln.skuId) || 0
+          agg.set(ln.skuId, prev + qn)
+        }
+      }
+      orderedInputs = [...agg.entries()].map(([skuId, orderedQty]) => {
+        const sku = SKUS.find((s) => s.id === skuId)
+        return { skuId, orderedQty, skuName: sku?.name }
+      })
+    } catch {
+      orderedInputs = []
+    }
+
+    if (!orderedInputs.length) {
+      const suggestion = suggestOrders(distributorId)
+      orderedInputs = (suggestion.lines || [])
+        .filter((l) => l.suggestedQty > 0)
+        .map((l) => ({
+          skuId: l.skuId,
+          orderedQty: l.suggestedQty,
+          skuName: l.skuName,
+        }))
+      dataSource = 'suggested_pipeline'
+    }
+
+    const rows = buildDispatchVisibilityRows(distributorId, orderedInputs)
+    const totalOrdered = rows.reduce((s, r) => s + r.orderedQty, 0)
+    const totalDispatched = rows.reduce((s, r) => s + r.dispatchedQty, 0)
+    const totalGap = rows.reduce((s, r) => s + r.gap, 0)
+    const byStatus = { 'Fully fulfilled': 0, Partial: 0, Pending: 0 }
+    for (const r of rows) byStatus[r.status] = (byStatus[r.status] || 0) + 1
+
+    return NextResponse.json({
+      distributorId,
+      distributorName: distributor.name,
+      region: distributor.region,
+      tier: distributor.tier,
+      dataSource,
+      dataSourceHint:
+        dataSource === 'placed_orders'
+          ? 'Aggregated from saved distributor orders (non-rejected).'
+          : 'No placed orders yet — showing suggested pipeline quantities as a stand-in for “committed demand”.',
+      summary: {
+        skuLines: rows.length,
+        totalOrdered,
+        totalDispatched,
+        totalGap,
+        fulfilmentPct: totalOrdered ? Math.round((totalDispatched / totalOrdered) * 1000) / 10 : 0,
+        byStatus,
+      },
+      rows,
     })
   }
 

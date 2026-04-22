@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import Image from 'next/image'
 import {
   LayoutDashboard,
   TrendingUp,
   Package,
   Factory,
-  DollarSign,
+  IndianRupee,
   GitBranch,
   Bot,
   Search,
@@ -45,6 +46,7 @@ import {
   ToggleRight,
   TrendingDown,
   Megaphone,
+  BarChart3,
 } from 'lucide-react'
 import {
   Dialog,
@@ -88,6 +90,13 @@ import { Progress } from '@/components/ui/progress'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Slider } from '@/components/ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  fmtInrMoney as fmtMoney,
+  DEMO_INR_PER_USD,
+  CASHFLOW_ORDER_LOW_INR,
+  CASHFLOW_ORDER_HIGH_INR,
+  ORDER_CASHFLOW_METER_MAX_INR,
+} from '@/lib/utils'
 
 // =============== NAVIGATION CONFIG ===============
 const NAV_ITEMS = [
@@ -95,8 +104,9 @@ const NAV_ITEMS = [
   { id: 'demand', label: 'Demand Planning', icon: TrendingUp },
   { id: 'factors', label: 'Demand Factors', icon: Activity },
   { id: 'orders', label: 'Distributor Orders', icon: Package },
+  { id: 'dispatch', label: 'Order vs Dispatch', icon: BarChart3 },
   { id: 'supply', label: 'Supply Planning', icon: Factory },
-  { id: 'financial', label: 'Financial Planning', icon: DollarSign },
+  { id: 'financial', label: 'Financial Planning', icon: IndianRupee },
   { id: 'scenario', label: 'Scenario Planning', icon: GitBranch },
   { id: 'chatbot', label: 'Chatbot', icon: Bot },
 ]
@@ -161,13 +171,7 @@ function useSopData() {
 }
 
 // Format helpers
-const fmtNum = (n) => new Intl.NumberFormat('en-US').format(Math.round(n || 0))
-const fmtMoney = (n, digits = 1) => {
-  const v = n || 0
-  if (Math.abs(v) >= 1_000_000) return `$${(v / 1_000_000).toFixed(digits)}M`
-  if (Math.abs(v) >= 1_000) return `$${(v / 1_000).toFixed(digits)}K`
-  return `$${v.toFixed(2)}`
-}
+const fmtNum = (n) => new Intl.NumberFormat('en-IN').format(Math.round(n || 0))
 
 // =============== REUSABLE: KPI CARD ===============
 function KpiCard({ title, value, change, trend = 'up', subtitle, icon: Icon, accent = 'blue' }) {
@@ -265,7 +269,13 @@ function DashboardPage({ data }) {
 
   // Category mix from SKU-level aggregation
   const categoryMix = useMemo(() => {
-    const palette = { Beverages: '#3b82f6', Snacks: '#10b981', Dairy: '#f59e0b', Frozen: '#8b5cf6', 'Personal Care': '#ec4899' }
+    const palette = {
+      'Breakfast Mixes (Instant)': '#3b82f6',
+      'Ready-To-Eat (RTE) Meals': '#10b981',
+      'Spices and Masalas': '#f59e0b',
+      'Rice and Poha Items': '#8b5cf6',
+      'Pickles and Snacks': '#ec4899',
+    }
     const bySku = data.bySku || []
     const skuMap = Object.fromEntries((data.skus || []).map((s) => [s.id, s.category]))
     const totals = {}
@@ -294,16 +304,17 @@ function DashboardPage({ data }) {
         const second = wk.slice(half).reduce((a, b) => a + b.revenue, 0)
         const growth = first ? ((second - first) / first) * 100 : 0
         const status = growth > 10 ? 'Growth' : growth < -3 ? 'At Risk' : 'On Track'
-        return { sku: r.key, name: s.name, category: s.category, rev: fmtMoney(r.revenue), growth, status }
+        return { sku: r.key, name: s.name, category: s.category, revenue: r.revenue, rev: fmtMoney(r.revenue), growth, status }
       })
-      .sort((a, b) => parseFloat(b.rev.replace(/[^\d.-]/g, '')) - parseFloat(a.rev.replace(/[^\d.-]/g, '')))
+      .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5)
+      .map(({ revenue: _rev, ...row }) => row)
   }, [data.bySku, data.skus, data.weekly, data.weeks])
 
   const k = data.kpis || {}
   const alerts = [
-    { sev: 'high', title: 'Stockout risk: SKU-10842 (Midwest DC)', time: '2h ago' },
-    { sev: 'medium', title: 'Forecast variance >15% on Dairy category', time: '5h ago' },
+    { sev: 'high', title: 'Stockout risk: MTR Rava Idli Mix (Midwest DC)', time: '2h ago' },
+    { sev: 'medium', title: 'Forecast variance >15% on Spices and Masalas category', time: '5h ago' },
     { sev: 'low', title: 'New distributor onboarded: NorthStar Foods', time: '1d ago' },
     { sev: 'medium', title: 'Q3 budget reforecast submitted by finance', time: '2d ago' },
   ]
@@ -322,7 +333,7 @@ function DashboardPage({ data }) {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <KpiCard title="Total Revenue" value={fmtMoney(k.totalRevenue)} change={`${k.demandWoW >= 0 ? '+' : ''}${k.demandWoW || 0}% WoW`} trend={k.demandWoW >= 0 ? 'up' : 'down'} subtitle={`${data.meta?.weekCount || 0}w window`} icon={DollarSign} accent="green" />
+        <KpiCard title="Total Revenue" value={fmtMoney(k.totalRevenue)} change={`${k.demandWoW >= 0 ? '+' : ''}${k.demandWoW || 0}% WoW`} trend={k.demandWoW >= 0 ? 'up' : 'down'} subtitle={`${data.meta?.weekCount || 0}w window`} icon={IndianRupee} accent="green" />
         <KpiCard title="Gross Margin" value={`${k.gmPct || 0}%`} change={fmtMoney(k.totalGm)} subtitle="value" icon={TrendingUp} accent="blue" />
         <KpiCard title="Primary Sales" value={`${fmtNum((k.totalPrimary || 0) / 1000)}K`} subtitle="units shipped" icon={Package} accent="amber" />
         <KpiCard title="Tertiary Demand" value={`${fmtNum((k.totalDemand || 0) / 1000)}K`} subtitle="units sold-out" icon={Factory} accent="purple" />
@@ -334,7 +345,7 @@ function DashboardPage({ data }) {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-base">Revenue: Plan vs Actual</CardTitle>
-                <CardDescription>Weekly consensus plan tracking ($M) · live data</CardDescription>
+                <CardDescription>Weekly consensus plan tracking (₹M = million INR) · live data</CardDescription>
               </div>
               <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">On Track</Badge>
             </div>
@@ -798,6 +809,12 @@ const STATUS_STYLES = {
   Rejected:           'bg-rose-50 text-rose-700',
   Locked:             'bg-rose-50 text-rose-700',
 }
+
+const EXECUTION_STATUS_STYLES = {
+  'Fully fulfilled': 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50',
+  Partial: 'bg-amber-50 text-amber-700 hover:bg-amber-50',
+  Pending: 'bg-slate-100 text-slate-600 hover:bg-slate-100',
+}
 const LockBadge = ({ lockState, size = 'sm' }) => {
   if (!lockState) return null
   const s = LOCK_STYLES[lockState.state] || LOCK_STYLES.editable
@@ -1124,13 +1141,14 @@ function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
 // Distributor Order Portal
 //   • Pull per-distributor suggested order lines from /api/orders/suggest
 //   • Editable table with: current stock, secondary sales, suggested qty,
-//     distributor→dealer gap, scheme/promo, order qty input, line value
+//     scheme/promo, order qty input, line value (execution gaps → Order vs Dispatch page)
 //   • Highlight high-demand SKUs (amber row + flame icon)
 //   • Live KPIs: lines, order value, tentative delivery, cashflow indicator
 //   • POST /api/orders/place to persist, then refresh recent-orders list
 function OrdersPage({ data }) {
   const [selectedDist, setSelectedDist] = useState('')
   const [suggestion, setSuggestion] = useState(null)
+  const [activationGap, setActivationGap] = useState(null)
   const [qtyMap, setQtyMap] = useState({}) // { skuId: qty }
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
@@ -1193,11 +1211,22 @@ function OrdersPage({ data }) {
       .then((j) => !cancelled && setSavedOrders(j.orders || []))
       .catch(() => !cancelled && setSavedOrders([]))
 
-    Promise.all([loadSuggestion, loadHistory]).finally(() => !cancelled && setLoading(false))
+    const loadActivationGap = fetch(`/api/orders/dealer-activation-gap?distributorId=${selectedDist}`)
+      .then((r) => r.json())
+      .then((j) => !cancelled && setActivationGap(j))
+      .catch(() => !cancelled && setActivationGap(null))
+
+    Promise.all([loadSuggestion, loadHistory, loadActivationGap]).finally(() => !cancelled && setLoading(false))
     return () => { cancelled = true }
   }, [selectedDist, demoDay])
 
   const lines = suggestion?.lines || []
+  const activationRows = activationGap?.rows || []
+  const activationSummary = activationGap?.summary
+  const topActivationRows = useMemo(
+    () => [...activationRows].sort((a, b) => b.gapDealers - a.gapDealers).slice(0, 8),
+    [activationRows],
+  )
   const selectedDistObj = data.distributors?.find((d) => d.id === selectedDist)
 
   // Derived totals (react to input edits instantly)
@@ -1217,7 +1246,7 @@ function OrdersPage({ data }) {
   }, [lines, qtyMap])
 
   // Cashflow classification mirrors the backend thresholds (see route.js)
-  const cashflow = totalValue >= 75000 ? 'high' : totalValue >= 25000 ? 'medium' : 'low'
+  const cashflow = totalValue >= CASHFLOW_ORDER_HIGH_INR ? 'high' : totalValue >= CASHFLOW_ORDER_LOW_INR ? 'medium' : 'low'
   const cashflowMeta = {
     low: { label: 'Low burn', accent: 'green', barColor: 'bg-emerald-500', pct: 28, hint: 'Comfortable working capital' },
     medium: { label: 'Moderate', accent: 'amber', barColor: 'bg-amber-500', pct: 62, hint: 'Watch receivables timing' },
@@ -1275,7 +1304,7 @@ function OrdersPage({ data }) {
 
   const highDemandCount = lines.filter((l) => l.isHighDemand).length
   const schemeCount = lines.filter((l) => l.scheme).length
-  const shortCount = lines.filter((l) => l.dealerGap > 0).length
+  const suggestCount = lines.filter((l) => l.suggestedQty > 0).length
 
   return (
     <div>
@@ -1340,7 +1369,7 @@ function OrdersPage({ data }) {
           title="Order Value"
           value={fmtMoney(totalValue)}
           subtitle={nonZeroLines ? `${nonZeroLines} SKU${nonZeroLines !== 1 ? 's' : ''}` : 'no lines yet'}
-          icon={DollarSign}
+          icon={IndianRupee}
           accent="green"
         />
         <KpiCard
@@ -1359,6 +1388,72 @@ function OrdersPage({ data }) {
         />
       </div>
 
+      {/* ---------- DEALER ACTIVATION GAP (Stocked vs Active) ---------- */}
+      <Card className="border-slate-200/70 shadow-sm mb-6">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <CardTitle className="text-base">Dealer Activation Opportunity (Last Week)</CardTitle>
+              <CardDescription>
+                SKU-wise view of stocked dealers vs active dealers. Gap identifies activation opportunity in the distributor network.
+              </CardDescription>
+            </div>
+            {activationSummary && (
+              <div className="flex items-center gap-2 text-xs flex-wrap">
+                <Badge variant="secondary" className="bg-slate-100 text-slate-700 hover:bg-slate-100">
+                  Registered {fmtNum(activationSummary.registeredDealers)} dealers
+                </Badge>
+                <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+                  Active rate {activationSummary.activationPct.toFixed(1)}%
+                </Badge>
+                <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
+                  Impact {fmtMoney(activationSummary.potentialSecondaryValue)} potential/wk
+                </Badge>
+              </div>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="py-8 text-center text-sm text-slate-500">Loading activation opportunity…</div>
+          ) : !topActivationRows.length ? (
+            <div className="py-8 text-center text-sm text-slate-500">Activation view not available yet.</div>
+          ) : (
+            <div className="rounded-lg border border-slate-200 overflow-hidden bg-white">
+              <Table>
+                <TableHeader className="bg-slate-50">
+                  <TableRow className="hover:bg-slate-50">
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">SKU</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Product</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Stocked</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Active (last wk)</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Gap</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Activation %</TableHead>
+                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Potential Impact / wk</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {topActivationRows.map((r) => (
+                    <TableRow key={r.skuId} className="hover:bg-slate-50/60">
+                      <TableCell className="py-3"><span className="font-mono text-xs text-slate-700">{r.skuId}</span></TableCell>
+                      <TableCell className="py-3">
+                        <div className="font-medium text-slate-900 text-sm">{r.skuName}</div>
+                        <div className="text-xs text-slate-500">{r.category}</div>
+                      </TableCell>
+                      <TableCell className="py-3 text-right tabular-nums text-sm">{fmtNum(r.stockedDealers)}</TableCell>
+                      <TableCell className="py-3 text-right tabular-nums text-sm">{fmtNum(r.activeDealers)}</TableCell>
+                      <TableCell className="py-3 text-right tabular-nums text-sm font-semibold text-amber-700">{fmtNum(r.gapDealers)}</TableCell>
+                      <TableCell className="py-3 text-right tabular-nums text-sm">{r.activationPct.toFixed(1)}%</TableCell>
+                      <TableCell className="py-3 text-right tabular-nums text-sm font-medium text-emerald-700">{fmtMoney(r.potentialSecondaryValue)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* ---------- Cashflow meter ---------- */}
       <Card className="border-slate-200/70 shadow-sm mb-6">
         <CardContent className="p-4">
@@ -1373,21 +1468,21 @@ function OrdersPage({ data }) {
               }>{cf.label}</Badge>
             </div>
             <div className="text-xs text-slate-500">
-              Thresholds: Low &lt; $25K · Moderate $25K–75K · High ≥ $75K
+              Thresholds: Low &lt; ₹20.8L · Moderate ₹20.8L–62.2L · High ≥ ₹62.2L
             </div>
           </div>
           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
             <div
               className={`h-full ${cf.barColor} transition-all duration-500`}
-              style={{ width: `${Math.max(4, Math.min(100, (totalValue / 100000) * 100))}%` }}
+              style={{ width: `${Math.max(4, Math.min(100, (totalValue / ORDER_CASHFLOW_METER_MAX_INR) * 100))}%` }}
             />
           </div>
           <div className="flex justify-between text-xs text-slate-400 mt-1.5">
-            <span>$0</span>
-            <span>$25K</span>
-            <span>$50K</span>
-            <span>$75K</span>
-            <span>$100K+</span>
+            <span>₹0</span>
+            <span>₹20.8L</span>
+            <span>₹41.5L</span>
+            <span>₹62.2L</span>
+            <span>₹83L+</span>
           </div>
         </CardContent>
       </Card>
@@ -1440,13 +1535,12 @@ function OrdersPage({ data }) {
                 {lines.length} SKUs ·{' '}
                 <span className="text-amber-700 font-medium">{highDemandCount} high-demand</span> ·{' '}
                 <span className="text-violet-700 font-medium">{schemeCount} with scheme</span> ·{' '}
-                <span className="text-rose-700 font-medium">{shortCount} dealer-short</span>
+                <span className="text-blue-700 font-medium">{suggestCount} with suggested reorder</span>
               </CardDescription>
             </div>
             <div className="flex items-center gap-4 text-xs text-slate-500">
               <span className="flex items-center gap-1.5"><Flame className="h-3.5 w-3.5 text-amber-500" />High demand</span>
               <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-violet-400" />Scheme</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-rose-400" />Dealer gap</span>
             </div>
           </div>
         </CardHeader>
@@ -1465,7 +1559,6 @@ function OrdersPage({ data }) {
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Current Stock</TableHead>
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Secondary (wk avg)</TableHead>
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Suggested</TableHead>
-                    <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Dist→Dealer Gap</TableHead>
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide">Scheme</TableHead>
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Order Qty</TableHead>
                     <TableHead className="text-slate-600 font-medium text-xs uppercase tracking-wide text-right">Line Value</TableHead>
@@ -1494,7 +1587,7 @@ function OrdersPage({ data }) {
                         </TableCell>
                         <TableCell className="py-3">
                           <div className="font-medium text-slate-900 text-sm">{l.skuName}</div>
-                          <div className="text-xs text-slate-500">{l.category} · ${l.price.toFixed(2)}/unit</div>
+                          <div className="text-xs text-slate-500">{l.category} · ₹{l.price.toFixed(2)}/unit</div>
                         </TableCell>
                         <TableCell className="py-3 text-right text-sm tabular-nums">
                           {fmtNum(l.currentStock)}
@@ -1513,17 +1606,6 @@ function OrdersPage({ data }) {
                             </button>
                           ) : (
                             <span className="text-xs text-slate-400">covered</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="py-3">
-                          {l.dealerGap > 0 ? (
-                            <Badge variant="secondary" className="bg-rose-50 text-rose-700 hover:bg-rose-50">
-                              -{fmtNum(l.dealerGap)} short
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
-                              +{fmtNum(Math.abs(l.dealerGap))} cover
-                            </Badge>
                           )}
                         </TableCell>
                         <TableCell className="py-3">
@@ -1573,7 +1655,7 @@ function OrdersPage({ data }) {
               <Input
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. please prioritize Beverages for weekend promo"
+                placeholder="e.g. please prioritize Breakfast Mixes (Instant) for weekend promo"
                 className="bg-white"
               />
             </div>
@@ -1730,6 +1812,239 @@ function OrdersPage({ data }) {
   )
 }
 
+// Order vs Dispatch — execution gap visibility (table + grouped bar chart)
+function OrderDispatchPage({ data }) {
+  const [selectedDist, setSelectedDist] = useState('')
+  const [payload, setPayload] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(null)
+
+  useEffect(() => {
+    if (!selectedDist && data.distributors?.length) {
+      setSelectedDist(data.distributors[0].id)
+    }
+  }, [data.distributors, selectedDist])
+
+  const load = useCallback(async () => {
+    if (!selectedDist) return
+    setLoading(true)
+    setErrorMsg(null)
+    try {
+      const r = await fetch(`/api/orders/dispatch-visibility?distributorId=${selectedDist}`)
+      const j = await r.json()
+      if (!r.ok) throw new Error(j.error || 'Failed to load')
+      setPayload(j)
+    } catch (e) {
+      setErrorMsg(e.message)
+      setPayload(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [selectedDist])
+
+  useEffect(() => {
+    load()
+  }, [load])
+
+  const rows = payload?.rows || []
+  const summary = payload?.summary
+  const selectedDistObj = data.distributors?.find((d) => d.id === selectedDist)
+
+  const chartData = useMemo(() => {
+    const sorted = [...rows].sort((a, b) => b.orderedQty - a.orderedQty)
+    const top = sorted.slice(0, 14)
+    return top.map((r) => ({
+      label: r.skuId.replace(/^SKU-/, ''),
+      ordered: r.orderedQty,
+      dispatched: r.dispatchedQty,
+    }))
+  }, [rows])
+
+  return (
+    <div>
+      <SectionHeader
+        title="Order vs Dispatch Visibility"
+        description={
+          selectedDistObj
+            ? `${selectedDistObj.name} · ${selectedDistObj.region} · Tier ${selectedDistObj.tier} — ordered vs simulated dispatch to surface supply execution gaps.`
+            : 'Select a distributor to view execution gaps.'
+        }
+        actions={
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select value={selectedDist} onValueChange={setSelectedDist}>
+              <SelectTrigger className="w-[260px]"><SelectValue placeholder="Distributor" /></SelectTrigger>
+              <SelectContent>
+                {(data.distributors || []).map((d) => (
+                  <SelectItem key={d.id} value={d.id}>
+                    {d.name} · {d.region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={load} disabled={loading || !selectedDist}>
+              <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+        }
+      />
+
+      {payload?.dataSourceHint && (
+        <Card className="border-slate-200/80 bg-slate-50/80 shadow-sm mb-6">
+          <CardContent className="p-3 flex flex-wrap items-start gap-2 text-sm text-slate-600">
+            <Activity className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
+            <Badge variant="secondary" className="shrink-0 bg-white border border-slate-200">
+              {payload.dataSource === 'placed_orders' ? 'Placed orders' : 'Suggested pipeline'}
+            </Badge>
+            <p className="min-w-0 flex-1">{payload.dataSourceHint}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {errorMsg && (
+        <Card className="border-rose-200 bg-rose-50/60 shadow-sm mb-6">
+          <CardContent className="p-4 flex items-start gap-3 text-sm text-rose-800">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <div className="flex-1">{errorMsg}</div>
+            <button type="button" onClick={() => setErrorMsg(null)} className="text-rose-700"><X className="h-4 w-4" /></button>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <KpiCard
+          title="Ordered (units)"
+          value={fmtNum(summary?.totalOrdered ?? 0)}
+          subtitle={`${summary?.skuLines ?? 0} SKU lines`}
+          icon={Package}
+          accent="blue"
+        />
+        <KpiCard
+          title="Dispatched (sim.)"
+          value={fmtNum(summary?.totalDispatched ?? 0)}
+          subtitle={summary?.totalOrdered ? `${summary.fulfilmentPct}% of ordered` : '—'}
+          icon={Truck}
+          accent="green"
+        />
+        <KpiCard
+          title="Execution gap"
+          value={fmtNum(summary?.totalGap ?? 0)}
+          subtitle="Ordered − dispatched"
+          icon={TrendingDown}
+          accent="rose"
+        />
+        <KpiCard
+          title="Line status mix"
+          value={`${summary?.byStatus?.['Fully fulfilled'] ?? 0} / ${summary?.byStatus?.Partial ?? 0} / ${summary?.byStatus?.Pending ?? 0}`}
+          subtitle="Fulfilled · Partial · Pending"
+          icon={Target}
+          accent="purple"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 mb-6">
+        <Card className="border-slate-200/70 shadow-sm xl:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-blue-600" />
+              Order vs dispatch
+            </CardTitle>
+            <CardDescription>
+              Top {chartData.length} SKUs by ordered quantity — grouped bars (demo dispatch uses supply adequacy rules).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="h-[320px]">
+            {loading ? (
+              <div className="h-full flex items-center justify-center text-sm text-slate-500">Loading chart…</div>
+            ) : !chartData.length ? (
+              <div className="h-full flex items-center justify-center text-sm text-slate-500">No rows to chart.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-200" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#64748b' }} interval={0} angle={-32} textAnchor="end" height={68} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748b' }} width={48} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }}
+                    formatter={(v) => [fmtNum(v), '']}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="ordered" name="Ordered" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                  <Bar dataKey="dispatched" name="Dispatched (sim.)" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/70 shadow-sm xl:col-span-3">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">SKU execution table</CardTitle>
+            <CardDescription>
+              Gap highlights where supply execution has not yet matched the order book (simulated dispatch for demo).
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="py-16 text-center text-sm text-slate-500">Loading…</div>
+            ) : !rows.length ? (
+              <div className="py-16 text-center text-sm text-slate-500">No data for this distributor.</div>
+            ) : (
+              <div className="rounded-lg border border-slate-200 overflow-hidden bg-white max-h-[360px] overflow-y-auto">
+                <Table>
+                  <TableHeader className="bg-slate-50 sticky top-0 z-[1]">
+                    <TableRow className="hover:bg-slate-50">
+                      <TableHead className="text-xs uppercase tracking-wide text-slate-600">SKU</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-slate-600">Product</TableHead>
+                      <TableHead className="text-right text-xs uppercase tracking-wide text-slate-600">Ordered</TableHead>
+                      <TableHead className="text-right text-xs uppercase tracking-wide text-slate-600">Dispatched</TableHead>
+                      <TableHead className="text-right text-xs uppercase tracking-wide text-slate-600">Gap</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-slate-600">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rows.map((r) => (
+                      <TableRow key={r.skuId} className={r.gap > 0 ? 'bg-amber-50/40 hover:bg-amber-50/60' : 'hover:bg-slate-50/60'}>
+                        <TableCell className="font-mono text-xs text-slate-700 py-2.5">{r.skuId}</TableCell>
+                        <TableCell className="text-sm text-slate-800 py-2.5 max-w-[200px]">
+                          <div className="truncate" title={r.skuName}>{r.skuName}</div>
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums text-sm py-2.5">{fmtNum(r.orderedQty)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-sm py-2.5">{fmtNum(r.dispatchedQty)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-sm font-medium py-2.5 text-rose-700">
+                          {r.gap > 0 ? fmtNum(r.gap) : '—'}
+                        </TableCell>
+                        <TableCell className="py-2.5">
+                          <Badge
+                            variant="secondary"
+                            className={EXECUTION_STATUS_STYLES[r.status] || 'bg-slate-100 text-slate-700'}
+                          >
+                            {r.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-blue-100 bg-gradient-to-br from-blue-50/40 to-slate-50/80 shadow-sm">
+        <CardContent className="p-4 text-sm text-slate-600">
+          <p className="font-medium text-slate-800 mb-1">How dispatch is simulated</p>
+          <p>
+            Fulfilment rate blends last-week <span className="font-medium text-slate-700">primary ÷ secondary</span> (factory→distributor vs distributor→retail)
+            as a supply-adequacy signal, a small deterministic variance per SKU, and tier service (A/B/C). This is a POC stand-in for ASN / shipment confirmations.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 // =============== PAGE: SUPPLY PLANNING ===============
 function SupplyPage({ data }) {
   // Plant capacity stays configured; in a real app this would also come from ERP.
@@ -1881,65 +2196,304 @@ function SupplyPage({ data }) {
 
 // =============== PAGE: FINANCIAL PLANNING ===============
 function FinancialPage({ data }) {
-  // P&L by week (grouped into "months" of 4 weeks)
-  const pnl = useMemo(() => {
-    const byWeek = data.byWeek || []
-    const bucket = []
-    // Aggregate every 4 weeks into one bar
-    for (let i = 0; i < byWeek.length; i += 4) {
-      const chunk = byWeek.slice(i, i + 4)
-      if (!chunk.length) continue
-      const revenue = chunk.reduce((s, r) => s + r.revenue, 0) / 1_000_000
-      const gm = chunk.reduce((s, r) => s + r.gm, 0) / 1_000_000
-      const cogs = revenue - gm
-      bucket.push({
-        m: chunk[0].key.replace('2025-', ''),
-        revenue: +revenue.toFixed(2),
-        cogs: +cogs.toFixed(2),
-        gm: +gm.toFixed(2),
-      })
-    }
-    return bucket
-  }, [data.byWeek])
+  const [demandUplift, setDemandUplift] = useState([0])
+  const [priceShift, setPriceShift] = useState([0])
+  const [costShift, setCostShift] = useState([0])
+  const [schemePerUnit, setSchemePerUnit] = useState([8])
+  const [logisticsPerUnit, setLogisticsPerUnit] = useState([3])
 
-  // Budget vs Actual by category
-  const byCat = useMemo(() => {
-    const skuMap = Object.fromEntries((data.skus || []).map((s) => [s.id, s.category]))
-    const totals = {}
-    for (const r of data.bySku || []) {
-      const cat = skuMap[r.key] || 'Other'
-      totals[cat] = (totals[cat] || 0) + r.revenue
+  const businessCategoryMap = {
+    'Breakfast Mixes (Instant)': 'FP',
+    'Ready-To-Eat (RTE) Meals': 'SP',
+    'Spices and Masalas': 'Accessories',
+    'Rice and Poha Items': 'Moto-FP',
+    'Pickles and Snacks': 'Accessories',
+  }
+  const channelByDistributor = {
+    'DST-001': 'national',
+    'DST-002': 'distributor',
+    'DST-003': 'pilot',
+    'DST-004': 'national',
+    'DST-005': 'distributor',
+  }
+  const segmentByDistributor = {
+    'DST-001': 'direct dealer',
+    'DST-002': 'distributor',
+    'DST-003': 'modern trade',
+    'DST-004': 'e-commerce',
+    'DST-005': 'distributor',
+  }
+  const collectionProfiles = {
+    'direct dealer': { terms: '7 days', current: 0.86, dpd0_30: 0.10, dpd30_60: 0.03, over60: 0.01 },
+    distributor: { terms: '30 days', current: 0.63, dpd0_30: 0.22, dpd30_60: 0.10, over60: 0.05 },
+    'modern trade': { terms: '45 days', current: 0.54, dpd0_30: 0.24, dpd30_60: 0.14, over60: 0.08 },
+    'e-commerce': { terms: '15 days', current: 0.76, dpd0_30: 0.17, dpd30_60: 0.05, over60: 0.02 },
+  }
+
+  const stableUnit01 = useCallback((seed) => {
+    let h = 2166136261 >>> 0
+    for (let i = 0; i < seed.length; i++) {
+      h ^= seed.charCodeAt(i)
+      h = Math.imul(h, 16777619) >>> 0
     }
-    // Pretend budget = 95% of actual with a deterministic skew per category
-    const skew = { Beverages: 1.04, Snacks: 1.03, Dairy: 0.94, Frozen: 1.03, 'Personal Care': 1.00 }
-    return Object.entries(totals).map(([cat, actual]) => {
-      const attain = skew[cat] || 1
-      const budget = actual / attain
-      const variance = actual - budget
+    return (h % 10_000) / 10_000
+  }, [])
+
+  const financialRows = useMemo(() => {
+    const dFactor = 1 + demandUplift[0] / 100
+    const pFactor = 1 + priceShift[0] / 100
+    const cFactor = 1 + costShift[0] / 100
+    const schemeCostPerUnit = Math.max(0, Number(schemePerUnit[0]) || 0)
+    const logisticsCostPerUnit = Math.max(0, Number(logisticsPerUnit[0]) || 0)
+
+    return (data.weekly || []).map((r) => {
+      const forecastUnits = Math.max(0, Math.round((r.tertiary || 0) * dFactor))
+      const sellingPrice = (r.price || 0) * pFactor
+      const unitCost = (r.cost || 0) * cFactor
+      const revenue = forecastUnits * sellingPrice
+      const cost = forecastUnits * unitCost
+      const schemeCost = forecastUnits * schemeCostPerUnit
+      const logisticsCost = forecastUnits * logisticsCostPerUnit
+      const grossProfit = revenue - cost
+      const contribution = revenue - cost - schemeCost - logisticsCost
+      const netRevenue = revenue - schemeCost - logisticsCost
+
       return {
-        cat,
-        budget: fmtMoney(budget),
-        actual: fmtMoney(actual),
-        var: `${variance >= 0 ? '+' : '-'}${fmtMoney(Math.abs(variance))}`,
-        attain: Math.round(attain * 100),
+        ...r,
+        forecastUnits,
+        sellingPrice,
+        unitCost,
+        categoryGroup: businessCategoryMap[r.category] || 'Accessories',
+        channel: channelByDistributor[r.distributorId] || 'distributor',
+        cashSegment: segmentByDistributor[r.distributorId] || 'distributor',
+        revenue,
+        cost,
+        grossProfit,
+        contribution,
+        netRevenue,
+        schemeCost,
+        logisticsCost,
       }
     })
-  }, [data.bySku, data.skus])
+  }, [data.weekly, demandUplift, priceShift, costShift, schemePerUnit, logisticsPerUnit])
 
-  const k = data.kpis || {}
+  const baselineTotals = useMemo(() => {
+    const rows = data.weekly || []
+    let revenue = 0
+    let cost = 0
+    for (const r of rows) {
+      const units = r.tertiary || 0
+      revenue += units * (r.price || 0)
+      cost += units * (r.cost || 0)
+    }
+    return { revenue, profit: revenue - cost }
+  }, [data.weekly])
+
+  const totals = useMemo(() => {
+    return financialRows.reduce(
+      (acc, r) => {
+        acc.revenue += r.revenue
+        acc.cost += r.cost
+        acc.profit += r.grossProfit
+        acc.contribution += r.contribution
+        acc.netRevenue += r.netRevenue
+        acc.forecastUnits += r.forecastUnits
+        return acc
+      },
+      { revenue: 0, cost: 0, profit: 0, contribution: 0, netRevenue: 0, forecastUnits: 0 },
+    )
+  }, [financialRows])
+
+  const marginPct = totals.revenue > 0 ? (totals.profit / totals.revenue) * 100 : 0
+  const contributionPct = totals.revenue > 0 ? (totals.contribution / totals.revenue) * 100 : 0
+  const revenueDeltaPct = baselineTotals.revenue > 0 ? ((totals.revenue - baselineTotals.revenue) / baselineTotals.revenue) * 100 : 0
+  const profitDeltaPct = baselineTotals.profit !== 0 ? ((totals.profit - baselineTotals.profit) / Math.abs(baselineTotals.profit)) * 100 : 0
+
+  const revenueTrend = useMemo(() => {
+    const weekMap = new Map()
+    for (const w of data.weeks || []) {
+      weekMap.set(w.weekId, { w: w.label, revenue: 0, profit: 0, netRevenue: 0 })
+    }
+    for (const r of financialRows) {
+      if (!weekMap.has(r.weekId)) continue
+      const row = weekMap.get(r.weekId)
+      row.revenue += r.revenue
+      row.profit += r.grossProfit
+      row.netRevenue += r.netRevenue
+    }
+    return (data.weeks || []).map((w) => {
+      const row = weekMap.get(w.weekId) || { w: w.label, revenue: 0, profit: 0, netRevenue: 0 }
+      return {
+        w: row.w,
+        revenue: +(row.revenue / 1_000_000).toFixed(2),
+        profit: +(row.profit / 1_000_000).toFixed(2),
+        netRevenue: +(row.netRevenue / 1_000_000).toFixed(2),
+      }
+    })
+  }, [financialRows, data.weeks])
+
+  const profitBySku = useMemo(() => {
+    const skuNames = Object.fromEntries((data.skus || []).map((s) => [s.id, s.name]))
+    const map = new Map()
+    for (const r of financialRows) {
+      if (!map.has(r.skuId)) map.set(r.skuId, { skuId: r.skuId, sku: skuNames[r.skuId] || r.skuId, profit: 0, revenue: 0 })
+      const e = map.get(r.skuId)
+      e.profit += r.grossProfit
+      e.revenue += r.revenue
+    }
+    return [...map.values()]
+      .sort((a, b) => b.profit - a.profit)
+      .slice(0, 10)
+      .map((r) => ({
+        sku: r.sku.length > 26 ? `${r.sku.slice(0, 26)}...` : r.sku,
+        profit: +(r.profit / 1_000_000).toFixed(2),
+        revenue: +(r.revenue / 1_000_000).toFixed(2),
+      }))
+  }, [financialRows, data.skus])
+
+  const categoryRollup = useMemo(() => {
+    const map = new Map()
+    for (const r of financialRows) {
+      if (!map.has(r.categoryGroup)) map.set(r.categoryGroup, { category: r.categoryGroup, revenue: 0, netRevenue: 0, contribution: 0 })
+      const e = map.get(r.categoryGroup)
+      e.revenue += r.revenue
+      e.netRevenue += r.netRevenue
+      e.contribution += r.contribution
+    }
+    return [...map.values()]
+      .sort((a, b) => b.revenue - a.revenue)
+      .map((r) => ({
+        ...r,
+        marginPct: r.revenue > 0 ? (r.contribution / r.revenue) * 100 : 0,
+      }))
+  }, [financialRows])
+
+  const channelRollup = useMemo(() => {
+    const map = new Map()
+    for (const r of financialRows) {
+      if (!map.has(r.channel)) map.set(r.channel, { channel: r.channel, revenue: 0, forecastUnits: 0, contribution: 0 })
+      const e = map.get(r.channel)
+      e.revenue += r.revenue
+      e.forecastUnits += r.forecastUnits
+      e.contribution += r.contribution
+    }
+    return [...map.values()].sort((a, b) => b.revenue - a.revenue)
+  }, [financialRows])
+
+  const cashflow = useMemo(() => {
+    const weekIds = (data.weeks || []).slice(-13).map((w) => w.weekId)
+    const weekLabels = Object.fromEntries((data.weeks || []).map((w) => [w.weekId, w.label]))
+    const weekSet = new Set(weekIds)
+    const trendMap = new Map()
+    const segmentMap = new Map()
+
+    for (const wk of weekIds) {
+      trendMap.set(wk, { w: weekLabels[wk] || wk, due: 0, overdue: 0, expected: 0, dispatched: 0 })
+    }
+
+    for (const r of financialRows) {
+      if (!weekSet.has(r.weekId)) continue
+      const profile = collectionProfiles[r.cashSegment] || collectionProfiles.distributor
+      const dispatched = r.revenue
+      const due = dispatched * (profile.current * 0.98 + profile.dpd0_30 * 0.88)
+      const overdue = dispatched * (profile.dpd30_60 * 0.55 + profile.over60 * 0.25)
+      const expected = due + overdue
+
+      const w = trendMap.get(r.weekId)
+      w.due += due
+      w.overdue += overdue
+      w.expected += expected
+      w.dispatched += dispatched
+
+      if (!segmentMap.has(r.cashSegment)) {
+        segmentMap.set(r.cashSegment, {
+          segment: r.cashSegment,
+          terms: profile.terms,
+          dispatched: 0,
+          due: 0,
+          overdue: 0,
+          expected: 0,
+        })
+      }
+      const s = segmentMap.get(r.cashSegment)
+      s.dispatched += dispatched
+      s.due += due
+      s.overdue += overdue
+      s.expected += expected
+    }
+
+    return {
+      trend: weekIds.map((wk) => {
+        const row = trendMap.get(wk) || { w: weekLabels[wk] || wk, due: 0, overdue: 0, expected: 0, dispatched: 0 }
+        return {
+          w: row.w,
+          due: +(row.due / 1_000_000).toFixed(2),
+          overdue: +(row.overdue / 1_000_000).toFixed(2),
+          expected: +(row.expected / 1_000_000).toFixed(2),
+        }
+      }),
+      bySegment: [...segmentMap.values()].sort((a, b) => b.expected - a.expected),
+    }
+  }, [financialRows, data.weeks])
+
+  const budgetVsActualVsForecast = useMemo(() => {
+    const bySkuWeek = new Map()
+    for (const r of financialRows) {
+      const key = `${r.skuId}|${r.weekId}`
+      if (!bySkuWeek.has(key)) {
+        bySkuWeek.set(key, {
+          skuId: r.skuId,
+          sku: r.skuName,
+          week: r.weekLabel,
+          weekId: r.weekId,
+          budget: 0,
+          actual: 0,
+          forecast: 0,
+        })
+      }
+      const row = bySkuWeek.get(key)
+      const actualRevenue = (r.tertiary || 0) * (r.price || 0)
+      const budgetFactor = 0.92 + stableUnit01(`${r.skuId}|${r.weekId}|budget-v1`) * 0.16
+      row.budget += actualRevenue * budgetFactor
+      row.actual += actualRevenue
+      row.forecast += r.revenue
+    }
+
+    return [...bySkuWeek.values()]
+      .map((r) => {
+        const fvB = r.forecast - r.budget
+        const avF = r.actual - r.forecast
+        const fvBPct = r.budget ? (fvB / r.budget) * 100 : 0
+        const avFPct = r.forecast ? (avF / r.forecast) * 100 : 0
+        const breach = Math.abs(fvBPct) >= 8 || Math.abs(avFPct) >= 8
+        return {
+          ...r,
+          fvB,
+          avF,
+          fvBPct,
+          avFPct,
+          severity: breach ? (Math.abs(fvBPct) > 15 || Math.abs(avFPct) > 15 ? 'High' : 'Medium') : 'Low',
+        }
+      })
+      .sort((a, b) => (Math.abs(b.fvB) + Math.abs(b.avF)) - (Math.abs(a.fvB) + Math.abs(a.avF)))
+      .slice(0, 12)
+  }, [financialRows, stableUnit01])
 
   return (
     <div>
       <SectionHeader
         title="Financial Planning"
-        description="Rolling financial forecast aligned with the S&OP cycle"
+        description="Link S&OP forecasts with revenue, profitability, and rolling collections"
         actions={
           <>
-            <Select defaultValue="fy25">
-              <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+            <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+              <RotateCw className="h-3 w-3 mr-1" />Realtime preview before save
+            </Badge>
+            <Select defaultValue="rolling13w">
+              <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="fy25">FY 2025</SelectItem>
-                <SelectItem value="fy24">FY 2024</SelectItem>
+                <SelectItem value="rolling13w">Rolling 13 Weeks</SelectItem>
+                <SelectItem value="rolling26w">Rolling 26 Weeks</SelectItem>
               </SelectContent>
             </Select>
             <Button size="sm" className="gap-2"><Download className="h-4 w-4" />Export</Button>
@@ -1947,61 +2501,252 @@ function FinancialPage({ data }) {
         }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <KpiCard title="Revenue (6mo)" value={fmtMoney(k.totalRevenue)} subtitle="sell-in basis" icon={DollarSign} accent="green" />
-        <KpiCard title="Gross Margin %" value={`${k.gmPct || 0}%`} subtitle={fmtMoney(k.totalGm)} icon={TrendingUp} accent="blue" />
-        <KpiCard title="Avg Weekly Rev" value={fmtMoney((k.totalRevenue || 0) / (data.meta?.weekCount || 1))} icon={TrendingUp} accent="purple" />
-        <KpiCard title="SKUs Tracked" value={`${data.meta?.skuCount || 0}`} subtitle={`${data.meta?.rowCount || 0} fact rows`} icon={Package} accent="amber" />
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-6">
+        <Card className="border-slate-200/70 shadow-sm lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Planning Inputs</CardTitle>
+            <CardDescription>Edit assumptions and preview business impact instantly</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Forecast uplift</span><span>{demandUplift[0] > 0 ? '+' : ''}{demandUplift[0]}%</span></div>
+              <Slider value={demandUplift} onValueChange={setDemandUplift} min={-20} max={35} step={1} />
+            </div>
+            <div>
+              <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Selling price shift</span><span>{priceShift[0] > 0 ? '+' : ''}{priceShift[0]}%</span></div>
+              <Slider value={priceShift} onValueChange={setPriceShift} min={-15} max={20} step={1} />
+            </div>
+            <div>
+              <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Unit cost shift</span><span>{costShift[0] > 0 ? '+' : ''}{costShift[0]}%</span></div>
+              <Slider value={costShift} onValueChange={setCostShift} min={-10} max={25} step={1} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Scheme / unit</span><span>₹{schemePerUnit[0]}</span></div>
+                <Slider value={schemePerUnit} onValueChange={setSchemePerUnit} min={0} max={40} step={1} />
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Logistics / unit</span><span>₹{logisticsPerUnit[0]}</span></div>
+                <Slider value={logisticsPerUnit} onValueChange={setLogisticsPerUnit} min={0} max={20} step={1} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <KpiCard
+          title="Revenue"
+          value={fmtMoney(totals.revenue)}
+          change={`${revenueDeltaPct >= 0 ? '+' : ''}${revenueDeltaPct.toFixed(1)}%`}
+          trend={revenueDeltaPct >= 0 ? 'up' : 'down'}
+          subtitle="Revenue = Forecast × Price"
+          icon={IndianRupee}
+          accent="green"
+        />
+        <KpiCard
+          title="Profit"
+          value={fmtMoney(totals.profit)}
+          change={`${profitDeltaPct >= 0 ? '+' : ''}${profitDeltaPct.toFixed(1)}%`}
+          trend={profitDeltaPct >= 0 ? 'up' : 'down'}
+          subtitle="Profit = Revenue − Cost"
+          icon={TrendingUp}
+          accent="blue"
+        />
+        <KpiCard
+          title="Margin %"
+          value={`${marginPct.toFixed(1)}%`}
+          subtitle={`Contribution ${contributionPct.toFixed(1)}% after scheme/logistics`}
+          icon={Target}
+          accent="purple"
+        />
       </div>
 
-      <Card className="border-slate-200/70 shadow-sm mb-6">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">P&L Summary ($M)</CardTitle>
-          <CardDescription>Revenue · COGS · Gross Margin by 4-week bucket</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={pnl}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-              <XAxis dataKey="m" tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="cogs" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="gm" fill="#10b981" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Revenue Trend (₹M)</CardTitle>
+            <CardDescription>Weekly rolling revenue and net revenue from the same demand signal</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={290}>
+              <LineChart data={revenueTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <XAxis dataKey="w" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
+                <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2.5} dot={false} name="Revenue" />
+                <Line type="monotone" dataKey="netRevenue" stroke="#10b981" strokeWidth={2.5} dot={false} name="Net Revenue" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Profit by SKU (Top 10 · ₹M)</CardTitle>
+            <CardDescription>SKU-level profitability under current planning inputs</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={290}>
+              <BarChart data={profitBySku} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                <XAxis type="number" tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis dataKey="sku" type="category" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} width={170} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
+                <Bar dataKey="profit" fill="#8b5cf6" radius={[0, 6, 6, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Category Rollup</CardTitle>
+            <CardDescription>FP / SP / Accessories / Moto-FP</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              columns={[
+                { key: 'category', label: 'Category' },
+                { key: 'revenue', label: 'Gross Revenue' },
+                { key: 'netRevenue', label: 'Net Revenue' },
+                { key: 'marginPct', label: 'Contribution %' },
+              ]}
+              rows={categoryRollup}
+              renderCell={(col, row) => {
+                if (col.key === 'revenue' || col.key === 'netRevenue') return fmtMoney(row[col.key])
+                if (col.key === 'marginPct') return <span className="font-medium">{row.marginPct.toFixed(1)}%</span>
+                return row[col.key]
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Channel Rollup</CardTitle>
+            <CardDescription>National / Pilot / Distributor</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              columns={[
+                { key: 'channel', label: 'Channel' },
+                { key: 'forecastUnits', label: 'Forecast Units' },
+                { key: 'revenue', label: 'Revenue' },
+                { key: 'contribution', label: 'Contribution' },
+              ]}
+              rows={channelRollup}
+              renderCell={(col, row) => {
+                if (col.key === 'forecastUnits') return fmtNum(row.forecastUnits)
+                if (col.key === 'revenue' || col.key === 'contribution') return fmtMoney(row[col.key])
+                return row[col.key]
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Contribution Check</CardTitle>
+            <CardDescription>Gross to net bridge with scheme and logistics</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="flex justify-between"><span className="text-slate-500">Gross Revenue</span><span className="font-medium">{fmtMoney(totals.revenue)}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Scheme Cost</span><span className="font-medium text-rose-600">-{fmtMoney(Math.max(0, totals.revenue - totals.netRevenue - financialRows.reduce((s, r) => s + r.logisticsCost, 0)))}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Logistics Cost</span><span className="font-medium text-rose-600">-{fmtMoney(financialRows.reduce((s, r) => s + r.logisticsCost, 0))}</span></div>
+            <div className="h-px bg-slate-200" />
+            <div className="flex justify-between"><span className="text-slate-700 font-medium">Net Revenue</span><span className="font-semibold">{fmtMoney(totals.netRevenue)}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">Cost</span><span className="font-medium text-rose-600">-{fmtMoney(totals.cost)}</span></div>
+            <div className="h-px bg-slate-200" />
+            <div className="flex justify-between"><span className="text-slate-700 font-medium">Contribution</span><span className={`font-semibold ${totals.contribution >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{fmtMoney(totals.contribution)}</span></div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">13-Week Cash Inflow Projection (₹M)</CardTitle>
+            <CardDescription>Expected collections split into due vs overdue</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={290}>
+              <AreaChart data={cashflow.trend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <XAxis dataKey="w" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
+                <YAxis tick={{ fill: '#64748b', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Area type="monotone" dataKey="due" stackId="1" stroke="#3b82f6" fill="#93c5fd" name="Due Collections" />
+                <Area type="monotone" dataKey="overdue" stackId="1" stroke="#f97316" fill="#fdba74" name="Overdue Collections" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/70 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Channel-wise Cash Flow View</CardTitle>
+            <CardDescription>Distributor portal demand converted to expected collections</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              columns={[
+                { key: 'segment', label: 'Segment' },
+                { key: 'terms', label: 'Terms' },
+                { key: 'due', label: 'Due' },
+                { key: 'overdue', label: 'Overdue' },
+                { key: 'expected', label: 'Expected Collections' },
+              ]}
+              rows={cashflow.bySegment}
+              renderCell={(col, row) => {
+                if (col.key === 'due' || col.key === 'overdue' || col.key === 'expected') return fmtMoney(row[col.key])
+                return row[col.key]
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       <Card className="border-slate-200/70 shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Budget vs Actual by Category</CardTitle>
+          <CardTitle className="text-base">Budget vs Actual vs Forecast (SKU × Week)</CardTitle>
+          <CardDescription>Variance flags for forecast vs budget and actuals vs forecast</CardDescription>
         </CardHeader>
         <CardContent>
           <DataTable
             columns={[
-              { key: 'cat', label: 'Category' },
+              { key: 'sku', label: 'SKU' },
+              { key: 'week', label: 'Week' },
               { key: 'budget', label: 'Budget' },
+              { key: 'forecast', label: 'Forecast' },
               { key: 'actual', label: 'Actual' },
-              { key: 'var', label: 'Variance' },
-              { key: 'attain', label: 'Attainment' },
+              { key: 'fvB', label: 'Forecast vs Budget' },
+              { key: 'avF', label: 'Actual vs Forecast' },
+              { key: 'severity', label: 'Flag' },
             ]}
-            rows={byCat}
+            rows={budgetVsActualVsForecast}
             renderCell={(col, row) => {
-              if (col.key === 'var') {
-                const pos = row.var.startsWith('+')
-                const neg = row.var.startsWith('-')
-                return <span className={pos ? 'text-emerald-600 font-medium' : neg ? 'text-rose-600 font-medium' : 'text-slate-500'}>{row.var}</span>
-              }
-              if (col.key === 'attain') {
+              if (col.key === 'budget' || col.key === 'forecast' || col.key === 'actual') return fmtMoney(row[col.key])
+              if (col.key === 'fvB' || col.key === 'avF') {
+                const value = row[col.key]
+                const pct = col.key === 'fvB' ? row.fvBPct : row.avFPct
+                const pos = value >= 0
                 return (
-                  <div className="flex items-center gap-2">
-                    <Progress value={Math.min(row.attain, 100)} className="h-1.5 w-20" />
-                    <span className="text-xs text-slate-600 font-medium">{row.attain}%</span>
-                  </div>
+                  <span className={pos ? 'text-emerald-600 font-medium' : 'text-rose-600 font-medium'}>
+                    {pos ? '+' : '-'}{fmtMoney(Math.abs(value))} ({pos ? '+' : '-'}{Math.abs(pct).toFixed(1)}%)
+                  </span>
                 )
+              }
+              if (col.key === 'severity') {
+                const map = {
+                  High: 'bg-rose-50 text-rose-700',
+                  Medium: 'bg-amber-50 text-amber-700',
+                  Low: 'bg-emerald-50 text-emerald-700',
+                }
+                return <Badge variant="secondary" className={`${map[row.severity]} hover:${map[row.severity]}`}>{row.severity}</Badge>
               }
               return row[col.key]
             }}
@@ -2019,8 +2764,8 @@ function ScenarioPage({ data }) {
   const [capacity, setCapacity] = useState([0])
 
   // Use 6-month revenue as the quarter baseline (2 quarters worth)
-  const totalRev = (data.kpis?.totalRevenue || 66_000_000) / 1_000_000  // in $M across 6 months
-  const totalGm = (data.kpis?.totalGm || 27_000_000) / 1_000_000
+  const totalRev = (data.kpis?.totalRevenue || 66_000_000 * DEMO_INR_PER_USD) / 1_000_000  // million INR across 6 months
+  const totalGm = (data.kpis?.totalGm || 27_000_000 * DEMO_INR_PER_USD) / 1_000_000
   const quarterlyBaseline = totalRev / 2   // one quarter = 3 months
   const quarterlyGmBase = totalGm / 2
 
@@ -2092,7 +2837,7 @@ function ScenarioPage({ data }) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-base">Scenario vs Baseline</CardTitle>
-              <CardDescription>Revenue projection by quarter ($M)</CardDescription>
+              <CardDescription>Revenue projection by quarter (₹M)</CardDescription>
             </div>
             <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
               <Sparkles className="h-3 w-3 mr-1" />Live simulation
@@ -2130,10 +2875,10 @@ function ScenarioPage({ data }) {
               { key: 'status', label: 'Status' },
             ]}
             rows={[
-              { name: 'Aggressive Growth Q4', owner: 'S. Chen', rev: '+$18.2M', gm: '+$4.1M', updated: '2d ago', status: 'Active' },
-              { name: 'Supplier Cost Spike', owner: 'M. Patel', rev: '-$2.4M', gm: '-$8.6M', updated: '5d ago', status: 'Draft' },
-              { name: 'New Line Launch Q3', owner: 'R. Alvarez', rev: '+$9.1M', gm: '+$2.8M', updated: '1w ago', status: 'Approved' },
-              { name: 'Recession Downside', owner: 'J. Kim', rev: '-$14.8M', gm: '-$5.2M', updated: '2w ago', status: 'Archived' },
+              { name: 'Aggressive Growth Q4', owner: 'S. Chen', rev: `+${fmtMoney(18.2 * 1_000_000 * DEMO_INR_PER_USD)}`, gm: `+${fmtMoney(4.1 * 1_000_000 * DEMO_INR_PER_USD)}`, updated: '2d ago', status: 'Active' },
+              { name: 'Supplier Cost Spike', owner: 'M. Patel', rev: `-${fmtMoney(2.4 * 1_000_000 * DEMO_INR_PER_USD)}`, gm: `-${fmtMoney(8.6 * 1_000_000 * DEMO_INR_PER_USD)}`, updated: '5d ago', status: 'Draft' },
+              { name: 'New Line Launch Q3', owner: 'R. Alvarez', rev: `+${fmtMoney(9.1 * 1_000_000 * DEMO_INR_PER_USD)}`, gm: `+${fmtMoney(2.8 * 1_000_000 * DEMO_INR_PER_USD)}`, updated: '1w ago', status: 'Approved' },
+              { name: 'Recession Downside', owner: 'J. Kim', rev: `-${fmtMoney(14.8 * 1_000_000 * DEMO_INR_PER_USD)}`, gm: `-${fmtMoney(5.2 * 1_000_000 * DEMO_INR_PER_USD)}`, updated: '2w ago', status: 'Archived' },
             ]}
             renderCell={(col, row) => {
               if (col.key === 'status') {
@@ -2160,9 +2905,9 @@ function ScenarioPage({ data }) {
 function DemandFactorsPage({ data }) {
   // Featured SKUs for dropdown selection
   const featuredSkus = [
-    { id: 'SKU-30220', name: 'Greek Yogurt Multipack 4x', category: 'Dairy', plc: 'Growth', baseDemand: 3500 },
-    { id: 'SKU-10842', name: 'Sparkling Water 500ml', category: 'Beverages', plc: 'Mature', baseDemand: 8200 },
-    { id: 'SKU-30118', name: 'Vanilla Ice Cream 1L', category: 'Frozen', plc: 'Decline', baseDemand: 3600 },
+    { id: 'SKU-30220', name: 'MTR Sambar Powder', category: 'Spices and Masalas', plc: 'Growth', baseDemand: 3500 },
+    { id: 'SKU-10842', name: 'MTR Rava Idli Mix (Signature product)', category: 'Breakfast Mixes (Instant)', plc: 'Mature', baseDemand: 8200 },
+    { id: 'SKU-40118', name: 'MTR Ready-to-Eat Vegetable Pulao', category: 'Rice and Poha Items', plc: 'Decline', baseDemand: 3600 },
   ]
 
   const [selectedSku, setSelectedSku] = useState(featuredSkus[0].id)
@@ -2185,10 +2930,11 @@ function DemandFactorsPage({ data }) {
 
   // Seasonality patterns by category (12 months)
   const seasonalityPatterns = {
-    'Dairy': [0.95, 0.92, 0.98, 1.02, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 0.98, 1.05], // Slight summer peak
-    'Beverages': [0.75, 0.80, 0.90, 1.05, 1.25, 1.40, 1.45, 1.40, 1.20, 1.00, 0.85, 0.80], // Strong summer peak
-    'Frozen': [1.10, 1.15, 1.05, 0.95, 0.85, 0.80, 0.75, 0.78, 0.90, 1.00, 1.15, 1.25], // Winter peak
-    'Snacks': [0.98, 0.95, 0.97, 1.00, 1.02, 1.00, 0.98, 0.97, 1.00, 1.05, 1.10, 1.20], // Holiday bump
+    'Spices and Masalas': [0.95, 0.92, 0.98, 1.02, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 0.98, 1.05],
+    'Breakfast Mixes (Instant)': [0.75, 0.80, 0.90, 1.05, 1.25, 1.40, 1.45, 1.40, 1.20, 1.00, 0.85, 0.80],
+    'Rice and Poha Items': [1.10, 1.15, 1.05, 0.95, 0.85, 0.80, 0.75, 0.78, 0.90, 1.00, 1.15, 1.25],
+    'Ready-To-Eat (RTE) Meals': [0.98, 0.95, 0.97, 1.00, 1.02, 1.00, 0.98, 0.97, 1.00, 1.05, 1.10, 1.20],
+    'Pickles and Snacks': [1.00, 1.00, 1.00, 1.02, 1.02, 1.00, 0.98, 0.98, 1.00, 1.02, 1.05, 1.08],
   }
 
   // Promotion schedule (weeks with active promotions)
@@ -2197,9 +2943,27 @@ function DemandFactorsPage({ data }) {
 
   // Regional multipliers
   const regionMultipliers = {
-    'North': { 'Dairy': 1.1, 'Beverages': 0.9, 'Frozen': 1.2, 'Snacks': 1.0 },
-    'South': { 'Dairy': 0.9, 'Beverages': 1.3, 'Frozen': 0.8, 'Snacks': 1.1 },
-    'West': { 'Dairy': 1.0, 'Beverages': 1.1, 'Frozen': 1.0, 'Snacks': 0.95 },
+    'North': {
+      'Spices and Masalas': 1.1,
+      'Breakfast Mixes (Instant)': 0.9,
+      'Rice and Poha Items': 1.2,
+      'Ready-To-Eat (RTE) Meals': 1.0,
+      'Pickles and Snacks': 1.0,
+    },
+    'South': {
+      'Spices and Masalas': 0.9,
+      'Breakfast Mixes (Instant)': 1.3,
+      'Rice and Poha Items': 0.8,
+      'Ready-To-Eat (RTE) Meals': 1.1,
+      'Pickles and Snacks': 1.05,
+    },
+    'West': {
+      'Spices and Masalas': 1.0,
+      'Breakfast Mixes (Instant)': 1.1,
+      'Rice and Poha Items': 1.0,
+      'Ready-To-Eat (RTE) Meals': 0.95,
+      'Pickles and Snacks': 0.98,
+    },
   }
 
   // Generate 26 weeks of demand data with factors
@@ -2923,7 +3687,7 @@ function ChatbotPage({ data }) {
     <div className="h-full flex flex-col">
       <SectionHeader
         title="S&OP AI Assistant"
-        description="Ask natural-language questions. Answers are grounded in live data — no hallucinations."
+        description="Ask natural-language questions. Answers are on the basis live data."
         actions={
           <>
             <Badge variant="secondary" className="bg-violet-50 text-violet-700 hover:bg-violet-50 gap-1.5">
@@ -3023,13 +3787,14 @@ function ChatbotPage({ data }) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center">
-                    <Bot className="h-5 w-5 text-white" />
+                    {/* <Bot className="h-5 w-5 text-white" /> */}
+                    <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-900 text-sm">Planning Intelligence</div>
+                    <div className="font-semibold text-slate-900 text-sm">Planning Intellisense</div>
                     <div className="text-xs text-slate-500 flex items-center gap-1.5">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      {health?.hasGroqKey ? 'LLM online' : 'LLM unavailable'}
+                      {health?.hasGroqKey ? 'online' : 'unavailable'}
                       {insights.length > 0 && <> · tracking <span className="font-medium text-slate-700">{insights.length}</span> exceptions</>}
                     </div>
                   </div>
@@ -3041,7 +3806,7 @@ function ChatbotPage({ data }) {
                 <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : ''}`}>
                   {m.role === 'assistant' && (
                     <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0">
-                      <Bot className="h-4 w-4 text-white" />
+                      <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
                     </div>
                   )}
                   <div className={`${m.role === 'user' ? 'max-w-[80%]' : 'max-w-[92%]'} flex-1`}>
@@ -3129,13 +3894,13 @@ function ChatbotPage({ data }) {
                 <Database className="h-4 w-4 text-blue-500" />
                 Data the Bot Sees
               </CardTitle>
-              <CardDescription className="text-xs">Live from dummy S&OP dataset</CardDescription>
+              <CardDescription className="text-xs">Live from S&OP dataset</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-lg border border-slate-200 p-2">
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Revenue</div>
-                  <div className="text-sm font-semibold tabular-nums">${((kpis.totalRevenue || 0) / 1e6).toFixed(2)}M</div>
+                  <div className="text-sm font-semibold tabular-nums">{fmtMoney(kpis.totalRevenue || 0)}</div>
                 </div>
                 <div className="rounded-lg border border-slate-200 p-2">
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">GM%</div>
@@ -3148,7 +3913,7 @@ function ChatbotPage({ data }) {
                 <div className="rounded-lg border border-slate-200 p-2">
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">WoW</div>
                   <div className={`text-sm font-semibold tabular-nums ${(kpis.demandWoW || 0) >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
-                    {(kpis.demandWoW || 0) >= 0 ? '+' : ''}{((kpis.demandWoW || 0) * 100).toFixed(1)}%
+                    {(kpis.demandWoW || 0) >= 0 ? '+' : ''}{(kpis.demandWoW || 0).toFixed(1)}%
                   </div>
                 </div>
               </div>
@@ -3162,7 +3927,7 @@ function ChatbotPage({ data }) {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200/70 shadow-sm">
+          {/* <Card className="border-slate-200/70 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
                 <Bot className="h-4 w-4 text-violet-500" />
@@ -3183,7 +3948,7 @@ function ChatbotPage({ data }) {
                 <span>Llama 3.1 8B answers in executive tone, then the UI overlays structured cards from the same rules.</span>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </aside>
       </div>
     </div>
@@ -3201,6 +3966,7 @@ function App() {
       case 'demand': return <DemandPage data={data} />
       case 'factors': return <DemandFactorsPage data={data} />
       case 'orders': return <OrdersPage data={data} />
+      case 'dispatch': return <OrderDispatchPage data={data} />
       case 'supply': return <SupplyPage data={data} />
       case 'financial': return <FinancialPage data={data} />
       case 'scenario': return <ScenarioPage data={data} />
@@ -3218,7 +3984,8 @@ function App() {
         <div className="px-5 py-5 border-b border-slate-200">
           <div className="flex items-center gap-2.5">
             <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-sm">
-              <GitBranch className="h-5 w-5 text-white" />
+              {/* <GitBranch className="h-5 w-5 text-white" /> */}
+              <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
             </div>
             <div>
               <h1 className="font-semibold text-slate-900 leading-tight">S&OP Suite</h1>
@@ -3253,10 +4020,10 @@ function App() {
         <div className="p-3 border-t border-slate-200">
           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 cursor-pointer">
             <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-600 text-white text-xs font-semibold">SC</AvatarFallback>
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-600 text-white text-xs font-semibold">SP</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-900 truncate">Sarah Chen</p>
+              <p className="text-sm font-medium text-slate-900 truncate">Srijoy Paul</p>
               <p className="text-xs text-slate-500 truncate">Demand Planner</p>
             </div>
             <ChevronDown className="h-4 w-4 text-slate-400" />
@@ -3276,12 +4043,12 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {data.meta && (
+            {/* {data.meta && (
               <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50 gap-1.5">
                 <Database className="h-3.5 w-3.5" />
                 {data.meta.rowCount} rows · {data.meta.skuCount}×{data.meta.distributorCount}×{data.meta.weekCount}
               </Badge>
-            )}
+            )} */}
             <div className="relative w-72 hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input placeholder="Search SKU, distributor, order..." className="pl-9 h-9 bg-slate-50 border-slate-200" />
