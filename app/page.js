@@ -110,9 +110,10 @@ const NAV_ITEMS = [
   { id: 'scenario', label: 'Scenario Planning', icon: GitBranch },
   { id: 'chatbot', label: 'Chatbot', icon: Bot },
 ]
+const LAVA_LOGO_URL = 'https://p7.hiclipart.com/preview/429/554/533/lava-international-noida-company-business-lava-a97-others.jpg'
 
 // =============== CENTRAL DATA HOOK ===============
-// Pulls the generated FMCG dataset from /api/data/* and caches it in state.
+// Pulls the generated electronics dataset from /api/data/* and caches it in state.
 // Every page consumes this same object so numbers stay consistent.
 function useSopData() {
   const [data, setData] = useState({
@@ -270,11 +271,11 @@ function DashboardPage({ data }) {
   // Category mix from SKU-level aggregation
   const categoryMix = useMemo(() => {
     const palette = {
-      'Breakfast Mixes (Instant)': '#3b82f6',
-      'Ready-To-Eat (RTE) Meals': '#10b981',
-      'Spices and Masalas': '#f59e0b',
-      'Rice and Poha Items': '#8b5cf6',
-      'Pickles and Snacks': '#ec4899',
+      'Smartphones - Blaze Series': '#3b82f6',
+      'Smartphones - Yuva Series': '#10b981',
+      'Smartphones - Premium 5G': '#f59e0b',
+      'Feature Phones': '#8b5cf6',
+      'Accessories and Wearables': '#ec4899',
     }
     const bySku = data.bySku || []
     const skuMap = Object.fromEntries((data.skus || []).map((s) => [s.id, s.category]))
@@ -313,9 +314,9 @@ function DashboardPage({ data }) {
 
   const k = data.kpis || {}
   const alerts = [
-    { sev: 'high', title: 'Stockout risk: MTR Rava Idli Mix (Midwest DC)', time: '2h ago' },
-    { sev: 'medium', title: 'Forecast variance >15% on Spices and Masalas category', time: '5h ago' },
-    { sev: 'low', title: 'New distributor onboarded: NorthStar Foods', time: '1d ago' },
+    { sev: 'high', title: 'Stockout risk: Lava Blaze Curve 5G (North hub)', time: '2h ago' },
+    { sev: 'medium', title: 'Forecast variance >15% on Accessories and Wearables category', time: '5h ago' },
+    { sev: 'low', title: 'New distributor onboarded: South Digital Retail Network', time: '1d ago' },
     { sev: 'medium', title: 'Q3 budget reforecast submitted by finance', time: '2d ago' },
   ]
 
@@ -1655,7 +1656,7 @@ function OrdersPage({ data }) {
               <Input
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. please prioritize Breakfast Mixes (Instant) for weekend promo"
+                placeholder="e.g. prioritize Smartphones - Yuva Series for festive campaign demand"
                 className="bg-white"
               />
             </div>
@@ -2203,11 +2204,11 @@ function FinancialPage({ data }) {
   const [logisticsPerUnit, setLogisticsPerUnit] = useState([3])
 
   const businessCategoryMap = {
-    'Breakfast Mixes (Instant)': 'FP',
-    'Ready-To-Eat (RTE) Meals': 'SP',
-    'Spices and Masalas': 'Accessories',
-    'Rice and Poha Items': 'Moto-FP',
-    'Pickles and Snacks': 'Accessories',
+    'Smartphones - Blaze Series': 'Smartphone',
+    'Smartphones - Yuva Series': 'Smartphone',
+    'Smartphones - Premium 5G': 'Premium 5G',
+    'Feature Phones': 'Feature',
+    'Accessories and Wearables': 'Accessories',
   }
   const channelByDistributor = {
     'DST-001': 'national',
@@ -2905,9 +2906,9 @@ function ScenarioPage({ data }) {
 function DemandFactorsPage({ data }) {
   // Featured SKUs for dropdown selection
   const featuredSkus = [
-    { id: 'SKU-30220', name: 'MTR Sambar Powder', category: 'Spices and Masalas', plc: 'Growth', baseDemand: 3500 },
-    { id: 'SKU-10842', name: 'MTR Rava Idli Mix (Signature product)', category: 'Breakfast Mixes (Instant)', plc: 'Mature', baseDemand: 8200 },
-    { id: 'SKU-40118', name: 'MTR Ready-to-Eat Vegetable Pulao', category: 'Rice and Poha Items', plc: 'Decline', baseDemand: 3600 },
+    { id: 'SKU-30220', name: 'Lava Agni 3 5G 8GB/256GB', category: 'Smartphones - Premium 5G', plc: 'Growth', baseDemand: 480 },
+    { id: 'SKU-10842', name: 'Lava Blaze Curve 5G 8GB/128GB (Hero SKU)', category: 'Smartphones - Blaze Series', plc: 'Mature', baseDemand: 760 },
+    { id: 'SKU-40118', name: 'Lava A3 Power Feature Phone', category: 'Feature Phones', plc: 'Decline', baseDemand: 920 },
   ]
 
   const [selectedSku, setSelectedSku] = useState(featuredSkus[0].id)
@@ -2930,11 +2931,11 @@ function DemandFactorsPage({ data }) {
 
   // Seasonality patterns by category (12 months)
   const seasonalityPatterns = {
-    'Spices and Masalas': [0.95, 0.92, 0.98, 1.02, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 0.98, 1.05],
-    'Breakfast Mixes (Instant)': [0.75, 0.80, 0.90, 1.05, 1.25, 1.40, 1.45, 1.40, 1.20, 1.00, 0.85, 0.80],
-    'Rice and Poha Items': [1.10, 1.15, 1.05, 0.95, 0.85, 0.80, 0.75, 0.78, 0.90, 1.00, 1.15, 1.25],
-    'Ready-To-Eat (RTE) Meals': [0.98, 0.95, 0.97, 1.00, 1.02, 1.00, 0.98, 0.97, 1.00, 1.05, 1.10, 1.20],
-    'Pickles and Snacks': [1.00, 1.00, 1.00, 1.02, 1.02, 1.00, 0.98, 0.98, 1.00, 1.02, 1.05, 1.08],
+    'Smartphones - Premium 5G': [0.92, 0.90, 0.95, 1.00, 1.03, 1.05, 1.08, 1.10, 1.18, 1.32, 1.38, 1.24],
+    'Smartphones - Blaze Series': [0.94, 0.92, 0.96, 1.00, 1.02, 1.06, 1.10, 1.14, 1.22, 1.30, 1.34, 1.20],
+    'Smartphones - Yuva Series': [0.96, 0.95, 0.98, 1.00, 1.03, 1.05, 1.08, 1.11, 1.16, 1.24, 1.28, 1.14],
+    'Feature Phones': [1.08, 1.06, 1.02, 0.98, 0.94, 0.92, 0.90, 0.92, 0.98, 1.08, 1.16, 1.18],
+    'Accessories and Wearables': [0.90, 0.88, 0.92, 0.98, 1.02, 1.08, 1.12, 1.18, 1.24, 1.36, 1.42, 1.26],
   }
 
   // Promotion schedule (weeks with active promotions)
@@ -2944,25 +2945,25 @@ function DemandFactorsPage({ data }) {
   // Regional multipliers
   const regionMultipliers = {
     'North': {
-      'Spices and Masalas': 1.1,
-      'Breakfast Mixes (Instant)': 0.9,
-      'Rice and Poha Items': 1.2,
-      'Ready-To-Eat (RTE) Meals': 1.0,
-      'Pickles and Snacks': 1.0,
+      'Smartphones - Premium 5G': 1.12,
+      'Smartphones - Blaze Series': 1.08,
+      'Smartphones - Yuva Series': 0.96,
+      'Feature Phones': 1.05,
+      'Accessories and Wearables': 1.10,
     },
     'South': {
-      'Spices and Masalas': 0.9,
-      'Breakfast Mixes (Instant)': 1.3,
-      'Rice and Poha Items': 0.8,
-      'Ready-To-Eat (RTE) Meals': 1.1,
-      'Pickles and Snacks': 1.05,
+      'Smartphones - Premium 5G': 0.94,
+      'Smartphones - Blaze Series': 0.98,
+      'Smartphones - Yuva Series': 1.14,
+      'Feature Phones': 0.92,
+      'Accessories and Wearables': 1.02,
     },
     'West': {
-      'Spices and Masalas': 1.0,
-      'Breakfast Mixes (Instant)': 1.1,
-      'Rice and Poha Items': 1.0,
-      'Ready-To-Eat (RTE) Meals': 0.95,
-      'Pickles and Snacks': 0.98,
+      'Smartphones - Premium 5G': 1.04,
+      'Smartphones - Blaze Series': 1.06,
+      'Smartphones - Yuva Series': 1.00,
+      'Feature Phones': 0.98,
+      'Accessories and Wearables': 1.08,
     },
   }
 
@@ -3786,12 +3787,11 @@ function ChatbotPage({ data }) {
             <CardHeader className="pb-2 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center">
-                    {/* <Bot className="h-5 w-5 text-white" /> */}
-                    <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
+                  <div className="h-9 w-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
+                    <Image src={LAVA_LOGO_URL} alt="Lava Mobiles logo" width={36} height={36} className="h-full w-full object-contain" />
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-900 text-sm">Planning Intellisense</div>
+                    <div className="font-semibold text-slate-900 text-sm">Lava Planning Intelligence</div>
                     <div className="text-xs text-slate-500 flex items-center gap-1.5">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                       {health?.hasGroqKey ? 'online' : 'unavailable'}
@@ -3805,8 +3805,8 @@ function ChatbotPage({ data }) {
               {messages.map((m, i) => (
                 <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : ''}`}>
                   {m.role === 'assistant' && (
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0">
-                      <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
+                    <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                      <Image src={LAVA_LOGO_URL} alt="Lava Mobiles logo" width={32} height={32} className="h-full w-full object-contain" />
                     </div>
                   )}
                   <div className={`${m.role === 'user' ? 'max-w-[80%]' : 'max-w-[92%]'} flex-1`}>
@@ -3983,13 +3983,12 @@ function App() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen sticky top-0">
         <div className="px-5 py-5 border-b border-slate-200">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-sm">
-              {/* <GitBranch className="h-5 w-5 text-white" /> */}
-              <Image src="https://vanco.ai/favicon.jpg" alt="Vanco Logo" width={100} height={100}/>
+            <div className="h-9 w-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center shadow-sm overflow-hidden">
+              <Image src={LAVA_LOGO_URL} alt="Lava Mobiles logo" width={36} height={36} className="h-full w-full object-contain" />
             </div>
             <div>
-              <h1 className="font-semibold text-slate-900 leading-tight">S&OP Suite</h1>
-              <p className="text-xs text-slate-500">Enterprise Planning</p>
+              <h1 className="font-semibold text-slate-900 leading-tight">Lava S&OP Suite</h1>
+              <p className="text-xs text-slate-500">Mobiles Planning Control Tower</p>
             </div>
           </div>
         </div>
@@ -4037,7 +4036,7 @@ function App() {
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <div className="text-sm text-slate-500">
-              <span className="text-slate-400">S&OP</span>
+              <span className="text-slate-400">Lava Mobiles</span>
               <span className="mx-2 text-slate-300">/</span>
               <span className="text-slate-900 font-medium">{activeLabel}</span>
             </div>
