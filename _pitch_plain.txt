@@ -1,0 +1,354 @@
+﻿LAVA MOBILES
+Sales & Operations Planning â€” Expansion Pitch
+Industry-Grade Capabilities: Deep Preparation Brief
+CONFIDENTIAL â€” FOR INTERNAL PITCH PREPARATION
+Prepared for: Senior Management Presentation
+  Executive Summary
+What we have built for Lava today is a solid, proven S&OP foundation: tertiary demand signals, derived secondary and primary flows, rule-based forecast blending, inventory roll-forward, and a clean single-model-per-SKU view. That is Phase 1.
+This document prepares you to pitch the next layer â€” nine industry-grade capability modules that transform the current system into a full Planning Command Centre for Lava. Each module is explained with business rationale, what we build, how it works, and what Lava specifically gains from it.
+Module
+Capability
+Business Impact
+1
+Distributor Order Portal
+Eliminate ordering chaos; digitise the channel
+2
+Order Freeze & Governance
+No last-minute surprises in supply planning
+3
+Order vs Dispatch Visibility
+Real-time shortfall detection
+4
+Supply Planning (Factory + Warehouse)
+Link demand signal to production floor
+5
+Business / Financial Planning
+Revenue projection tied to the same data
+6
+Consensus Flow
+One agreed number, not five versions
+7
+PLC, Seasonality & Promotional Factors
+Context-aware, not flat-line forecasting
+8
+Chatbot & Automated Recommendations
+Bring intelligence to every planner's desktop
+9
+Exception-Based Planning & Alerts
+Manage by exception, not by spreadsheet patrol
+  Module 1 â€” Distributor Order Portal
+1.1  The Problem It Solves
+Today, distributors call, email, or WhatsApp their orders. Lava's inside sales team manually keys these into the ERP. The result: data entry errors, delayed confirmation, no real-time stock visibility at the distributor end, and zero system-assisted guidance on what to order. Distributors who are overstocked re-order less; those who are understocked run out before anyone notices.
+1.2  What We Build
+Core Portal Features
+Active SKU visibility with current schemes and pricing â€” Distributor logs in and sees only the SKUs available to him, with applicable trade scheme (e.g. buy 50 units, get 2 free) active on that date.
+System-assisted ordering â€” The portal surfaces current DBR stock, secondary sales (last 4 weeks), and a recommended order quantity computed from a simple reorder rule: Recommended Qty = (Target DOS Ã— Daily Run Rate) âˆ’ Current DBR Stock.
+Distributor vs Dealer gap view â€” For each SKU, the portal shows how many of the distributor's registered dealers actually placed secondary sales last week vs. how many are stocked. This gap is the activation opportunity.(Gap â€“ why :-High Gap (Stocked but not Selling): The product is sitting on shelves. This usually means a lack of consumer pull, poor shelf placement, or the dealer isn't incentivized to push it.
+Low Gap (Stocked and Selling): These are your "healthy" accounts. The goal here isn't activation, but rather upselling or increasing order frequency.
+Zero Stock / High Demand: If a dealer is active but stock levels are low, youâ€™re looking at a replenishment risk.
+)(Action Plans:Targeted Sampling: For dealers who are stocked but inactive, send a salesperson to check the display or offer a small "refresher" demo.
+Incentive Programs: Run a "Secondary Scheme" (e.g., Sell 5 units this week, get 1 free) specifically for those in the gap.
+Root Cause Analysis: If a specific SKU has a massive gap across all distributors, it might be a pricing or competition issue rather than a dealer issue.)
+Order placement with tentative delivery date â€” On submit, the order registers in our system and pulls a delivery window from the dispatch schedule. The distributor gets an SMS/email confirmation with a reference number.
+Cash flow monitoring panel â€” Distributor can see outstanding invoices, payment due dates, and current credit limit consumption. This reduces collection calls and helps Lava's finance team forecast receivables.
+(Order Cash Flow:1. Order-to-cash velocity: tracks the physical movement of orders and how quickly they convert into liquid cash:i. Days sales outstanding(DSO) :- Avg. time between sending the invoice and receiving payment. [â¬†ï¸DSO -> cash trapped in the system]     ii. Order Fulfilment Lead time: The duration between order placed and delivery. Delays in this dealys the invoice issue date, which delays payment.2. Forward-Looking Cashflow Forecasting: Means, Demand PlanÂ to project future cash inflows.i.Forecast Variance:Â Measuring how actual cash inflows deviate from the original S&OP financial plan.)
+3. Cash Conversion Cycle (for how long the payment is stuck in the supply chain)i. So leadership decide if they can afford to launch a new product or at first need to liquidate slow-moving stocks.
+Why Lava Specifically Benefits
+Lava has a large, diverse distributor network spread across Tier 2 and Tier 3 cities. Many of these distributors are small businesses with limited planning capability.
+The portal does the thinking for them â€” showing what they sold, what they have, and what they should order â€” which reduces both stockouts and over-ordering.
+For Lava's commercial team, every order is now digital, timestamped, and visible in the S&OP system before it reaches the ERP.
+1.3  Technical Approach
+Web-based portal (React frontend, FastAPI backend) â€” same stack as the S&OP system, so data is shared.
+Orders land in a new MongoDB collection (distributor_orders) with status tracking: draft â†’ placed â†’ confirmed â†’ dispatched â†’ delivered.
+Reorder recommendation engine runs nightly from the same forecast output we already compute.
+SMS/email notification via standard gateway (MSG91 or similar) â€” no additional platform needed.
+Role-based access: Distributor sees only their own data; Area Sales Manager sees all distributors in their territory.
+1.4  What Lava Can Demo to Its Own Distributors
+In the pitch, you can show this flow live: a distributor logging in, seeing their stock gap, getting a recommended order, and placing it â€” the entire cycle in under 2 minutes. This is a very tangible, visible win that resonates immediately with sales leadership.
+  Module 2 â€” Order Freeze Flow & Governance
+2.1  The Problem It Solves
+Without a formal freeze discipline, orders keep changing right up to dispatch day. The factory or warehouse gets last-minute amendments. Planning becomes reactive. Supply teams cannot commit to a production schedule when demand input is unstable. This is one of the most common and costly S&OP failures in distribution businesses.
+2.2  What We Build
+The Freeze Calendar
+Window
+Rule
+Before 25th of the month
+Fully editable â€” distributor can add, remove, or change SKUs and quantities freely.
+25th to 28th of the month
+Limited edits â€” only quantity reductions allowed, not additions. No new SKUs.
+After 28th
+Locked â€” order is frozen. Any change requires a formal approval flow.
+Approval Workflow for Late Changes
+A distributor or ASM who needs to change a locked order raises a Late Change Request through the portal.
+The request routes to the Area Sales Manager, then to National Sales for approval if quantity exceeds a defined threshold.
+Approved changes trigger an automated notification to the warehouse/logistics team with the revised quantity and an updated delivery window.
+All change requests are logged â€” who requested, who approved, timestamp, reason code. This creates audit trail for post-month analysis.
+Lava Flexibility Controls
+Lava's planning team can modify freeze dates in the system admin panel â€” so if there is a festive season, they can extend the editable window. The rule engine is configurable, not hardcoded.
+Freeze exceptions by category are possible â€” for example, accessories (which have faster sell-through) could have a later freeze date than smartphones.
+Why This Matters for Lava Senior Management
+The freeze discipline is a process governance tool, not just a technical one. When you pitch this, emphasise that it changes the culture of planning.
+Once distributors know the freeze window, they engage earlier and more thoughtfully with orders. This reduces emergency dispatches, premium freight, and stockout penalties.
+For Lava's CFO: frozen orders become committed revenue. A locked order is a receivable that can be modelled in cash flow.
+  Module 3 â€” Order vs Dispatch Visibility
+3.1  The Problem It Solves
+An order placed is not an order fulfilled. In most distribution setups, there is a gap between what was ordered and what actually got dispatched â€” due to stock shortfalls, partial dispatches, or logistics delays. Without a live view of this gap, the S&OP system is working off stale data. Secondary sales actuals lag, and by the time the planning team knows about a shortfall, it is too late to react.
+3.2  What We Build
+Order Fulfilment Dashboard
+For every distributor order, we track: Ordered Qty, Confirmed Qty, Dispatched Qty, Delivered Qty, and Pending Qty â€” at SKU level.
+Shortfall flag: If Dispatched < Confirmed by more than a defined tolerance (e.g. 10%), the SKU is flagged automatically. The planning team sees this without having to run a report.
+Rolling fulfilment rate by distributor and by SKU â€” over the last 4, 8, and 13 weeks. This tells you which distributors are consistently under-served and which SKUs are supply-constrained.
+Analytics We Surface
+Metric
+Business Use
+Order Fill Rate (OFR)
+% of ordered units actually dispatched on time. Industry benchmark: >95% for FMCG.
+Line Fill Rate (LFR)
+% of order lines (SKUs) fully satisfied. Partial dispatches hurt this.
+Dispatch Cycle Time
+Days from order freeze to physical dispatch. Lava can benchmark state vs state.
+Distributor Pending Ageing
+Orders pending for >7 days by root cause: stock, logistics, credit block.
+Integration Point with Existing S&OP
+The dispatched quantity feeds back into the Primary volume data (daily_primary_vol). This closes the loop: forecast â†’ order â†’ dispatch â†’ actual primary. Our existing stock roll-forward then uses real dispatch data, not just planned.
+  Module 4 â€” Supply Planning (Factory, Warehouse & Raw Materials)
+4.1  The Problem It Solves
+Currently, the S&OP system generates a demand signal â€” tertiary forecast, derived secondary and primary volumes. But this signal does not connect to production. The factory team works from their own plans. The result is the classic disconnect: S&OP says demand will spike in week 38, but the production schedule was set 6 weeks ago based on last quarter's actuals.
+4.2  What We Build â€” The 5M Framework
+Supply planning in manufacturing is built around five resources â€” the 5Ms. We design a module for each:
+4.2.1  Manpower Planning
+Translate the weekly primary volume plan into a shift plan. If primary volume in week 38 is 40,000 units and line capacity is 2,000 units per shift, the system tells you: you need 20 shifts that week.
+Factor in planned leaves, public holidays (which we already have in week_master), and shift patterns. Flag if required shifts exceed available workforce capacity.
+Output: weekly headcount requirement vs. available capacity â€” one line per assembly line or product family.
+4.2.2  Machine / Capacity Planning
+Define capacity master: each assembly line, its rated throughput per shift, and current planned downtime (maintenance, changeovers).
+Map the primary volume plan to machine capacity â€” produces a weekly utilisation % per line.
+If utilisation exceeds 85% (a standard planning threshold), the system raises a capacity alert and suggests either overtime, subcontracting, or demand-side adjustment.
+4.2.3  Material Planning (Bill of Materials linkage)
+For each model code, define a simplified BOM (Bill of Materials): screen, battery, PCB, casing, charger, box. These are the critical long-lead components.
+Multiply the weekly primary plan by the BOM to get material requirements by week. Compare against procurement lead times (local: 2 weeks; overseas: 8-12 weeks) to produce a buy signal.
+Differentiate in-house vs outsourced components. For outsourced parts (e.g. screens from a contract manufacturer), the buy signal goes to procurement with a due-date.
+Example output: 'For SKU Lava X3, week 40 primary plan is 12,000 units. You need 12,000 screens. Lead time is 6 weeks. Place PO by week 34.'
+4.2.4  Warehouse & Storage Planning
+Project finished goods inventory by week at each warehouse hub, using the same stock roll-forward logic we already have.
+Flag warehouses that will exceed rated capacity (in units or cubic metres) â€” allows logistics team to plan inter-warehouse transfers or temporary storage in advance.
+Show inbound materials flow (components arriving) vs. outbound dispatch schedule â€” so the warehouse team can plan dock slots and manpower.
+4.2.5  Manufacturing Schedule (Order Freeze linkage)
+Once orders are frozen (Module 2), the system generates a tentative production schedule: which model on which line in which week.
+The schedule is shown as a Gantt-style view by product family. Planning can drag-and-drop to adjust sequencing while the system validates capacity constraints in real time.
+Changeover penalties (time lost switching from one model to another) can be configured and are factored into capacity utilisation.
+Pitch Framing for Lava
+The key message here is: 'Your demand signal is already in the system. We are proposing to extend one cable from S&OP to the shop floor.'
+For a legacy company, this does not mean replacing the ERP or MRP. It means adding a planning layer on top that translates the S&OP forecast into actionable factory schedules â€” a bridge, not a replacement.
+Start with the material planning module first. It has the most immediate financial impact (avoiding expedited freight for missing components) and is the easiest to demonstrate with a few model codes.
+  Module 5 â€” Business & Financial Planning
+5.1  The Problem It Solves
+Volume planning and financial planning live in different worlds â€” Excel for finance, ERP for operations, and now the S&OP system for demand signals. Revenue projections are done by finance separately, often using top-down targets, disconnected from the SKU-level forecast. When the forecast changes, the revenue number does not update automatically.
+5.2  What We Build
+Revenue Projection Engine
+For each model_code, we store a Selling Price (ex-factory or channel price as appropriate). Revenue projection = Tertiary Forecast Ã— Selling Price, aggregated weekly and monthly.
+Roll up by category (FP, SP, Accessories, Moto-FP) and by channel (national, pilot, distributor). Finance gets a revenue view that comes directly from the same demand signal as operations.
+When a planner edits inputs and recalculates, the revenue impact shows immediately â€” before saving. This is a real-time financial sanity check on planning decisions.
+Channel-wise Cash Flow View
+Distinguish cash flows by segment: direct dealer, distributor, modern trade, e-commerce. Each has different payment terms.
+The distributor portal (Module 1) feeds order data here. Expected collections = Dispatched Value Ã— Collection probability by age bucket (current, 0-30 DPD, 30-60 DPD, >60 DPD).
+For Lava's finance team, this produces a rolling 13-week cash inflow projection by channel â€” something currently done manually in Excel.
+Scheme Cost Tracking
+Trade schemes (distributor incentives, dealer margins, consumer offers) have a cost per unit. When the forecast changes, scheme cost changes proportionally.
+The system tracks: Net Revenue = Gross Revenue âˆ’ Scheme Cost âˆ’ Logistics Cost (if logistics rates are loaded). This gives a contribution-level view per SKU per week, which is far more useful than gross revenue alone.
+Budget vs Actual vs Forecast
+View
+Description
+Budget
+Annual plan loaded at the start of the year (static)
+Forecast
+Rolling S&OP projection, updated weekly or at consensus
+Actuals
+Realised tertiary, secondary, primary from the database
+Variance
+Forecast vs Budget, Actuals vs Forecast â€” flagged by SKU and week
+For Lava CFO or Finance Leadership
+The single most compelling message in this module: 'For the first time, the volume plan and the revenue plan will come from the same model.'
+Today, finance re-forecasts revenue quarterly. With this module, every weekly S&OP cycle also produces an updated revenue outlook. Finance and operations will stop arguing over which number is correct, because there is only one number.
+  Module 6 â€” Consensus Flow
+6.1  What Consensus Flow Means in S&OP
+In a full S&OP process, the word 'consensus' has a precise meaning: it is the single agreed forecast number that all functions â€” Sales, Supply Chain, Finance, and Leadership â€” commit to for a given time horizon. Without a structured consensus process, each function defends their own number, meetings go in circles, and the 'final' plan is whatever the most senior person says at the end of the meeting.
+6.2  What We Build
+The Demand Review Step
+Sales and Marketing review the statistical demand forecast from our S&OP engine. They can propose adjustments â€” called 'demand overrides' â€” for known business events: a product launch, a competitor's product exit, a promotional push.
+Each override must have a reason code (new distribution, promotion, competitor, market intelligence) and an expiry week (after which the override lapses unless renewed).
+The system shows the statistical forecast alongside the override in the same table, with the % deviation highlighted. This prevents overriding by gut feel alone.
+The Supply Review Step
+Supply chain reviews constrained supply: if factory capacity or material availability limits primary dispatch below the demand plan, this is flagged as a supply gap.
+The supply review produces a Supply Constrained Plan: the demand plan capped at what supply can realistically deliver. The gap between unconstrained demand and supply constrained plan is made visible â€” not hidden.
+The Pre-S&OP and Executive S&OP Steps
+Pre-S&OP: The planning team consolidates the demand override, supply constraint, and financial view into a single consensus pack. Unresolved issues are listed as escalations.
+Executive S&OP: Leadership reviews the consensus pack, resolves escalations, and ratifies the final plan. The ratified plan is saved as the official version in the system (write to weekly_forecast with a consensus flag).
+Version Control and Audit
+Every plan version is time-stamped with the user who submitted or approved it. You can replay the history of a forecast: what was the plan on week 30, what was it on week 35, and who changed it and why.
+Deviation reports: compare the consensus plan from 4 weeks ago vs. today. This is the input to forecast accuracy improvement meetings.
+Process Change, Not Just Technology
+The consensus module is as much about process design as software. When pitching this to Lava leadership, it is important to say: we will work with you to design the meeting cadence, the roles (Demand Manager, Supply Planner, S&OP Manager), and the escalation rules.
+The software enforces the process â€” you cannot skip a step, you cannot publish a plan without supply review, and all changes are logged. This is governance that a spreadsheet cannot provide.
+  Module 7 â€” PLC, Seasonality, Promotions & Location
+7.1  Why Context-Aware Forecasting Matters
+Our current rule-based engine already uses a PLC factor and pilot L7D. But the system treats PLC as a flat scalar and does not model the interaction between lifecycle stage, seasonal pattern, and promotional uplift together. For a mobile device company like Lava, these three forces drive enormous volume variance â€” ignoring them means your forecast is wrong in a predictable way.
+7.2  Product Lifecycle (PLC) â€” Deeper Implementation
+Stage Classification
+Stage
+Business Characteristics & Planning Implications
+New Launch (Weeks 1-8)
+High pilot signal; national DRR not yet meaningful. Forecast should be pilot-weighted (80%+). Ramp curve is S-shaped â€” slow start, then rapid acceleration, then plateau. Outlets expand weekly.
+Growth (Weeks 9-26)
+National distribution expanding. The weight shift from pilot to national DRR happens here. Outlet-weighted forecasting (AO Ã— T-Put) becomes most reliable. Watch for early competition response.
+Mature (Weeks 27-78)
+Stable distribution, predictable sell-through. National DRR and parameters carry equal weight. Seasonality overlay is most important in this phase.
+Decline (Week 79+)
+Tertiary falling. Switch to minimum order logic â€” order only enough to maintain DOS at floor level. Flag for phase-out planning. Avoid over-stocking a declining SKU.
+PLC-Driven Planning Rules
+Different default DOS targets by stage: a new launch should target 25 days market DOS to ensure shelves are full during the ramp; a declining SKU should target 10 days to drain inventory before phase-out.
+PLC stage transition is automatic, based on week_after_launch, but can be overridden by the planning team when business conditions warrant.
+Portfolio view: show all Lava models on a single matrix â€” Stage Ã— Volume â€” so leadership can see how many SKUs are in decline simultaneously (risk of revenue cliff) and how many are in launch ramp (risk of stock-out).
+7.3  Seasonality â€” Monthly Patterns
+How We Model It
+We already have a seasonality collection in the database. The current implementation uses it as a scalar. We extend this to a proper seasonality decomposition.
+For each SKU (or family), compute a 52-week seasonal index using 2+ years of historical tertiary data. Index = (actual that week) / (average week). Values above 1.0 are high season; below 1.0 are low season.
+The index is applied as a multiplier on the base forecast. If week 43 has a seasonal index of 1.35 (Diwali season), the base forecast is scaled up by 35%.
+Example: Lava Blaze, mature stage, base weekly forecast 8,000 units. Week 43 seasonal index 1.35. Adjusted forecast: 10,800 units. Secondary and primary derived accordingly.
+Key Seasonal Patterns for Lava to Configure
+Diwali / Navratri season (September-October): typically 25-40% uplift for entry-level and mid-range smartphones.
+Year-end clearance (December-January): retailer destocking, slower consumer demand â€” often a 15-20% dip.
+Budget phone seasonality differs from premium: rural Tier 3 buyers respond to harvest season cash (October, March) while urban buyers respond to festive gifting.
+Regional patterns: North India has a different festive calendar than South India. Location-based indices (next section) allow this to be modelled at state level.
+7.4  Promotions & Trade Schemes
+What We Build
+A promotion calendar: for each SKU, in each week, is there an active promotion? If yes, what is the expected uplift % (historical average from past similar promotions)?
+Uplift learning: after each promotion ends, the system compares actual uplift to projected uplift. Over time, the model improves its uplift estimates per SKU and promotion type.
+Scheme cost integration with the financial module (Module 5): when a promotion is added to the calendar, the revenue projection automatically nets out the scheme cost.
+Cannibalisation flag: if a promotion on Model A historically pulls demand from Model B within the same family, the system flags this and suggests offsetting the Model B forecast downward.
+7.5  Location-Based Planning
+Region and State Level Planning
+Extend the data model from model_code to model_code Ã— region (or state). This requires regional breakdowns in the tertiary, secondary, and stock collections â€” which is achievable if Lava's data has geography tags on billing records.
+Regional S&OP: separate forecasts per region, with regional DOS targets, regional outlet plans, and regional inventory held at zone warehouses.
+Competitor benchmarking overlay: for each region, if Lava has market intelligence on competitor sell-out or activation, surface it alongside Lava's own metrics. The planning team can see: 'In Uttar Pradesh, Lava AO/SO is 62% while the market leader is estimated at 75%. The gap is 1,200 outlets.' This becomes a planning action.
+State-level activation planning: assign state-wise outlet targets to Area Sales Managers. Track actual vs target activation every week. The S&OP system becomes the truth source for field performance.
+  Module 8 â€” Chatbot & Automated Decision Recommendations
+8.1  The Vision
+The S&OP system today is a table â€” you look at numbers and draw conclusions yourself. The chatbot changes this: you ask a question in plain language and get an answer from the data. You do not need to know which API to call or which row in the table to look at.
+The automated recommendations layer goes further: without being asked, the system identifies when a rule is about to be breached and tells you what to do about it. This is the difference between a reporting tool and an intelligent planning assistant.
+8.2  Chatbot â€” What It Can Answer
+Conversational Queries
+User Question
+System Response (from live data)
+'What is the market DOS for Lava Blaze this week?'
+Returns current market DOS from the S&OP table, with trend vs last 4 weeks.
+'Which SKUs are at risk of stockout in the next 3 weeks?'
+Returns models where projected market DOS < floor DOS target, sorted by severity.
+'How did the Diwali forecast compare to actuals last year?'
+Pulls forecast accuracy report for weeks 40-44 of prior year, by model.
+'What is the recommended order for distributor XYZ this week?'
+Computes and returns recommended order from Module 1 logic for that distributor.
+'Show me the top 5 underperforming SKUs by AO/SO this month'
+Runs a driver query and returns a ranked table.
+Technical Approach
+The chatbot is built on a Large Language Model (LLM) with function calling. It interprets the user's question and routes it to the appropriate API endpoint in our FastAPI backend.
+The LLM does not make up data â€” it only answers what the API returns. This is important for credibility with management: answers are always grounded in the actual S&OP data.
+The chatbot is embedded in the existing UI â€” a side panel that any planner can open without leaving the forecast table.
+8.3  Automated Decision Recommendations
+Rule-Based Recommendation Engine
+We define a set of business rules. When a rule condition is met, the system generates a recommendation â€” a specific, actionable suggestion â€” not a vague alert.
+Trigger Condition
+Recommendation Generated
+Market DOS projected to fall below 10 days within 2 weeks
+'Increase primary dispatch for SKU X by 15,000 units in week N. Current plan leaves 8 days DOS.'
+Market DOS projected to exceed 45 days for 3+ consecutive weeks
+'Reduce primary plan for SKU X by 10,000 units. Risk of excess inventory and markdown.'
+Activation rate below 50% AO/SO for 4 consecutive weeks
+'SKU X activation is stalled in 3 regions. Consider targeted dealer incentive for the next 2 weeks.'
+Forecast accuracy error >25% for 3 consecutive months
+'Revisit PLC stage for SKU X. Consider switching weight from national DRR to pilot signals.'
+Promotional week approaching with no scheme configured
+'Promotion window Week 42 has no active scheme for SKU X. Review with trade marketing.'
+How to Position This in the Pitch
+For Lava senior management, the key message is: 'We are not asking your planners to check 200 SKUs every Monday morning. The system watches all of them, all the time. When something needs human attention, it surfaces â€” with a specific recommendation, not just a red flag.'
+This is a strong differentiator from any BI tool or spreadsheet. The chatbot demo in the meeting should show one live question answered from real data â€” even a simple one. That is enough to make the point.
+  Module 9 â€” Exception-Based Planning & Alerts
+9.1  The Problem It Solves
+A planner managing 150 SKUs across 25 distributors cannot review every number every week. Exception-based planning inverts the process: instead of the planner hunting for problems, the system flags what needs attention. Planners spend their time resolving exceptions, not checking whether exceptions exist.
+9.2  Exception Types and Alert Logic
+Demand-Side Exceptions
+Forecast bias alert: If actual tertiary is consistently above forecast for 3 consecutive weeks, the system flags 'Demand Uplift â€” Review Forecast Upward' for that SKU. Persistent below-forecast is flagged as 'Demand Softness.'
+Pilot signal divergence: If pilot L7D average is growing rapidly while the national DRR is flat, flag as 'Emerging Demand â€” Pilot Outpacing National.' This is an early signal to increase weight on pilot in the blend.
+New launch ramp anomaly: If a new launch is in week 6 and AO/SO is still below 30%, the launch activation is behind plan. Flag for immediate field action.
+Supply-Side Exceptions
+DOS floor breach imminent: Market DOS projected to cross below the configured floor (e.g. 10 days) within the next 3 weeks. Immediate action: increase primary order.
+DOS ceiling breach imminent: Market DOS projected to exceed ceiling (e.g. 50 days) for 4+ weeks. Action: reduce dispatch, review if promotion is needed to accelerate sell-through.
+Primary order vs forecast gap: If the confirmed order for a distributor is more than 30% above or below the S&OP forecast, flag for review â€” either the forecast is wrong or the distributor is gaming the system.
+Inventory concentration risk: If more than 60% of a model's total market inventory is sitting with a single distributor, flag as concentration risk.
+Process-Side Exceptions
+Inputs not updated: If a model's PLC factor, DOS input, or weightages have not been reviewed in 4 weeks, flag as 'Stale Inputs.' Planning quality degrades when inputs are not maintained.
+Consensus plan not ratified: If the weekly S&OP cycle is due but the consensus plan has not been approved, escalate to the S&OP manager.
+Distributor order not placed: If it is day 22 of the month and a distributor has not placed their monthly order, flag for the ASM to follow up.
+9.3  Alert Delivery
+Channel
+Use Case
+In-app notification
+Live alerts within the S&OP UI â€” banner and side panel. Planner sees it when they log in.
+Weekly exception digest email
+Automated email every Monday morning with all active exceptions, sorted by severity. Goes to planners, their manager, and S&OP lead.
+WhatsApp / SMS
+For critical alerts only â€” DOS floor breach imminent, major forecast miss. Goes to specific roles defined in the alert config.
+Dashboard summary
+A separate 'Exceptions' tab in the UI showing a heat map: rows = SKUs, columns = exception types. Colour = severity.
+9.4  Exception Resolution Workflow
+Each exception has an owner (assigned by role: Demand Planner, Supply Planner, ASM, etc.).
+Owner resolves by taking an action in the system (editing an input, placing an order, updating a forecast) or by closing with a reason code ('Accepted Risk', 'Resolved Externally', 'False Positive').
+Unresolved critical exceptions after 48 hours are automatically escalated to the next level of ownership.
+Monthly exception report: % of exceptions resolved on time, most frequent exception types, SKUs with persistent exceptions. This is the input to process improvement reviews.
+The Pitch Closing Message on This Module
+The exception module is the productivity multiplier. Every planner does the work of three.
+For Lava senior management, frame it this way: 'Right now, your planning team is maintaining a system â€” checking numbers, running reports, chasing data. With exception-based planning, they shift from maintenance to decision-making. The system maintains itself; they only engage when a decision is needed.'
+This is a direct argument for not needing to add headcount even as the SKU portfolio grows.
+  Recommended Implementation Roadmap
+Not all nine modules should be proposed as a single project. A phased approach reduces implementation risk, delivers early wins, and builds internal confidence in the system. Here is a practical sequencing for a legacy organisation like Lava:
+Phase
+Modules
+Rationale
+Phase 1 (Now â€” Already Built)
+Demand Forecast, Rule-Based Engine, Stock Roll-Forward, Basic KPIs
+Foundation is live. Demonstrate and stabilise.
+Phase 2 (Months 1-3)
+PLC & Seasonality Deepening (7), Consensus Flow (6), Exception Alerts (9)
+Highest ROI on current foundation. No new data sources needed. Directly improves forecast accuracy and planner productivity.
+Phase 3 (Months 3-6)
+Distributor Order Portal (1), Order Freeze & Governance (2), Order vs Dispatch (3)
+Channel digitisation. Requires change management with distributors. Start with top 20 distributors as pilot.
+Phase 4 (Months 6-9)
+Financial Planning module (5), Revenue projection, Budget vs Forecast
+Needs price master data from ERP. High CFO interest â€” ensure finance sponsor is engaged.
+Phase 5 (Months 9-12)
+Supply Planning â€” Material & Capacity (4)
+Requires BOM data and capacity master from factory. Biggest ERP integration effort. High payoff.
+Phase 6 (Ongoing)
+Chatbot & Automated Recommendations (8)
+Layer on top of all modules once data is stable. AI quality improves with richer data history.
+This roadmap gives Lava a visible, progressively richer system rather than a big-bang delivery. It also allows the business to learn and adapt its processes at each phase before the next layer is added.
+  Key Talking Points for the Pitch Meeting
+For the CEO / MD
+'What we are proposing is a Planning Command Centre for Lava â€” one place where every planning decision, from consumer demand to factory schedule, is connected and visible.'
+'The ROI drivers are: fewer stockouts (captured revenue), fewer excess inventory markdowns (protected margin), and faster response to market changes (competitive advantage).'
+'Lava is a large company with a legacy distribution network. The beauty of this architecture is that it sits on top of what you have â€” it does not require replacing your ERP or retraining your field force.'
+For the Sales / Commercial Head
+'Distributors will thank you for the order portal. It simplifies their life and gives them visibility they have never had. Better-served distributors order more and stay loyal.'
+'Activation tracking â€” AO/SO, WOD/AO by region â€” moves from a lagging indicator in a monthly report to a live, actionable metric your ASMs check every Monday.'
+For the Supply Chain Head
+'The freeze calendar and governance module end the fire-fighting. Once orders are frozen on the 25th, your team has a stable number to plan against for the last week of the month.'
+'The material planning module converts the S&OP forecast into a buy signal automatically. Your procurement team stops working from their own Excel and starts working from the plan.'
+For the CFO
+'For the first time, your revenue forecast will come from the same model as the volume forecast. No reconciliation meetings between finance and operations.'
+'The cash flow module shows you channel-wise receivable projections, not just total revenue. You can manage collection risk by distributor and by ageing bucket, in real time.'
+What to Avoid Saying
+Do not over-promise AI/ML. The rule-based engine is the production workhorse. ML is additive and experimental. Say so plainly â€” it builds more trust than overstating the technology.
+Do not sell all nine modules in one meeting. Focus on the three that resonate most with the audience in the room. Leave the roadmap document behind for them to review.
+Do not underplay the process change required. Be honest that the consensus flow and exception modules require Lava to change how their S&OP meeting is run. Frame this as a strength, not a warning.
+This document is confidential and prepared for internal pitch use only.

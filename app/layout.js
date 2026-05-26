@@ -4,8 +4,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'S&OP Demo | Enterprise Planning Suite',
-  description: 'Sales & Operations Planning enterprise demo application',
+  title: 'Lava Mobiles S&OP Suite | Enterprise Planning',
+  description: 'Sales and operations planning workspace tailored for Lava Mobiles demo scenarios.',
 }
 
 export default function RootLayout({ children }) {

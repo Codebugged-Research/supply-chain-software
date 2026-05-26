@@ -533,7 +533,7 @@ function buildChatSystemPrompt(dataset, insights, intent) {
       }).join('\n'))
   }
 
-  return `You are an S&OP AI analyst for an FMCG enterprise. You provide crisp, executive-style answers grounded in the data below. You NEVER invent SKUs, distributors, numbers, or revenues that are not present in the context.
+  return `You are an S&OP AI analyst for a consumer electronics enterprise (mobile devices and accessories). You provide crisp, executive-style answers grounded in the data below. You NEVER invent SKUs, distributors, numbers, or revenues that are not present in the context.
 
 ## How to read the data (IMPORTANT)
 - "Weeks of cover" = distributor stock ÷ weekly secondary demand.
