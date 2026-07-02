@@ -798,17 +798,17 @@ function DemandPage({ data }) {
 // =============== PAGE: DISTRIBUTOR ORDERS ===============
 // ---- Helpers shared by OrdersPage + OrderEditDialog --------------------
 const LOCK_STYLES = {
-  editable:   { icon: Unlock,      chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', iconCls: 'text-emerald-600' },
-  restricted: { icon: ShieldAlert, chip: 'bg-amber-50 text-amber-700 border-amber-200',       iconCls: 'text-amber-600'   },
-  locked:     { icon: Lock,        chip: 'bg-rose-50 text-rose-700 border-rose-200',          iconCls: 'text-rose-600'    },
+  editable: { icon: Unlock, chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', iconCls: 'text-emerald-600' },
+  restricted: { icon: ShieldAlert, chip: 'bg-amber-50 text-amber-700 border-amber-200', iconCls: 'text-amber-600' },
+  locked: { icon: Lock, chip: 'bg-rose-50 text-rose-700 border-rose-200', iconCls: 'text-rose-600' },
 }
 const STATUS_STYLES = {
-  Pending:            'bg-slate-100 text-slate-700',
-  Amended:            'bg-blue-50 text-blue-700',
+  Pending: 'bg-slate-100 text-slate-700',
+  Amended: 'bg-blue-50 text-blue-700',
   'Pending Approval': 'bg-violet-50 text-violet-700',
-  Approved:           'bg-emerald-50 text-emerald-700',
-  Rejected:           'bg-rose-50 text-rose-700',
-  Locked:             'bg-rose-50 text-rose-700',
+  Approved: 'bg-emerald-50 text-emerald-700',
+  Rejected: 'bg-rose-50 text-rose-700',
+  Locked: 'bg-rose-50 text-rose-700',
 }
 
 const EXECUTION_STATUS_STYLES = {
@@ -937,8 +937,8 @@ function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
   const bannerCls = isLocked
     ? 'bg-rose-50 border-rose-200 text-rose-800'
     : isRestricted
-    ? 'bg-amber-50 border-amber-200 text-amber-800'
-    : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+      ? 'bg-amber-50 border-amber-200 text-amber-800'
+      : 'bg-emerald-50 border-emerald-200 text-emerald-800'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -973,8 +973,8 @@ function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
               {isLocked
                 ? 'Changes to a locked order require a mock governance approval.'
                 : isRestricted
-                ? 'You may increase or decrease any line, but no single line may move more than ±10%.'
-                : 'Freely change any quantities. Save will update the order.'}
+                  ? 'You may increase or decrease any line, but no single line may move more than ±10%.'
+                  : 'Freely change any quantities. Save will update the order.'}
             </div>
           </div>
         </div>
@@ -1022,7 +1022,7 @@ function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
                 const lineVal = Math.max(0, newQty) * eff
                 const pctCls = pct === 0 ? 'text-slate-500' :
                   isRestricted && Math.abs(pct === Infinity ? 999 : pct) > 10 ? 'text-rose-600 font-semibold' :
-                  pct > 0 ? 'text-emerald-700' : 'text-slate-700'
+                    pct > 0 ? 'text-emerald-700' : 'text-slate-700'
                 return (
                   <TableRow key={row.skuId}>
                     <TableCell className="py-2.5">
@@ -1047,7 +1047,7 @@ function OrderEditDialog({ order, open, onOpenChange, simDay, onSaved }) {
                     <TableCell className={`py-2.5 text-right tabular-nums text-sm ${pctCls}`}>
                       {origQty === 0 && newQty > 0 ? 'NEW'
                         : pct === 0 ? '—'
-                        : `${pct > 0 ? '+' : ''}${pct.toFixed(1)}%`}
+                          : `${pct > 0 ? '+' : ''}${pct.toFixed(1)}%`}
                     </TableCell>
                     <TableCell className="py-2.5 text-right tabular-nums text-sm">
                       {newQty > 0 ? fmtMoney(lineVal) : <span className="text-slate-400">—</span>}
@@ -1464,8 +1464,8 @@ function OrdersPage({ data }) {
               <span className="font-medium text-slate-700">Order Cashflow Meter</span>
               <Badge variant="secondary" className={
                 cashflow === 'high' ? 'bg-rose-50 text-rose-700 hover:bg-rose-50' :
-                cashflow === 'medium' ? 'bg-amber-50 text-amber-700 hover:bg-amber-50' :
-                'bg-emerald-50 text-emerald-700 hover:bg-emerald-50'
+                  cashflow === 'medium' ? 'bg-amber-50 text-amber-700 hover:bg-amber-50' :
+                    'bg-emerald-50 text-emerald-700 hover:bg-emerald-50'
               }>{cf.label}</Badge>
             </div>
             <div className="text-xs text-slate-500">
@@ -1574,8 +1574,8 @@ function OrdersPage({ data }) {
                     const rowCls = l.isHighDemand
                       ? 'bg-amber-50/50 hover:bg-amber-50'
                       : qtyNum > 0
-                      ? 'bg-blue-50/30 hover:bg-blue-50/60'
-                      : 'hover:bg-slate-50/60'
+                        ? 'bg-blue-50/30 hover:bg-blue-50/60'
+                        : 'hover:bg-slate-50/60'
                     return (
                       <TableRow key={l.skuId} className={rowCls}>
                         <TableCell className="py-3">
@@ -2200,8 +2200,8 @@ function FinancialPage({ data }) {
   const [demandUplift, setDemandUplift] = useState([0])
   const [priceShift, setPriceShift] = useState([0])
   const [costShift, setCostShift] = useState([0])
-  const [schemePerUnit, setSchemePerUnit] = useState([8])
-  const [logisticsPerUnit, setLogisticsPerUnit] = useState([3])
+  const [schemePerUnit, setSchemePerUnit] = useState([350])
+  const [logisticsPerUnit, setLogisticsPerUnit] = useState([150])
 
   const businessCategoryMap = {
     'Smartphones - Blaze Series': 'Smartphone',
@@ -2524,11 +2524,11 @@ function FinancialPage({ data }) {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Scheme / unit</span><span>₹{schemePerUnit[0]}</span></div>
-                <Slider value={schemePerUnit} onValueChange={setSchemePerUnit} min={0} max={40} step={1} />
+                <Slider value={schemePerUnit} onValueChange={setSchemePerUnit} min={0} max={1000} step={10} />
               </div>
               <div>
                 <div className="flex justify-between text-xs text-slate-600 mb-1"><span>Logistics / unit</span><span>₹{logisticsPerUnit[0]}</span></div>
-                <Slider value={logisticsPerUnit} onValueChange={setLogisticsPerUnit} min={0} max={20} step={1} />
+                <Slider value={logisticsPerUnit} onValueChange={setLogisticsPerUnit} min={0} max={500} step={10} />
               </div>
             </div>
           </CardContent>
@@ -2765,8 +2765,8 @@ function ScenarioPage({ data }) {
   const [capacity, setCapacity] = useState([0])
 
   // Use 6-month revenue as the quarter baseline (2 quarters worth)
-  const totalRev = (data.kpis?.totalRevenue || 66_000_000 * DEMO_INR_PER_USD) / 1_000_000  // million INR across 6 months
-  const totalGm = (data.kpis?.totalGm || 27_000_000 * DEMO_INR_PER_USD) / 1_000_000
+  const totalRev = (data.kpis?.totalRevenue || 11_400_000_000) / 1_000_000  // million INR across 6 months
+  const totalGm = (data.kpis?.totalGm || 2_800_000_000) / 1_000_000
   const quarterlyBaseline = totalRev / 2   // one quarter = 3 months
   const quarterlyGmBase = totalGm / 2
 
@@ -3020,9 +3020,9 @@ function DemandFactorsPage({ data }) {
 
   // Competitor mock data
   const competitorData = [
-    { name: 'Your Company', value: currentSku.baseDemand * 1.2, color: '#3b82f6' },
-    { name: 'Competitor A', value: currentSku.baseDemand * 1.1, color: '#f59e0b' },
-    { name: 'Competitor B', value: currentSku.baseDemand * 0.9, color: '#8b5cf6' },
+    { name: 'Lava', value: currentSku.baseDemand * 1.2, color: '#3b82f6' },
+    { name: 'Samsung', value: currentSku.baseDemand * 1.1, color: '#f59e0b' },
+    { name: 'Redmi', value: currentSku.baseDemand * 0.9, color: '#8b5cf6' },
   ]
 
   // Calculate impact percentages
@@ -3416,9 +3416,9 @@ function DemandFactorsPage({ data }) {
 
 // Severity → colour helper used in several places
 const SEVERITY_STYLES = {
-  high:   { chip: 'bg-rose-50 text-rose-700 border-rose-200',       icon: 'text-rose-600',   dot: 'bg-rose-500' },
-  medium: { chip: 'bg-amber-50 text-amber-700 border-amber-200',    icon: 'text-amber-600',  dot: 'bg-amber-500' },
-  low:    { chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'text-emerald-600', dot: 'bg-emerald-500' },
+  high: { chip: 'bg-rose-50 text-rose-700 border-rose-200', icon: 'text-rose-600', dot: 'bg-rose-500' },
+  medium: { chip: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'text-amber-600', dot: 'bg-amber-500' },
+  low: { chip: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'text-emerald-600', dot: 'bg-emerald-500' },
 }
 const INSIGHT_ICON = {
   overstock: Package,
@@ -3430,12 +3430,12 @@ const INSIGHT_ICON = {
   distributor_underperform: ArrowDownRight,
 }
 const CARD_ACCENTS = {
-  rose:    { bar: 'border-rose-400 bg-rose-50/40',     title: 'text-rose-900' },
-  amber:   { bar: 'border-amber-400 bg-amber-50/40',   title: 'text-amber-900' },
-  blue:    { bar: 'border-blue-400 bg-blue-50/40',     title: 'text-blue-900' },
-  violet:  { bar: 'border-violet-400 bg-violet-50/40', title: 'text-violet-900' },
+  rose: { bar: 'border-rose-400 bg-rose-50/40', title: 'text-rose-900' },
+  amber: { bar: 'border-amber-400 bg-amber-50/40', title: 'text-amber-900' },
+  blue: { bar: 'border-blue-400 bg-blue-50/40', title: 'text-blue-900' },
+  violet: { bar: 'border-violet-400 bg-violet-50/40', title: 'text-violet-900' },
   emerald: { bar: 'border-emerald-400 bg-emerald-50/40', title: 'text-emerald-900' },
-  slate:   { bar: 'border-slate-300 bg-slate-50/50',   title: 'text-slate-900' },
+  slate: { bar: 'border-slate-300 bg-slate-50/50', title: 'text-slate-900' },
 }
 
 // Lightweight markdown-ish renderer for the bot reply:
@@ -3596,11 +3596,11 @@ function ChatbotPage({ data }) {
     fetch('/api/chat/insights').then((r) => r.json()).then((j) => {
       setInsights(j.insights || [])
       setInsightsBySeverity(j.bySeverity || { high: 0, medium: 0, low: 0 })
-    }).catch(() => {})
+    }).catch(() => { })
     fetch('/api/chat/suggestions').then((r) => r.json()).then((j) => {
       setSuggestions(j.suggestions || [])
-    }).catch(() => {})
-    fetch('/api/chat/health').then((r) => r.json()).then((j) => setHealth(j)).catch(() => {})
+    }).catch(() => { })
+    fetch('/api/chat/health').then((r) => r.json()).then((j) => setHealth(j)).catch(() => { })
     // Greet user
     setMessages([{
       role: 'assistant',
@@ -3810,11 +3810,10 @@ function ChatbotPage({ data }) {
                     </div>
                   )}
                   <div className={`${m.role === 'user' ? 'max-w-[80%]' : 'max-w-[92%]'} flex-1`}>
-                    <div className={`rounded-2xl px-4 py-3 text-sm ${
-                      m.role === 'user'
+                    <div className={`rounded-2xl px-4 py-3 text-sm ${m.role === 'user'
                         ? 'bg-blue-600 text-white rounded-br-sm ml-auto w-fit'
                         : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'
-                    }`}>
+                      }`}>
                       {m.role === 'user' ? m.text : renderBotText(m.text)}
                       {m.role === 'assistant' && m.llmError && (
                         <div className="mt-2 text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 flex items-start gap-1.5">
@@ -3988,7 +3987,7 @@ function App() {
             </div>
             <div>
               <h1 className="font-semibold text-slate-900 leading-tight">Lava S&OP Suite</h1>
-              <p className="text-xs text-slate-500">Mobiles Planning Control Tower</p>
+              <p className="text-xs text-slate-500">Planning & Control Tower</p>
             </div>
           </div>
         </div>
@@ -4002,11 +4001,10 @@ function App() {
               <button
                 key={item.id}
                 onClick={() => setActive(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
                     ? 'bg-blue-50 text-blue-700'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                }`}
+                  }`}
               >
                 <Icon className={`h-[18px] w-[18px] ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
                 <span>{item.label}</span>
