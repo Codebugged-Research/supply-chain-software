@@ -1,0 +1,47 @@
+# ==========================================
+# SUPPLIERS & EMS PARTNERS
+# ==========================================
+suppliers:
+  - supplierCode: "SUP-DIXON-NOIDA"
+    supplierName: "Dixon Technologies India Ltd"
+    country: "IN"
+    city: "Noida"
+    contactPerson: "Rajiv Sharma"
+    rating: 4.8
+    qualityScore: 99.1
+    onTimeDelivery: 96.5
+    defaultLeadTimeDays: 14
+    status: "APPROVED"
+
+  - supplierCode: "SUP-FOXCONN-TN"
+    supplierName: "Bharat FIH (Foxconn India)"
+    country: "IN"
+    city: "Sriperumbudur"
+    contactPerson: "Anand R"
+    rating: 4.9
+    qualityScore: 99.5
+    onTimeDelivery: 97.2
+    defaultLeadTimeDays: 10
+    status: "APPROVED"
+
+  - supplierCode: "SUP-SYRMA-HR"
+    supplierName: "Syrma SGS Technology Ltd"
+    country: "IN"
+    city: "Manesar"
+    contactPerson: "Vikas Gupta"
+    rating: 4.6
+    qualityScore: 98.4
+    onTimeDelivery: 94.0
+    defaultLeadTimeDays: 14
+    status: "APPROVED"
+
+  - supplierCode: "SUP-AAC-SHENZHEN"
+    supplierName: "AAC Technologies Global Import"
+    country: "CN"
+    city: "Shenzhen"
+    contactPerson: "Li Wei"
+    rating: 4.5
+    qualityScore: 98.8
+    onTimeDelivery: 91.0
+    defaultLeadTimeDays: 30
+    status: "APPROVED"

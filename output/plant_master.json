@@ -1,0 +1,47 @@
+[
+  {
+    "plantCode": "PLANT-NOIDA-01",
+    "plantName": "boAt Manufacturing Facility Noida",
+    "country": "IN",
+    "state": "Uttar Pradesh",
+    "city": "Noida",
+    "timezone": "Asia/Kolkata",
+    "workingDays": 6,
+    "workingShifts": 2,
+    "dailyCapacity": 25000,
+    "weeklyCapacity": 150000,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-MANESAR-02",
+    "plantName": "boAt EMS Assembly Plant Manesar",
+    "country": "IN",
+    "state": "Haryana",
+    "city": "Manesar",
+    "timezone": "Asia/Kolkata",
+    "workingDays": 6,
+    "workingShifts": 2,
+    "dailyCapacity": 20000,
+    "weeklyCapacity": 120000,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-CHETPET-03",
+    "plantName": "boAt South Manufacturing Hub Chennai",
+    "country": "IN",
+    "state": "Tamil Nadu",
+    "city": "Sriperumbudur",
+    "timezone": "Asia/Kolkata",
+    "workingDays": 6,
+    "workingShifts": 3,
+    "dailyCapacity": 30000,
+    "weeklyCapacity": 180000,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  }
+]

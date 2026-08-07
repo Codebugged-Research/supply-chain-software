@@ -1,0 +1,76 @@
+# ==========================================
+# PROMOTION & EVENT CALENDAR
+# Calendar Year: 2026
+# Consumer Electronics (E-Comm & Retail Surge)
+# ==========================================
+promotionCalendar:
+  calendarId: "PROM-CAL-2026"
+  year: 2026
+  events:
+    - promotionId: "PR-2026-REP-SALE"
+      name: "Republic Day Mega Sale"
+      targetChannels:
+        - "CH-AMAZON"
+        - "CH-FLIPKART"
+        - "CH-BOAT-D2C"
+      startDate: "2026-01-20"
+      endDate: "2026-01-26"
+      demandLiftMultiplier: 2.2
+      impactedCategories:
+        - "Audio"
+        - "Wearables"
+
+    - promotionId: "PR-2026-IPL-FEVER"
+      name: "Cricket Season / IPL Campaign"
+      targetChannels:
+        - "CH-AMAZON"
+        - "CH-FLIPKART"
+        - "CH-BOAT-D2C"
+        - "CH-RELIANCE"
+      startDate: "2026-04-01"
+      endDate: "2026-05-30"
+      demandLiftMultiplier: 1.4
+      impactedCategories:
+        - "Audio"
+
+    - promotionId: "PR-2026-IND-SALE"
+      name: "Freedom Sale / Independence Day"
+      targetChannels:
+        - "CH-AMAZON"
+        - "CH-FLIPKART"
+        - "CH-BOAT-D2C"
+        - "CH-CROMA"
+      startDate: "2026-08-08"
+      endDate: "2026-08-15"
+      demandLiftMultiplier: 2.5
+      impactedCategories:
+        - "Audio"
+        - "Wearables"
+
+    - promotionId: "PR-2026-BBD-GIF"
+      name: "Big Billion Days & Great Indian Festival"
+      targetChannels:
+        - "CH-AMAZON"
+        - "CH-FLIPKART"
+      startDate: "2026-10-10"
+      endDate: "2026-10-18"
+      demandLiftMultiplier: 4.8
+      impactedCategories:
+        - "Audio"
+        - "Wearables"
+
+    - promotionId: "PR-2026-DIWALI-PEAK"
+      name: "Diwali Festive Rush"
+      targetChannels:
+        - "CH-AMAZON"
+        - "CH-FLIPKART"
+        - "CH-BOAT-D2C"
+        - "CH-RELIANCE"
+        - "CH-CROMA"
+        - "CH-GEN-TRADE"
+      startDate: "2026-10-25"
+      endDate: "2026-11-08"
+      demandLiftMultiplier: 3.5
+      impactedCategories:
+        - "Audio"
+        - "Wearables"

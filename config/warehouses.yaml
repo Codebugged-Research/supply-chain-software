@@ -1,0 +1,43 @@
+# ==========================================
+# WAREHOUSES & DISTRIBUTION CENTERS
+# ==========================================
+warehouses:
+  - warehouseCode: "WH-NORTH-DELHI"
+    warehouseName: "boAt Central Distribution Center Delhi NCR"
+    warehouseType: "CENTRAL_DC"
+    country: "IN"
+    state: "Haryana"
+    city: "Faridabad"
+    capacityUnits: 500000
+    storageCost: 0.45
+    status: "ACTIVE"
+
+  - warehouseCode: "WH-WEST-BHIWANDI"
+    warehouseName: "boAt Regional DC West Bhiwandi"
+    warehouseType: "REGIONAL_DC"
+    country: "IN"
+    state: "Maharashtra"
+    city: "Bhiwandi"
+    capacityUnits: 400000
+    storageCost: 0.50
+    status: "ACTIVE"
+
+  - warehouseCode: "WH-SOUTH-BLR"
+    warehouseName: "boAt Regional DC South Bangalore"
+    warehouseType: "REGIONAL_DC"
+    country: "IN"
+    state: "Karnataka"
+    city: "Hoskote"
+    capacityUnits: 350000
+    storageCost: 0.48
+    status: "ACTIVE"
+
+  - warehouseCode: "WH-EAST-KOLKATA"
+    warehouseName: "boAt Regional DC East Kolkata"
+    warehouseType: "REGIONAL_DC"
+    country: "IN"
+    state: "West Bengal"
+    city: "Dankuni"
+    capacityUnits: 200000
+    storageCost: 0.42
+    status: "ACTIVE"

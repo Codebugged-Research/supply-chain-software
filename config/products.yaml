@@ -1,0 +1,182 @@
+# ==========================================
+# PRODUCTS CONFIGURATION
+# Company: boAt Lifestyle (Imagine Marketing Ltd)
+# Maximum 3 Products Only
+# ==========================================
+products:
+  - skuCode: "SKU-BOAT-AD141"
+    skuName: "boAt Airdopes 141"
+    shortName: "Airdopes 141"
+    brand: "boAt"
+    category: "Audio"
+    subCategory: "TWS Earbuds"
+    productFamily: "Airdopes Series"
+    productSeries: "100-Series"
+    modelNumber: "AD-141-BLK"
+    color: "Bold Black"
+    variant: "42H Playback / ENx Tech"
+    technologyGeneration: "Bluetooth 5.3"
+    barcode: "8904354201011"
+    hsnCode: "85183000"
+    unitOfMeasure: "EA"
+    lifecycleStage: "GROWTH"
+    status: "ACTIVE"
+    planning:
+      abcClass: "A"
+      xyzClass: "X"
+      planningStrategy: "MTS"
+      planningPriority: 1
+      planningFenceDays: 14
+      demandTimeFenceDays: 7
+      safetyStockDays: 15.0
+      reorderPointUnits: 5000
+      reorderQuantity: 10000
+      minimumOrderQuantity: 2500
+      maximumInventoryUnits: 50000
+      targetServiceLevel: 98.5
+      forecastConsumptionMethod: "BOTH"
+      plannerGroup: "PLN-GRP-AUDIO"
+      planningCalendar: "6_DAY"
+    pricing:
+      standardCost: 420.00
+      manufacturingCost: 350.00
+      landedCost: 480.00
+      mrp: 4490.00
+      averageSellingPrice: 1299.00
+      targetMarginPercent: 63.0
+      currency: "INR"
+    logistics:
+      netWeightKg: 0.060
+      grossWeightKg: 0.180
+      productLengthCm: 6.5
+      productWidthCm: 5.0
+      productHeightCm: 2.8
+      productVolume: 0.000091
+      cartonQuantity: 40
+      cartonLength: 35.0
+      cartonWidth: 28.0
+      cartonHeight: 22.0
+      cartonWeight: 7.8
+      palletQuantity: 1920
+      stackLimit: 5
+      fragile: false
+      hazardousMaterial: true
+      storageCondition: "AMBIENT"
+
+  - skuCode: "SKU-BOAT-LD100"
+    skuName: "boAt Lunar Discovery"
+    shortName: "Lunar Discovery"
+    brand: "boAt"
+    category: "Wearables"
+    subCategory: "Smartwatch"
+    productFamily: "Lunar Series"
+    productSeries: "Discovery-Gen1"
+    modelNumber: "LD-100-SIL"
+    color: "Active Silver"
+    variant: "1.39 inch HD / DIY Watch Face"
+    technologyGeneration: "BT Calling Gen2"
+    barcode: "8904354202028"
+    hsnCode: "85176290"
+    unitOfMeasure: "EA"
+    lifecycleStage: "NPI"
+    status: "ACTIVE"
+    planning:
+      abcClass: "A"
+      xyzClass: "Y"
+      planningStrategy: "MTS"
+      planningPriority: 2
+      planningFenceDays: 14
+      demandTimeFenceDays: 7
+      safetyStockDays: 18.0
+      reorderPointUnits: 3000
+      reorderQuantity: 8000
+      minimumOrderQuantity: 2000
+      maximumInventoryUnits: 30000
+      targetServiceLevel: 98.0
+      forecastConsumptionMethod: "BOTH"
+      plannerGroup: "PLN-GRP-WEAR"
+      planningCalendar: "6_DAY"
+    pricing:
+      standardCost: 650.00
+      manufacturingCost: 540.00
+      landedCost: 720.00
+      mrp: 6990.00
+      averageSellingPrice: 1799.00
+      targetMarginPercent: 60.0
+      currency: "INR"
+    logistics:
+      netWeightKg: 0.055
+      grossWeightKg: 0.210
+      productLengthCm: 10.0
+      productWidthCm: 10.0
+      productHeightCm: 6.5
+      productVolume: 0.000650
+      cartonQuantity: 30
+      cartonLength: 32.0
+      cartonWidth: 32.0
+      cartonHeight: 24.0
+      cartonWeight: 6.9
+      palletQuantity: 1200
+      stackLimit: 4
+      fragile: true
+      hazardousMaterial: true
+      storageCondition: "AMBIENT"
+
+  - skuCode: "SKU-BOAT-ST350"
+    skuName: "boAt Stone 350"
+    shortName: "Stone 350"
+    brand: "boAt"
+    category: "Audio"
+    subCategory: "Portable Bluetooth Speaker"
+    productFamily: "Stone Series"
+    productSeries: "300-Series"
+    modelNumber: "ST-350-BLU"
+    color: "Ocean Blue"
+    variant: "10W RMS / IPX7 Water Resistant"
+    technologyGeneration: "Bluetooth 5.0"
+    barcode: "8904354203035"
+    hsnCode: "85182200"
+    unitOfMeasure: "EA"
+    lifecycleStage: "MATURE"
+    status: "ACTIVE"
+    planning:
+      abcClass: "B"
+      xyzClass: "X"
+      planningStrategy: "MTS"
+      planningPriority: 3
+      planningFenceDays: 14
+      demandTimeFenceDays: 7
+      safetyStockDays: 12.0
+      reorderPointUnits: 2000
+      reorderQuantity: 5000
+      minimumOrderQuantity: 1000
+      maximumInventoryUnits: 20000
+      targetServiceLevel: 95.0
+      forecastConsumptionMethod: "BOTH"
+      plannerGroup: "PLN-GRP-AUDIO"
+      planningCalendar: "6_DAY"
+    pricing:
+      standardCost: 510.00
+      manufacturingCost: 430.00
+      landedCost: 580.00
+      mrp: 3490.00
+      averageSellingPrice: 1499.00
+      targetMarginPercent: 61.3
+      currency: "INR"
+    logistics:
+      netWeightKg: 0.450
+      grossWeightKg: 0.620
+      productLengthCm: 11.0
+      productWidthCm: 11.0
+      productHeightCm: 9.0
+      productVolume: 0.001089
+      cartonQuantity: 20
+      cartonLength: 46.0
+      cartonWidth: 24.0
+      cartonHeight: 20.0
+      cartonWeight: 13.2
+      palletQuantity: 800
+      stackLimit: 5
+      fragile: false
+      hazardousMaterial: true
+      storageCondition: "AMBIENT"

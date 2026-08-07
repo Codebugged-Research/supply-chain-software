@@ -4,8 +4,13 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Lava Mobiles S&OP Suite | Enterprise Planning',
-  description: 'Sales and operations planning workspace tailored for Lava Mobiles demo scenarios.',
+  title: "Vanco - AI S&OP Suite",
+  description: 'Executive Supply & Operations Planning Platform',
+  icons: {
+    icon: '/vanco-only-logo.png',
+    shortcut: '/vanco-only-logo.png',
+    apple: '/vanco-only-logo.png',
+  },
 }
 
 export default function RootLayout({ children }) {

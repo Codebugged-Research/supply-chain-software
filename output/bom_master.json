@@ -1,0 +1,110 @@
+[
+  {
+    "parentSku": "SKU-BOAT-AD141",
+    "componentSku": "SKU-COMP-CHIP",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.5,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-AD141",
+    "componentSku": "SKU-COMP-BATT",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 2.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-AD141",
+    "componentSku": "SKU-COMP-CASE",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-LD100",
+    "componentSku": "SKU-COMP-CHIP",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.5,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-LD100",
+    "componentSku": "SKU-COMP-BATT",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 2.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-LD100",
+    "componentSku": "SKU-COMP-CASE",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-ST350",
+    "componentSku": "SKU-COMP-CHIP",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.5,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-ST350",
+    "componentSku": "SKU-COMP-BATT",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 2.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "parentSku": "SKU-BOAT-ST350",
+    "componentSku": "SKU-COMP-CASE",
+    "quantity": 1.0,
+    "unitOfMeasure": "EA",
+    "scrapPercent": 1.0,
+    "isOptional": false,
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null,
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  }
+]

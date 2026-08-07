@@ -1,0 +1,316 @@
+# ==============================================================================
+# SUPPLY PLANNING SYSTEM: SYNTHETIC DATA GENERATOR BUSINESS RULES
+# Role: Senior Supply Chain Planning Consultant
+# Industry: Consumer Electronics (boAt Lifestyle - Imagine Marketing Ltd)
+# Target Market: India (D2C, E-Commerce, Modern Trade, General Trade)
+# ==============================================================================
+
+consumer_electronics_assumptions:
+  industry: "Consumer Electronics & Wearables"
+  target_market: "India"
+  base_currency: "INR"
+  planning_time_bucket: "WEEKLY" # Horizon defined in weeks (YYYY-Www)
+  standard_planning_horizon_weeks: 52
+  decay_rate_annual: 0.15 # Technological obsolescence price decay rate
+  batch_tracking_enabled: true
+  shelf_life_months: 24 # Battery shelf-life limitation for TWS/Wearables
+
+product_rules:
+  lifecycle:
+    stages:
+      NPI:
+        description: "New Product Introduction (Phase-In)"
+        duration_weeks: 6
+        initial_forecast_multiplier: 0.5
+        growth_rate_weekly: 0.15 # Rapid ramp up
+        safety_stock_buffer_multiplier: 1.5 # Extra buffer for unconstrained demand
+        quality_inspection_sample_percent: 100.0
+      GROWTH:
+        description: "Active Scaling & Peak Demand"
+        duration_weeks: 52
+        forecast_multiplier: 1.0
+        growth_rate_weekly: 0.02
+        safety_stock_buffer_multiplier: 1.0
+        quality_inspection_sample_percent: 10.0
+      MATURE:
+        description: "Stable Base Demand"
+        duration_weeks: 52
+        forecast_multiplier: 0.85
+        growth_rate_weekly: 0.0
+        safety_stock_buffer_multiplier: 0.8
+        quality_inspection_sample_percent: 5.0
+      DECLINE:
+        description: "Phase-Out & Tech Substitution"
+        duration_weeks: 16
+        forecast_multiplier: 0.4
+        decay_rate_weekly: 0.05
+        safety_stock_buffer_multiplier: 0.5
+        quality_inspection_sample_percent: 5.0
+      EOL:
+        description: "End of Life (Discontinued)"
+        duration_weeks: 0
+        forecast_multiplier: 0.0
+        safety_stock_buffer_multiplier: 0.0
+        requires_replacement_sku: true
+
+  demand_profile:
+    abc_classification:
+      class_A:
+        pareto_revenue_share_percent: 80.0
+        sku_portfolio_share_percent: 20.0
+        service_level_target_percent: 98.5
+        review_frequency: "DAILY"
+      class_B:
+        pareto_revenue_share_percent: 15.0
+        sku_portfolio_share_percent: 30.0
+        service_level_target_percent: 95.0
+        review_frequency: "WEEKLY"
+      class_C:
+        pareto_revenue_share_percent: 5.0
+        sku_portfolio_share_percent: 50.0
+        service_level_target_percent: 90.0
+        review_frequency: "BIWEEKLY"
+
+    xyz_variability:
+      class_X:
+        cv_coefficient_of_variation_max: 0.20 # Low demand volatility
+        safety_stock_z_score: 2.17 # 98.5% confidence
+      class_Y:
+        cv_coefficient_of_variation_max: 0.50 # Moderate volatility
+        safety_stock_z_score: 1.96 # 95.0% confidence
+      class_Z:
+        cv_coefficient_of_variation_max: 1.20 # High volatility
+        safety_stock_z_score: 1.65 # 90.0% confidence
+
+  growth_curve:
+    npi_bass_diffusion_model:
+      coefficient_innovation_p: 0.03 # External marketing drive
+      coefficient_imitation_q: 0.38 # Word-of-mouth viral drive
+      market_potential_m_factor: 1.25
+
+inventory_rules:
+  opening_stock:
+    initial_balance_calculation: "safety_stock_units + (average_weekly_demand * 2.5)"
+    batch_assignment_policy: "FEFO" # First Expired, First Out
+    default_quality_quarantine_percent: 2.0
+
+  safety_stock:
+    calculation_method: "STATISTICAL_DUAL_BOUND"
+    formula: "Z * sqrt((lead_time_weeks * (demand_std_dev ^ 2)) + ((average_demand ^ 2) * (lead_time_std_dev ^ 2)))"
+    min_days_of_supply: 7
+    max_days_of_supply: 30
+
+  reorder_point:
+    formula: "(average_daily_demand * lead_time_days) + safety_stock_units"
+
+  inventory_coverage:
+    target_days_of_cover:
+      central_dc: 21
+      regional_dc: 14
+      channel_partner: 10
+    holding_cost_rate_annual_percent: 18.0 # Capital + Storage + Insurance + Obsolescence
+
+supplier_rules:
+  lead_time:
+    domestic_ems_partner:
+      base_lead_time_days: 10
+      transit_days: 3
+      lead_time_std_dev_days: 1.5
+    overseas_component_import:
+      base_lead_time_days: 28
+      customs_clearance_days: 5
+      lead_time_std_dev_days: 4.0
+
+  reliability:
+    tier_1_preferred:
+      on_time_delivery_min_percent: 95.0
+      defect_rate_ppm_max: 500 # Parts Per Million
+      capacity_flexibility_surge_percent: 20.0
+    tier_2_secondary:
+      on_time_delivery_min_percent: 88.0
+      defect_rate_ppm_max: 1500
+      capacity_flexibility_surge_percent: 10.0
+
+  moq:
+    raw_material_components: 5000
+    sub_assemblies: 1000
+    finished_goods_fg: 500
+    order_multiple_fg: 100 # Batch lot increment
+
+  capacity:
+    monthly_cap_per_supplier_units: 150000
+    max_sku_allocation_share_percent: 70.0 # Single-source risk cap
+
+warehouse_rules:
+  storage_capacity:
+    utilization_warning_threshold_percent: 85.0
+    utilization_critical_threshold_percent: 95.0
+    max_pallet_stack_height: 5
+
+  inventory_policy:
+    min_stock_age_days_before_clearance: 90
+    quarantine_holding_days_max: 7
+    storage_conditions:
+      AMBIENT: "Standard consumer electronic goods (15-30°C)"
+      COLD_STORAGE: "Lithium battery raw cells long-term (10-15°C)"
+      SECURE_VAULT: "High-value smartwatches and micro-chips"
+
+forecast_rules:
+  seasonality:
+    quarterly_weights:
+      Q1_jan_mar: 0.85 # Post-festive dip
+      Q2_apr_jun: 0.95 # Summer / IPL season
+      Q3_jul_sep: 1.10 # Pre-festive stocking
+      Q4_oct_dec: 1.45 # Festive peak (Diwali / New Year)
+
+  trend:
+    annual_category_growth_rate: 0.18 # 18% YoY Indian TWS & Wearables growth
+
+  promotions:
+    forecast_consumption_window_backward_days: 7
+    forecast_consumption_window_forward_days: 14
+    unconsumed_forecast_action: "EXPIRE_AT_WEEK_END"
+
+  festivals:
+    diwali_surge_factor: 3.8
+    independence_day_surge_factor: 2.2
+    republic_day_surge_factor: 1.8
+
+production_rules:
+  capacity:
+    standard_shift_hours: 8.0
+    shifts_per_day: 2
+    operating_days_per_week: 6
+    line_efficiency_overall_equipment_effectiveness_oee: 0.85
+
+  utilization:
+    target_utilization_percent: 82.0
+    max_sustainable_utilization_percent: 92.0
+
+  overtime:
+    max_overtime_hours_per_week: 12.0
+    overtime_cost_multiplier: 1.5
+    surge_capacity_max_boost_percent: 15.0
+
+purchase_order_rules:
+  replenishment_policy: "PERIODIC_REVIEW_LOT_FOR_LOT_WITH_MOQ"
+  ordering_frequency: "WEEKLY"
+  po_auto_approval_threshold_inr: 500000.00
+  payment_terms: "NET_60_DAYS"
+
+supply_planning_rules:
+  shortage_handling:
+    prioritization_hierarchy:
+      - priority: 1
+        channel: "CH-AMAZON"
+        allocation_share_percent: 35.0
+      - priority: 1
+        channel: "CH-FLIPKART"
+        allocation_share_percent: 35.0
+      - priority: 2
+        channel: "CH-BOAT-D2C"
+        allocation_share_percent: 15.0
+      - priority: 3
+        channel: "CH-RELIANCE"
+        allocation_share_percent: 10.0
+      - priority: 4
+        channel: "CH-GEN-TRADE"
+        allocation_share_percent: 5.0
+    shortage_action: "PARTIAL_SHIPMENT_GENERATE_CONSTRAINT_LOG"
+
+  excess_inventory_handling:
+    holding_threshold_days_of_supply: 45
+    mitigation_actions:
+      - days_over: 45
+        action: "REDUCE_PLANNED_PURCHASE_ORDERS"
+      - days_over: 60
+        action: "TRIGGER_PROMOTIONAL_DISCOUNT_EVENT"
+      - days_over: 90
+        action: "INITIATE_INTER_DC_STOCK_TRANSFER"
+
+promotion_calendar:
+  - promotionId: "PR-2026-REP-SALE"
+    name: "Republic Day Mega Sale"
+    targetChannels: ["CH-AMAZON", "CH-FLIPKART", "CH-BOAT-D2C"]
+    startDate: "2026-01-20"
+    endDate: "2026-01-26"
+    demandLiftMultiplier: 2.2
+    impactedCategories: ["Audio", "Wearables"]
+
+  - promotionId: "PR-2026-IPL-FEVER"
+    name: "Cricket Season / IPL Campaign"
+    targetChannels: ["CH-AMAZON", "CH-FLIPKART", "CH-BOAT-D2C", "CH-RELIANCE"]
+    startDate: "2026-04-01"
+    endDate: "2026-05-30"
+    demandLiftMultiplier: 1.4
+    impactedCategories: ["Audio"]
+
+  - promotionId: "PR-2026-IND-SALE"
+    name: "Freedom Sale / Independence Day"
+    targetChannels: ["CH-AMAZON", "CH-FLIPKART", "CH-BOAT-D2C", "CH-CROMA"]
+    startDate: "2026-08-08"
+    endDate: "2026-08-15"
+    demandLiftMultiplier: 2.5
+    impactedCategories: ["Audio", "Wearables"]
+
+  - promotionId: "PR-2026-BBD-GIF"
+    name: "Big Billion Days & Great Indian Festival"
+    targetChannels: ["CH-AMAZON", "CH-FLIPKART"]
+    startDate: "2026-10-10"
+    endDate: "2026-10-18"
+    demandLiftMultiplier: 4.8
+    impactedCategories: ["Audio", "Wearables"]
+
+  - promotionId: "PR-2026-DIWALI-PEAK"
+    name: "Diwali Festive Rush"
+    targetChannels: ["CH-AMAZON", "CH-FLIPKART", "CH-BOAT-D2C", "CH-RELIANCE", "CH-CROMA", "CH-GEN-TRADE"]
+    startDate: "2026-10-25"
+    endDate: "2026-11-08"
+    demandLiftMultiplier: 3.5
+    impactedCategories: ["Audio", "Wearables"]
+
+holiday_calendar:
+  calendarId: "HOL-CAL-IN-2026"
+  year: 2026
+  country: "IN"
+  holidays:
+    - date: "2026-01-26"
+      name: "Republic Day"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+    - date: "2026-03-04"
+      name: "Holi"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+    - date: "2026-08-15"
+      name: "Independence Day"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+    - date: "2026-10-02"
+      name: "Gandhi Jayanti"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+    - date: "2026-10-20"
+      name: "Dussehra (Vijayadashami)"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+    - date: "2026-11-08"
+      name: "Diwali (Laxmi Pujan)"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: true
+    - date: "2026-11-09"
+      name: "Diwali Balipratipada"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+    - date: "2026-12-25"
+      name: "Christmas"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false

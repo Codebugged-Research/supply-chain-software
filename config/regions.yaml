@@ -1,0 +1,58 @@
+# ==========================================
+# GEOGRAPHIC SALES REGIONS
+# ==========================================
+regions:
+  - regionCode: "REG-NORTH"
+    regionName: "North India Territory"
+    country: "IN"
+    states:
+      - "Delhi NCR"
+      - "Punjab"
+      - "Haryana"
+      - "Uttar Pradesh"
+      - "Rajasthan"
+      - "Himachal Pradesh"
+      - "Uttarakhand"
+      - "Jammu & Kashmir"
+    primaryDC: "WH-NORTH-DELHI"
+    targetFulfillmentDays: 2
+    status: "ACTIVE"
+
+  - regionCode: "REG-WEST"
+    regionName: "West India Territory"
+    country: "IN"
+    states:
+      - "Maharashtra"
+      - "Gujarat"
+      - "Goa"
+      - "Madhya Pradesh"
+    primaryDC: "WH-WEST-BHIWANDI"
+    targetFulfillmentDays: 2
+    status: "ACTIVE"
+
+  - regionCode: "REG-SOUTH"
+    regionName: "South India Territory"
+    country: "IN"
+    states:
+      - "Karnataka"
+      - "Tamil Nadu"
+      - "Telangana"
+      - "Andhra Pradesh"
+      - "Kerala"
+    primaryDC: "WH-SOUTH-BLR"
+    targetFulfillmentDays: 2
+    status: "ACTIVE"
+
+  - regionCode: "REG-EAST"
+    regionName: "East & North-East Territory"
+    country: "IN"
+    states:
+      - "West Bengal"
+      - "Odisha"
+      - "Bihar"
+      - "Jharkhand"
+      - "Assam"
+      - "North East States"
+    primaryDC: "WH-EAST-KOLKATA"
+    targetFulfillmentDays: 3
+    status: "ACTIVE"

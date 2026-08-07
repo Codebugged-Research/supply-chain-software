@@ -1,0 +1,13 @@
+[
+  {
+    "skuCode": "SKU-BOAT-AD141",
+    "constraintType": "CAPACITY",
+    "constraintSource": "WH-NORTH-DELHI / 2026-W41",
+    "severity": "HIGH",
+    "description": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
+    "recommendedAction": "Immediate Action Required: Shift volume from bottleneck WH-NORTH-DELHI to qualified secondary assembly line or expedite raw material intake.",
+    "resolved": false,
+    "createdAt": "2026-07-29T11:36:22.952711Z",
+    "updatedAt": "2026-07-29T11:36:22.952711Z"
+  }
+]

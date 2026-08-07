@@ -1,0 +1,51 @@
+# ==========================================
+# SALES CHANNELS CONFIGURATION
+# ==========================================
+channels:
+  - channelCode: "CH-AMAZON"
+    channelName: "Amazon India (FBA & Flex)"
+    channelType: "ECOMMERCE"
+    priority: 1
+    serviceLevel: 99.0
+    defaultInventoryDays: 14
+    status: "ACTIVE"
+
+  - channelCode: "CH-FLIPKART"
+    channelName: "Flipkart Internet Pvt Ltd"
+    channelType: "ECOMMERCE"
+    priority: 1
+    serviceLevel: 99.0
+    defaultInventoryDays: 14
+    status: "ACTIVE"
+
+  - channelCode: "CH-BOAT-D2C"
+    channelName: "boAt Official Website (boat-lifestyle.com)"
+    channelType: "ECOMMERCE"
+    priority: 2
+    serviceLevel: 98.0
+    defaultInventoryDays: 10
+    status: "ACTIVE"
+
+  - channelCode: "CH-RELIANCE"
+    channelName: "Reliance Digital & MyJio Stores"
+    channelType: "MODERN_TRADE"
+    priority: 3
+    serviceLevel: 95.0
+    defaultInventoryDays: 21
+    status: "ACTIVE"
+
+  - channelCode: "CH-CROMA"
+    channelName: "Croma Retail (Infiniti Retail)"
+    channelType: "MODERN_TRADE"
+    priority: 3
+    serviceLevel: 95.0
+    defaultInventoryDays: 21
+    status: "ACTIVE"
+
+  - channelCode: "CH-GEN-TRADE"
+    channelName: "General Trade & Distributor Network"
+    channelType: "GENERAL_TRADE"
+    priority: 4
+    serviceLevel: 90.0
+    defaultInventoryDays: 30
+    status: "ACTIVE"

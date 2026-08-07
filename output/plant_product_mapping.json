@@ -1,0 +1,101 @@
+[
+  {
+    "plantCode": "PLANT-NOIDA-01",
+    "skuCode": "SKU-BOAT-AD141",
+    "productionLine": "LINE-ASM-01",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-NOIDA-01",
+    "skuCode": "SKU-BOAT-LD100",
+    "productionLine": "LINE-ASM-02",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-NOIDA-01",
+    "skuCode": "SKU-BOAT-ST350",
+    "productionLine": "LINE-ASM-03",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-MANESAR-02",
+    "skuCode": "SKU-BOAT-AD141",
+    "productionLine": "LINE-ASM-01",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-MANESAR-02",
+    "skuCode": "SKU-BOAT-LD100",
+    "productionLine": "LINE-ASM-02",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-MANESAR-02",
+    "skuCode": "SKU-BOAT-ST350",
+    "productionLine": "LINE-ASM-03",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-CHETPET-03",
+    "skuCode": "SKU-BOAT-AD141",
+    "productionLine": "LINE-ASM-01",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-CHETPET-03",
+    "skuCode": "SKU-BOAT-LD100",
+    "productionLine": "LINE-ASM-02",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  },
+  {
+    "plantCode": "PLANT-CHETPET-03",
+    "skuCode": "SKU-BOAT-ST350",
+    "productionLine": "LINE-ASM-03",
+    "dailyCapacity": 2000,
+    "weeklyCapacity": 12000,
+    "productionRate": 150.0,
+    "status": "QUALIFIED",
+    "createdAt": "2026-07-29T11:36:22.912374Z",
+    "updatedAt": "2026-07-29T11:36:22.912374Z"
+  }
+]

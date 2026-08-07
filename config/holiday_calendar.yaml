@@ -1,0 +1,57 @@
+# ==========================================
+# HOLIDAY CALENDAR (PLANTS & WAREHOUSES)
+# Calendar Year: 2026
+# Country: India
+# ==========================================
+holidayCalendar:
+  calendarId: "HOL-CAL-IN-2026"
+  year: 2026
+  country: "IN"
+  holidays:
+    - date: "2026-01-26"
+      name: "Republic Day"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+
+    - date: "2026-03-04"
+      name: "Holi"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+
+    - date: "2026-08-15"
+      name: "Independence Day"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+
+    - date: "2026-10-02"
+      name: "Gandhi Jayanti"
+      type: "NATIONAL"
+      affectsProduction: true
+      affectsShipping: true
+
+    - date: "2026-10-20"
+      name: "Dussehra (Vijayadashami)"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+
+    - date: "2026-11-08"
+      name: "Diwali (Laxmi Pujan)"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: true
+
+    - date: "2026-11-09"
+      name: "Diwali Balipratipada"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
+
+    - date: "2026-12-25"
+      name: "Christmas"
+      type: "FESTIVAL"
+      affectsProduction: true
+      affectsShipping: false
