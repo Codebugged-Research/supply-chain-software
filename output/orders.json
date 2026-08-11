@@ -1,0 +1,42 @@
+[
+  {
+    "orderId": "ORD-BOAT-DST001-2026W33",
+    "distributorId": "DST-001",
+    "distributorName": "boAt North Distribution Hub",
+    "status": "Pending",
+    "lines": [
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "skuName": "boAt Airdopes 161 Pro",
+        "category": "TWS Earbuds",
+        "qty": 1516,
+        "unitPrice": 1999,
+        "effectivePrice": 1999,
+        "lineValue": 3030484,
+        "scheme": {
+          "label": "Quick-ship priority",
+          "discountPct": 0
+        },
+        "discountPct": 0
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "skuName": "boAt Rockerz 330 Pro",
+        "category": "Neckbands",
+        "qty": 221,
+        "unitPrice": 1499,
+        "effectivePrice": 1499,
+        "lineValue": 331279,
+        "scheme": {
+          "label": "Back-to-campus cashback 6%",
+          "discountPct": 6
+        },
+        "discountPct": 0
+      }
+    ],
+    "totalQty": 1737,
+    "totalValue": 3361763,
+    "createdAt": "2026-08-11T00:00:00.000Z",
+    "updatedAt": "2026-08-11T00:00:00.000Z"
+  }
+]

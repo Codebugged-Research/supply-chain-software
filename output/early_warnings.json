@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "6a7abde7204e8027eff76a5d",
+    "warningId": "EW-CAPACITY-1",
+    "riskCategory": "CAPACITY_RISK",
+    "riskDate": "2026-07-29T11:36:22.952711Z",
+    "horizonWeek": "2026-W41",
+    "probability": null,
+    "probabilityScore": null,
+    "impact": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
+    "affectedSku": "SKU-BOAT-AD141",
+    "affectedPlant": "WH-NORTH-DELHI",
+    "affectedPlantName": "WH-NORTH-DELHI",
+    "recommendedAction": "Immediate Action Required: Shift volume from bottleneck WH-NORTH-DELHI to qualified secondary assembly line or expedite raw material intake.",
+    "actionCode": "REVIEW_STORED_CONSTRAINT",
+    "severity": "HIGH",
+    "status": "ACTIVE",
+    "constraintSource": "WH-NORTH-DELHI / 2026-W41",
+    "revenueAtRiskInr": 1558800
+  }
+]

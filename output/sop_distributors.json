@@ -1,0 +1,32 @@
+[
+  {
+    "id": "DST-001",
+    "name": "boAt North Distribution Hub",
+    "region": "North",
+    "tier": "A"
+  },
+  {
+    "id": "DST-002",
+    "name": "Western India Audio Channel Partners",
+    "region": "West",
+    "tier": "A"
+  },
+  {
+    "id": "DST-003",
+    "name": "Northland Electronics Distributors",
+    "region": "North",
+    "tier": "B"
+  },
+  {
+    "id": "DST-004",
+    "name": "South India Digital Retail Network",
+    "region": "South",
+    "tier": "A"
+  },
+  {
+    "id": "DST-005",
+    "name": "West Bharat Consumer Electronics Traders",
+    "region": "West",
+    "tier": "C"
+  }
+]

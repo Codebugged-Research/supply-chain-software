@@ -1,0 +1,17 @@
+[
+  {
+    "id": "REG-N",
+    "name": "North",
+    "color": "#3b82f6"
+  },
+  {
+    "id": "REG-S",
+    "name": "South",
+    "color": "#10b981"
+  },
+  {
+    "id": "REG-W",
+    "name": "West",
+    "color": "#f59e0b"
+  }
+]

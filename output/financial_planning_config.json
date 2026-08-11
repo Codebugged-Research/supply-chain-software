@@ -1,0 +1,59 @@
+[
+  {
+    "configId": "FIN-PLAN-DEFAULT",
+    "schemeCostPerUnit": 350,
+    "logisticsCostPerUnit": 150,
+    "businessCategoryMap": {
+      "TWS Earbuds": "TWS",
+      "Neckbands": "Neckband",
+      "Smartwatches": "Wearable",
+      "Wired Audio": "Wired",
+      "Portable Speakers": "Speaker"
+    },
+    "channelByDistributor": {
+      "DST-001": "national",
+      "DST-002": "distributor",
+      "DST-003": "pilot",
+      "DST-004": "national",
+      "DST-005": "distributor"
+    },
+    "segmentByDistributor": {
+      "DST-001": "direct dealer",
+      "DST-002": "distributor",
+      "DST-003": "modern trade",
+      "DST-004": "e-commerce",
+      "DST-005": "distributor"
+    },
+    "collectionProfiles": {
+      "direct dealer": {
+        "terms": "7 days",
+        "current": 0.86,
+        "dpd0_30": 0.1,
+        "dpd30_60": 0.03,
+        "over60": 0.01
+      },
+      "distributor": {
+        "terms": "30 days",
+        "current": 0.63,
+        "dpd0_30": 0.22,
+        "dpd30_60": 0.1,
+        "over60": 0.05
+      },
+      "modern trade": {
+        "terms": "45 days",
+        "current": 0.54,
+        "dpd0_30": 0.24,
+        "dpd30_60": 0.14,
+        "over60": 0.08
+      },
+      "e-commerce": {
+        "terms": "15 days",
+        "current": 0.76,
+        "dpd0_30": 0.17,
+        "dpd30_60": 0.05,
+        "over60": 0.02
+      }
+    },
+    "updatedAt": "2026-08-11T00:00:00.000Z"
+  }
+]

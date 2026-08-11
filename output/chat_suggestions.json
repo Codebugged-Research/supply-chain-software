@@ -1,0 +1,65 @@
+[
+  {
+    "suggestionId": "CHAT-Q-1",
+    "question": {
+      "category": "Stock Risk",
+      "q": "Which SKU has the highest stock risk right now?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-2",
+    "question": {
+      "category": "Stock Risk",
+      "q": "Show me all overstock alerts with tied capital over ₹40 lakh."
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-3",
+    "question": {
+      "category": "Production",
+      "q": "What should we increase production for?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-4",
+    "question": {
+      "category": "Production",
+      "q": "Which SKUs have demand outpacing supply?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-5",
+    "question": {
+      "category": "Distribution",
+      "q": "Rank distributors by revenue and highlight laggards."
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-6",
+    "question": {
+      "category": "Schemes",
+      "q": "Are our current schemes driving incremental demand?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-7",
+    "question": {
+      "category": "Demand",
+      "q": "Which SKUs are trending up week-over-week?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-8",
+    "question": {
+      "category": "Scenarios",
+      "q": "If I cut production by 15% next month, which SKUs will stock out first?"
+    }
+  },
+  {
+    "suggestionId": "CHAT-Q-9",
+    "question": {
+      "category": "Summary",
+      "q": "Give me an executive summary of this week."
+    }
+  }
+]

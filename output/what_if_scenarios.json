@@ -4,9 +4,12 @@
     "description": "Simulating 20% festive surge across boAt TWS and Wearables portfolio",
     "createdBy": "planner.noida@boat-lifestyle.com",
     "assumptionType": "DEMAND_SURGE",
-    "assumptionValue": 20.0,
+    "assumptionValue": 20,
     "generatedSupplyPlanId": "PLAN-BATCH-20260728-99",
     "createdAt": "2026-07-29T11:36:22.952711Z",
-    "updatedAt": "2026-07-29T11:36:22.952711Z"
+    "updatedAt": "2026-07-29T11:36:22.952711Z",
+    "costVarianceInr": null,
+    "serviceLevelDelta": null,
+    "revenueAtRiskRecovered": null
   }
 ]

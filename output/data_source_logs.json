@@ -1,0 +1,66 @@
+[
+  {
+    "sourceId": "CAT-DEMAND",
+    "categoryId": "CAT-DEMAND",
+    "collectionName": "consensus_forecast",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-INVENTORY",
+    "categoryId": "CAT-INVENTORY",
+    "collectionName": "inventory",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-CAPACITY",
+    "categoryId": "CAT-CAPACITY",
+    "collectionName": "plant_master",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-SUPPLIER",
+    "categoryId": "CAT-SUPPLIER",
+    "collectionName": "supplier_master",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-PROCUREMENT",
+    "categoryId": "CAT-PROCUREMENT",
+    "collectionName": "purchase_orders",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-PRODUCTION",
+    "categoryId": "CAT-PRODUCTION",
+    "collectionName": "production_orders",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-RULES",
+    "categoryId": "CAT-RULES",
+    "collectionName": "planning_rules",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "sourceId": "CAT-MASTERDATA",
+    "categoryId": "CAT-MASTERDATA",
+    "collectionName": "product_master",
+    "sourceType": "MONGO_COLLECTION",
+    "healthStatus": "HEALTHY",
+    "lastSyncTime": "2026-08-11T00:00:00.000Z"
+  }
+]

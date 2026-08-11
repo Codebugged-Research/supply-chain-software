@@ -2,14 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import SupplyChainLayout from '@/components/supply-chain/SupplyChainLayout'
-import StatusBadge from '@/components/supply-chain/StatusBadge'
 import KpiCard from '@/components/supply-chain/KpiCard'
 import {
   Layers,
-  Sparkles,
-  CheckCircle2,
-  Sliders,
-  TrendingUp,
   Plus
 } from 'lucide-react'
 
@@ -35,6 +30,8 @@ export default function ScenarioStudioPage() {
     fetchScenarios()
   }, [])
 
+  const formatOutcome = (value, formatter = (item) => item) => value == null ? 'Not calculated' : formatter(value)
+
   return (
     <SupplyChainLayout activeTitle="S&OP Scenario Simulation Studio">
       {/* Overview KPIs */}
@@ -49,16 +46,16 @@ export default function ScenarioStudioPage() {
         />
         <KpiCard
           title="Simulated Cost Variance vs Baseline"
-          value="+₹1.25M INR"
-          subtitle="Working Capital & Overtime Freight"
+          value={scenarios.some((scenario) => scenario.costVarianceInr != null) ? `₹${scenarios.reduce((sum, scenario) => sum + Number(scenario.costVarianceInr || 0), 0).toLocaleString()} INR` : 'Not calculated'}
+          subtitle="Persisted scenario outcome"
           badgeText="Within Budget"
           badgeType="warning"
           loading={loading}
         />
         <KpiCard
           title="Simulated Service Level Delta"
-          value="+1.2%"
-          subtitle="Boosts service level from 97.3% to 98.5%"
+          value={scenarios.find((scenario) => scenario.serviceLevelDelta != null)?.serviceLevelDelta ?? 'Not calculated'}
+          subtitle="Persisted scenario outcome"
           badgeText="SLA Compliant"
           badgeType="success"
           loading={loading}
@@ -74,7 +71,7 @@ export default function ScenarioStudioPage() {
               <span>Side-by-Side S&OP Executive Trade-Off Comparison Matrix</span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Compare Baseline vs Simulated What-If Scenarios before promoting the official Executive S&OP plan.
+              Review persisted What-If assumptions and calculated outcomes before promoting an Executive S&OP plan.
             </p>
           </div>
 
@@ -87,72 +84,36 @@ export default function ScenarioStudioPage() {
           </button>
         </div>
 
-        {/* Side-by-Side Matrix Table */}
+        {/* Persisted scenario records */}
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left text-slate-700 dark:text-slate-300">
             <thead className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 uppercase font-semibold border-b border-slate-200 dark:border-slate-800">
               <tr>
-                <th className="px-4 py-3 min-w-[200px]">Strategic Metric</th>
-                <th className="px-4 py-3 min-w-[180px] bg-slate-100/80 dark:bg-slate-900/80">Active Baseline Plan</th>
-                <th className="px-4 py-3 min-w-[200px] bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300">
-                  Scenario A: Festive Surge (+20%)
-                </th>
-                <th className="px-4 py-3 min-w-[200px]">
-                  Scenario B: Supplier Disruption (14d)
-                </th>
+                <th className="px-4 py-3 min-w-[240px]">Scenario</th>
+                <th className="px-4 py-3">Assumption</th>
+                <th className="px-4 py-3">Generated Plan</th>
+                <th className="px-4 py-3">Cost Variance</th>
+                <th className="px-4 py-3">Service Delta</th>
+                <th className="px-4 py-3">Revenue Risk Recovered</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Gross Forecast Demand</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">124,800 Units</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 font-bold text-purple-600 dark:text-purple-400">149,760 Units (+20%)</td>
-                <td className="px-4 py-3">124,800 Units</td>
-              </tr>
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Planned Production Runs</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">85,000 Units</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 text-emerald-600 dark:text-emerald-400 font-semibold">105,000 Units</td>
-                <td className="px-4 py-3">85,000 Units</td>
-              </tr>
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Planned Vendor Purchases</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">48,000 Units</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 text-cyan-600 dark:text-cyan-400 font-semibold">58,000 Units</td>
-                <td className="px-4 py-3 text-rose-600 dark:text-rose-400">32,000 Units (-33%)</td>
-              </tr>
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Projected Service Level (%)</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">97.3%</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 font-bold text-emerald-600 dark:text-emerald-400">98.5% (+1.2%)</td>
-                <td className="px-4 py-3 text-rose-600 dark:text-rose-400">91.4% (-5.9%)</td>
-              </tr>
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Total Supply Plan Cost</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">₹42.5M INR</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 font-bold text-slate-900 dark:text-slate-100">₹43.75M INR (+₹1.25M)</td>
-                <td className="px-4 py-3">₹38.2M INR</td>
-              </tr>
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">Unfulfilled Revenue at Risk</td>
-                <td className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/40">₹1.5M INR</td>
-                <td className="px-4 py-3 bg-purple-50/30 dark:bg-purple-950/20 text-emerald-600 dark:text-emerald-400 font-bold">₹0.00 INR (Fully Recovered)</td>
-                <td className="px-4 py-3 text-rose-600 dark:text-rose-400 font-bold">₹4.8M INR</td>
-              </tr>
-              <tr className="bg-slate-50 dark:bg-slate-950/60">
-                <td className="px-4 py-4 font-bold text-slate-900 dark:text-white">Executive Consensus Action</td>
-                <td className="px-4 py-4 bg-slate-50/50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400">Active Baseline</td>
-                <td className="px-4 py-4 bg-purple-50/50 dark:bg-purple-950/40">
-                  <button
-                    onClick={() => alert("Published Official Executive S&OP Supply Plan!")}
-                    className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-purple-600/40 transition-all"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Publish Official S&OP Plan</span>
-                  </button>
-                </td>
-                <td className="px-4 py-4 text-slate-500 dark:text-slate-500">Not Recommended</td>
-              </tr>
+              {!loading && scenarios.length === 0 && (
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500">No persisted scenarios found.</td></tr>
+              )}
+              {scenarios.map((scenario) => (
+                <tr key={scenario._id || scenario.scenarioName} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                  <td className="px-4 py-3">
+                    <div className="font-semibold font-sans text-slate-900 dark:text-white">{scenario.scenarioName}</div>
+                    <div className="mt-1 font-sans text-[11px] text-slate-500">{scenario.description}</div>
+                  </td>
+                  <td className="px-4 py-3">{scenario.assumptionType}: {scenario.assumptionValue ?? '—'}</td>
+                  <td className="px-4 py-3">{scenario.generatedSupplyPlanId || 'Not generated'}</td>
+                  <td className="px-4 py-3">{formatOutcome(scenario.costVarianceInr, (value) => `₹${Number(value).toLocaleString()} INR`)}</td>
+                  <td className="px-4 py-3">{formatOutcome(scenario.serviceLevelDelta, (value) => `${value}%`)}</td>
+                  <td className="px-4 py-3">{formatOutcome(scenario.revenueAtRiskRecovered, (value) => `₹${Number(value).toLocaleString()} INR`)}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -160,4 +121,3 @@ export default function ScenarioStudioPage() {
     </SupplyChainLayout>
   )
 }
-

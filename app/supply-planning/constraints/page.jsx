@@ -48,14 +48,25 @@ export default function ConstraintsPage() {
   const handleInspectDrawer = async (row) => {
     setActiveDrawer(row)
     try {
-      const res = await fetch(`/api/v1/supply-planning?action=root_cause_analysis&constraintId=${row._id}`)
+      const res = await fetch(`/api/v1/supply-planning?action=root_cause_analysis&domain=${row.constraintType}&skuCode=${row.skuCode}`)
       const json = await res.json()
       if (json.success) {
-        setRootCauseTree(json.data)
+        const record = Array.isArray(json.data) ? json.data[0] : json.data
+        setRootCauseTree(record ? { ...record, causalTreeNodes: record.causalTreeNodes || record.causalChainNodes, recommendedMitigation: record.recommendedMitigation || record.correctiveActions?.[0] } : null)
       }
     } catch (e) {
       console.error('Failed to fetch root cause tree:', e)
     }
+  }
+
+  const handleExecutiveAction = async (recommendation) => {
+    const response = await fetch('/api/v1/supply-planning', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'execute_executive_recommendation', recommendationId: recommendation.recommendationId, actionCode: recommendation.actionCode })
+    })
+    const payload = await response.json()
+    if (payload.success) setExecRecommendations((rows) => rows.map((row) => row.recommendationId === recommendation.recommendationId ? { ...row, status: payload.data.status } : row))
   }
 
   return (
@@ -72,8 +83,8 @@ export default function ConstraintsPage() {
         />
         <KpiCard
           title="Revenue at Risk (INR)"
-          value="₹1.5M INR"
-          subtitle="1,200 units deficit in Week 41"
+          value={`₹${constraints.reduce((sum, row) => sum + Number(row.revenueAtRiskInr || 0), 0).toLocaleString()} INR`}
+          subtitle={constraints[0]?.description || 'No active constraint'}
           badgeText="High Impact"
           badgeType="warning"
           loading={loading}
@@ -100,19 +111,19 @@ export default function ConstraintsPage() {
             {execRecommendations.map((rec, idx) => (
               <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl space-y-3 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{rec.optionId}</span>
+                  <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{rec.recommendationId}</span>
                   <StatusBadge status={rec.status} />
                 </div>
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white">{rec.title}</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400">{rec.description}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">{rec.reason}</p>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <span className="text-slate-600 dark:text-slate-400">Cost: +₹{rec.costVarianceInr?.toLocaleString()}</span>
-                  <span className="text-emerald-600 dark:text-emerald-400">SLA: {rec.serviceLevelImpact}</span>
-                  <span className="text-purple-600 dark:text-purple-400">Recovered: ₹{rec.revenueRecoveredInr?.toLocaleString()}</span>
-                  <span className="text-amber-500">Score: {rec.recommendationScore}/100</span>
+                  <span className="text-slate-600 dark:text-slate-400">Cost: {rec.businessImpact?.costVarianceInr == null ? 'Not calculated' : `₹${rec.businessImpact.costVarianceInr.toLocaleString()}`}</span>
+                  <span className="text-emerald-600 dark:text-emerald-400">SLA: {rec.expectedImprovement?.orderFulfillmentSla || 'Not calculated'}</span>
+                  <span className="text-purple-600 dark:text-purple-400">Recovered: {rec.businessImpact?.revenueAtRiskRecoveredInr == null ? 'Not calculated' : `₹${rec.businessImpact.revenueAtRiskRecoveredInr.toLocaleString()}`}</span>
+                  <span className="text-amber-500">Confidence: {rec.confidence || 'Not calculated'}</span>
                 </div>
                 <button
-                  onClick={() => alert(`Approved ${rec.optionId}: Executive Plan Promoted!`)}
+                  onClick={() => handleExecutiveAction(rec)}
                   className="w-full mt-2 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition-colors"
                 >
                   Approve Executive Trade-Off

@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "6a7abde8204e8027eff76a5f",
+    "recommendationId": "EXEC-CAPACITY-1",
+    "title": "Resolve capacity constraint for SKU-BOAT-AD141",
+    "reason": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
+    "businessImpact": {
+      "costVarianceInr": null,
+      "revenueAtRiskRecoveredInr": 1558800,
+      "marginImpactPct": null,
+      "summary": "Protect up to ₹15,58,800 of persisted revenue at risk."
+    },
+    "expectedImprovement": {
+      "orderFulfillmentSla": null,
+      "stockoutReductionPct": null,
+      "daysOfSupplyRecovery": null
+    },
+    "priority": "HIGH",
+    "confidence": null,
+    "confidenceScore": null,
+    "executiveExplanation": "Immediate Action Required: Shift volume from bottleneck WH-NORTH-DELHI to qualified secondary assembly line or expedite raw material intake.",
+    "actionCode": "REVIEW_STORED_CONSTRAINT",
+    "status": "RECOMMENDED",
+    "createdAt": "2026-07-29T11:36:22.952711Z"
+  }
+]

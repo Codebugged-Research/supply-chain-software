@@ -1,0 +1,30 @@
+[
+  {
+    "supplierCode": "SUP-DIXON-NOIDA",
+    "onTimeDelivery4Week": 96.5,
+    "onTimeDelivery13Week": 96.5,
+    "onTimeDelivery52Week": 96.5,
+    "measuredAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "supplierCode": "SUP-FOXCONN-TN",
+    "onTimeDelivery4Week": 97.2,
+    "onTimeDelivery13Week": 97.2,
+    "onTimeDelivery52Week": 97.2,
+    "measuredAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "supplierCode": "SUP-SYRMA-HR",
+    "onTimeDelivery4Week": 94,
+    "onTimeDelivery13Week": 94,
+    "onTimeDelivery52Week": 94,
+    "measuredAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "supplierCode": "SUP-AAC-SHENZHEN",
+    "onTimeDelivery4Week": 91,
+    "onTimeDelivery13Week": 91,
+    "onTimeDelivery52Week": 91,
+    "measuredAt": "2026-08-11T00:00:00.000Z"
+  }
+]

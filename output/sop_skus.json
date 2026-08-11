@@ -1,0 +1,170 @@
+[
+  {
+    "id": "SKU-BOAT-AD141",
+    "name": "boAt Airdopes 141",
+    "category": "TWS Earbuds",
+    "price": 1299,
+    "cost": 480,
+    "baseWeekly": 1400,
+    "seasonPeakWeek": 44,
+    "seasonAmp": 0.28,
+    "growth": 0.008,
+    "lifecycleStage": "GROWTH"
+  },
+  {
+    "id": "SKU-BOAT-AD131",
+    "name": "boAt Airdopes 131",
+    "category": "TWS Earbuds",
+    "price": 1299,
+    "cost": 820,
+    "baseWeekly": 1600,
+    "seasonPeakWeek": 43,
+    "seasonAmp": 0.24,
+    "growth": 0.005
+  },
+  {
+    "id": "SKU-BOAT-AD161P",
+    "name": "boAt Airdopes 161 Pro",
+    "category": "TWS Earbuds",
+    "price": 1999,
+    "cost": 1300,
+    "baseWeekly": 900,
+    "seasonPeakWeek": 45,
+    "seasonAmp": 0.32,
+    "growth": 0.012
+  },
+  {
+    "id": "SKU-BOAT-RZ255",
+    "name": "boAt Rockerz 255 Pro+",
+    "category": "Neckbands",
+    "price": 1299,
+    "cost": 800,
+    "baseWeekly": 1100,
+    "seasonPeakWeek": 30,
+    "seasonAmp": 0.22,
+    "growth": 0.004
+  },
+  {
+    "id": "SKU-BOAT-RZ245",
+    "name": "boAt Rockerz 245v2",
+    "category": "Neckbands",
+    "price": 999,
+    "cost": 620,
+    "baseWeekly": 1350,
+    "seasonPeakWeek": 29,
+    "seasonAmp": 0.2,
+    "growth": 0.002
+  },
+  {
+    "id": "SKU-BOAT-RZ330",
+    "name": "boAt Rockerz 330 Pro",
+    "category": "Neckbands",
+    "price": 1499,
+    "cost": 950,
+    "baseWeekly": 700,
+    "seasonPeakWeek": 31,
+    "seasonAmp": 0.25,
+    "growth": 0.007
+  },
+  {
+    "id": "SKU-BOAT-WC100",
+    "name": "boAt Wave Connect",
+    "category": "Smartwatches",
+    "price": 1799,
+    "cost": 1150,
+    "baseWeekly": 850,
+    "seasonPeakWeek": 45,
+    "seasonAmp": 0.3,
+    "growth": 0.015
+  },
+  {
+    "id": "SKU-BOAT-LD100",
+    "name": "boAt Lunar Discovery",
+    "category": "Smartwatches",
+    "price": 1799,
+    "cost": 720,
+    "baseWeekly": 420,
+    "seasonPeakWeek": 46,
+    "seasonAmp": 0.34,
+    "growth": 0.018,
+    "lifecycleStage": "NPI"
+  },
+  {
+    "id": "SKU-BOAT-XT200",
+    "name": "boAt Xtend",
+    "category": "Smartwatches",
+    "price": 3299,
+    "cost": 2150,
+    "baseWeekly": 300,
+    "seasonPeakWeek": 44,
+    "seasonAmp": 0.3,
+    "growth": 0.01
+  },
+  {
+    "id": "SKU-BOAT-ST350",
+    "name": "boAt Stone 350",
+    "category": "Portable Speakers",
+    "price": 1499,
+    "cost": 580,
+    "baseWeekly": 380,
+    "seasonPeakWeek": 47,
+    "seasonAmp": 0.36,
+    "growth": 0.009,
+    "lifecycleStage": "MATURE"
+  },
+  {
+    "id": "SKU-BOAT-ST1508",
+    "name": "boAt Stone 1508",
+    "category": "Portable Speakers",
+    "price": 5999,
+    "cost": 3900,
+    "baseWeekly": 150,
+    "seasonPeakWeek": 48,
+    "seasonAmp": 0.4,
+    "growth": 0.006
+  },
+  {
+    "id": "SKU-BOAT-PP20",
+    "name": "boAt Party Pal 20",
+    "category": "Portable Speakers",
+    "price": 8999,
+    "cost": 5900,
+    "baseWeekly": 70,
+    "seasonPeakWeek": 49,
+    "seasonAmp": 0.45,
+    "growth": 0.011
+  },
+  {
+    "id": "SKU-BOAT-BH100",
+    "name": "boAt Bassheads 100",
+    "category": "Wired Audio",
+    "price": 399,
+    "cost": 240,
+    "baseWeekly": 2200,
+    "seasonPeakWeek": 20,
+    "seasonAmp": 0.14,
+    "growth": -0.002
+  },
+  {
+    "id": "SKU-BOAT-BH225",
+    "name": "boAt Bassheads 225",
+    "category": "Wired Audio",
+    "price": 599,
+    "cost": 360,
+    "baseWeekly": 1500,
+    "seasonPeakWeek": 22,
+    "seasonAmp": 0.16,
+    "growth": -0.001
+  },
+  {
+    "id": "SKU-BOAT-IM201",
+    "name": "boAt Immortal IM 201",
+    "category": "Wired Audio",
+    "price": 699,
+    "cost": 430,
+    "baseWeekly": 950,
+    "seasonPeakWeek": 25,
+    "seasonAmp": 0.18,
+    "growth": 0.003
+  }
+]

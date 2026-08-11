@@ -27,7 +27,19 @@ import {
   executeRcaCorrectiveAction,
   getExecutiveRecommendations,
   generateExecutiveRecommendationEngine,
-  executeExecutiveRecommendation
+  executeExecutiveRecommendation,
+  getPoHandoverAdherence,
+  getPoAdherenceSummary,
+  setPoExclusionFlag,
+  getOdmEmsMaster,
+  getSupplierReliabilityScorecard,
+  getCapacityHorizonLegend,
+  getRoughCutProductionPlan,
+  getConsensusProductionPlanStatus,
+  submitConsensusProductionPlanForReview,
+  reviewConsensusProductionPlan,
+  lockConsensusProductionPlan,
+  getImportControlTower
 } from '@/lib/supplyChainService'
 
 export async function GET(request) {
@@ -36,7 +48,7 @@ export async function GET(request) {
 
   try {
     if (action === 'overview') {
-      const data = await getOverviewMetrics()
+      const data = await getOverviewMetrics(searchParams.get('portfolio') || 'all')
       return NextResponse.json({ success: true, data })
     }
 
@@ -68,6 +80,11 @@ export async function GET(request) {
 
     if (action === 'distribution') {
       const data = await getDistributionNetwork()
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'import_control_tower') {
+      const data = await getImportControlTower()
       return NextResponse.json({ success: true, data })
     }
 
@@ -156,6 +173,49 @@ export async function GET(request) {
       return NextResponse.json({ success: true, data })
     }
 
+    if (action === 'po_hod_adherence') {
+      const supplierCode = searchParams.get('supplierCode')
+      const skuCode = searchParams.get('skuCode')
+      const data = await getPoHandoverAdherence({ supplierCode, skuCode })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'po_adherence_summary') {
+      const supplierCode = searchParams.get('supplierCode')
+      const skuCode = searchParams.get('skuCode')
+      const data = await getPoAdherenceSummary({ supplierCode, skuCode })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'odm_ems_master') {
+      const supplierCode = searchParams.get('supplierCode')
+      const data = await getOdmEmsMaster({ supplierCode })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'supplier_reliability_scorecard') {
+      const supplierCode = searchParams.get('supplierCode')
+      const data = await getSupplierReliabilityScorecard({ supplierCode })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'capacity_horizon_legend') {
+      const data = await getCapacityHorizonLegend()
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'rough_cut_production_plan') {
+      const parentSku = searchParams.get('parentSku') || searchParams.get('skuCode')
+      const plantCode = searchParams.get('plantCode')
+      const data = await getRoughCutProductionPlan({ parentSku, plantCode })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'consensus_production_plan_status') {
+      const data = await getConsensusProductionPlanStatus()
+      return NextResponse.json({ success: true, data })
+    }
+
     return NextResponse.json({ success: false, error: 'Unknown action parameter' }, { status: 400 })
 
   } catch (error) {
@@ -167,7 +227,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json()
-    const { action, recommendationId, plantCode, poNumber, actionCode, warningId, issueId } = body
+    const { action, recommendationId, plantCode, poNumber, actionCode, warningId, issueId, exclusionCode, reason, actor, decision, notes } = body
 
     if (action === 'execute_capacity_recommendation') {
       const result = await executeCapacityRecommendation(recommendationId || 'REC-PLANT-NOIDA-2026-W34')
@@ -181,6 +241,26 @@ export async function POST(request) {
 
     if (action === 'execute_procurement_action') {
       const result = await executeProcurementAlignmentAction(poNumber, actionCode)
+      return NextResponse.json({ success: true, data: result })
+    }
+
+    if (action === 'set_po_exclusion') {
+      const result = await setPoExclusionFlag(poNumber, exclusionCode, reason, actor)
+      return NextResponse.json({ success: true, data: result })
+    }
+
+    if (action === 'submit_consensus_plan_for_review') {
+      const result = await submitConsensusProductionPlanForReview(actor, notes)
+      return NextResponse.json({ success: true, data: result })
+    }
+
+    if (action === 'review_consensus_plan') {
+      const result = await reviewConsensusProductionPlan(actor, decision, notes)
+      return NextResponse.json({ success: true, data: result })
+    }
+
+    if (action === 'lock_consensus_plan') {
+      const result = await lockConsensusProductionPlan(actor)
       return NextResponse.json({ success: true, data: result })
     }
 

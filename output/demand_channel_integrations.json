@@ -1,0 +1,116 @@
+[
+  {
+    "distributorId": "DST-001",
+    "distributorName": "boAt North Distribution Hub",
+    "region": "North",
+    "tier": "A",
+    "channelType": "GENERAL_TRADE",
+    "sourceType": "EDI_SFTP",
+    "expectedCadenceHours": 4,
+    "dataDomains": [
+      "TERTIARY_SALES",
+      "CHANNEL_STOCK",
+      "DOS"
+    ],
+    "enabled": true,
+    "lastSyncAt": "2026-08-11T02:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed",
+    "freshnessHours": 3.5,
+    "recordCount": 390,
+    "activeListings": 10,
+    "healthStatus": "HEALTHY",
+    "gapFlag": null
+  },
+  {
+    "distributorId": "DST-002",
+    "distributorName": "Western India Audio Channel Partners",
+    "region": "West",
+    "tier": "A",
+    "channelType": "MODERN_TRADE_OFFLINE",
+    "sourceType": "EDI_SFTP",
+    "expectedCadenceHours": 4,
+    "dataDomains": [
+      "TERTIARY_SALES",
+      "CHANNEL_STOCK",
+      "DOS"
+    ],
+    "enabled": true,
+    "lastSyncAt": "2026-08-11T02:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed",
+    "freshnessHours": 3.5,
+    "recordCount": 390,
+    "activeListings": 11,
+    "healthStatus": "HEALTHY",
+    "gapFlag": null
+  },
+  {
+    "distributorId": "DST-003",
+    "distributorName": "Northland Electronics Distributors",
+    "region": "North",
+    "tier": "B",
+    "channelType": "ONLINE_MARKETPLACE",
+    "sourceType": "API_PULL",
+    "expectedCadenceHours": 8,
+    "dataDomains": [
+      "TERTIARY_SALES",
+      "CHANNEL_STOCK"
+    ],
+    "enabled": true,
+    "lastSyncAt": "2026-08-10T22:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed",
+    "freshnessHours": 7.5,
+    "recordCount": 390,
+    "activeListings": 11,
+    "healthStatus": "HEALTHY",
+    "gapFlag": "Missing feed coverage: DOS."
+  },
+  {
+    "distributorId": "DST-004",
+    "distributorName": "South India Digital Retail Network",
+    "region": "South",
+    "tier": "A",
+    "channelType": "D2C",
+    "sourceType": "EDI_SFTP",
+    "expectedCadenceHours": 4,
+    "dataDomains": [
+      "TERTIARY_SALES",
+      "CHANNEL_STOCK",
+      "DOS"
+    ],
+    "enabled": true,
+    "lastSyncAt": "2026-08-11T02:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed",
+    "freshnessHours": 3.5,
+    "recordCount": 390,
+    "activeListings": 10,
+    "healthStatus": "HEALTHY",
+    "gapFlag": null
+  },
+  {
+    "distributorId": "DST-005",
+    "distributorName": "West Bharat Consumer Electronics Traders",
+    "region": "West",
+    "tier": "C",
+    "channelType": "GENERAL_TRADE",
+    "sourceType": "MANUAL_UPLOAD",
+    "expectedCadenceHours": 24,
+    "dataDomains": [
+      "TERTIARY_SALES",
+      "CHANNEL_STOCK",
+      "DOS"
+    ],
+    "enabled": true,
+    "lastSyncAt": "2026-08-09T17:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed",
+    "freshnessHours": 36.5,
+    "recordCount": 390,
+    "activeListings": 11,
+    "healthStatus": "DEGRADED",
+    "gapFlag": "Last feed exceeds the 24h cadence SLA."
+  }
+]

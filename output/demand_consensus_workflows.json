@@ -1,0 +1,132 @@
+[
+  {
+    "workflowId": "DCW-SKU-BOAT-AD141",
+    "skuId": "SKU-BOAT-AD141",
+    "skuName": "boAt Airdopes 141",
+    "planningWeek": "2026-W33",
+    "horizonType": "SHORT",
+    "statisticalFcst": 5600,
+    "channelSubmittedFcst": 5824,
+    "proposedConsensusFcst": 5936,
+    "finalConsensusFcst": null,
+    "status": "CATEGORY_REVIEW",
+    "currentStepOwner": "Category Manager",
+    "auditTrail": [
+      {
+        "auditId": "AUD-0-1",
+        "action": "CREATED",
+        "actorRole": "Demand Planner",
+        "actor": "demand.planner@boat.com",
+        "oldValue": null,
+        "newValue": 5936,
+        "reason": "Initial consensus proposal",
+        "at": "2026-08-11T04:54:52.680Z"
+      }
+    ],
+    "updatedAt": "2026-08-11T05:54:52.680Z"
+  },
+  {
+    "workflowId": "DCW-SKU-BOAT-AD131",
+    "skuId": "SKU-BOAT-AD131",
+    "skuName": "boAt Airdopes 131",
+    "planningWeek": "2026-W33",
+    "horizonType": "SHORT",
+    "statisticalFcst": 6400,
+    "channelSubmittedFcst": 6656,
+    "proposedConsensusFcst": 6144,
+    "finalConsensusFcst": null,
+    "status": "SALES_REVIEW",
+    "currentStepOwner": "Sales Head",
+    "auditTrail": [
+      {
+        "auditId": "AUD-1-1",
+        "action": "CREATED",
+        "actorRole": "Demand Planner",
+        "actor": "demand.planner@boat.com",
+        "oldValue": null,
+        "newValue": 6144,
+        "reason": "Initial consensus proposal",
+        "at": "2026-08-11T03:54:52.680Z"
+      }
+    ],
+    "updatedAt": "2026-08-11T05:54:52.680Z"
+  },
+  {
+    "workflowId": "DCW-SKU-BOAT-AD161P",
+    "skuId": "SKU-BOAT-AD161P",
+    "skuName": "boAt Airdopes 161 Pro",
+    "planningWeek": "2026-W33",
+    "horizonType": "MID",
+    "statisticalFcst": 3600,
+    "channelSubmittedFcst": 3744,
+    "proposedConsensusFcst": 3996,
+    "finalConsensusFcst": null,
+    "status": "SOP_REVIEW",
+    "currentStepOwner": "S&OP Lead",
+    "auditTrail": [
+      {
+        "auditId": "AUD-2-1",
+        "action": "CREATED",
+        "actorRole": "Demand Planner",
+        "actor": "demand.planner@boat.com",
+        "oldValue": null,
+        "newValue": 3996,
+        "reason": "Initial consensus proposal",
+        "at": "2026-08-11T02:54:52.680Z"
+      }
+    ],
+    "updatedAt": "2026-08-11T05:54:52.680Z"
+  },
+  {
+    "workflowId": "DCW-SKU-BOAT-RZ255",
+    "skuId": "SKU-BOAT-RZ255",
+    "skuName": "boAt Rockerz 255 Pro+",
+    "planningWeek": "2026-W33",
+    "horizonType": "MID",
+    "statisticalFcst": 4400,
+    "channelSubmittedFcst": 4576,
+    "proposedConsensusFcst": 4488,
+    "finalConsensusFcst": null,
+    "status": "FINANCE_REVIEW",
+    "currentStepOwner": "Finance",
+    "auditTrail": [
+      {
+        "auditId": "AUD-3-1",
+        "action": "CREATED",
+        "actorRole": "Demand Planner",
+        "actor": "demand.planner@boat.com",
+        "oldValue": null,
+        "newValue": 4488,
+        "reason": "Initial consensus proposal",
+        "at": "2026-08-11T01:54:52.680Z"
+      }
+    ],
+    "updatedAt": "2026-08-11T05:54:52.680Z"
+  },
+  {
+    "workflowId": "DCW-SKU-BOAT-RZ245",
+    "skuId": "SKU-BOAT-RZ245",
+    "skuName": "boAt Rockerz 245v2",
+    "planningWeek": "2026-W33",
+    "horizonType": "MID",
+    "statisticalFcst": 5400,
+    "channelSubmittedFcst": 5616,
+    "proposedConsensusFcst": 4968,
+    "finalConsensusFcst": 4968,
+    "status": "LOCKED",
+    "currentStepOwner": null,
+    "auditTrail": [
+      {
+        "auditId": "AUD-4-1",
+        "action": "CREATED",
+        "actorRole": "Demand Planner",
+        "actor": "demand.planner@boat.com",
+        "oldValue": null,
+        "newValue": 4968,
+        "reason": "Initial consensus proposal",
+        "at": "2026-08-11T00:54:52.680Z"
+      }
+    ],
+    "updatedAt": "2026-08-11T05:54:52.680Z"
+  }
+]

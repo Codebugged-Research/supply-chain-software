@@ -1,0 +1,55 @@
+[
+  {
+    "eventId": "EVT-DIWALI",
+    "eventName": "Diwali Audio Festival",
+    "eventType": "FESTIVAL",
+    "startWeek": "2026-W28",
+    "endWeek": "2026-W31",
+    "affectedSkus": [],
+    "affectedChannels": [],
+    "upliftPercent": 32,
+    "status": "PLANNED",
+    "actualUpliftPercent": null,
+    "createdAt": "2026-08-11T05:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed"
+  },
+  {
+    "eventId": "EVT-MARKETPLACE",
+    "eventName": "Marketplace Mega Days",
+    "eventType": "PROMOTIONAL",
+    "startWeek": "2026-W22",
+    "endWeek": "2026-W23",
+    "affectedSkus": [
+      "SKU-BOAT-AD141",
+      "SKU-BOAT-WC100"
+    ],
+    "affectedChannels": [
+      "DST-003"
+    ],
+    "upliftPercent": 24,
+    "status": "ACTIVE",
+    "actualUpliftPercent": null,
+    "createdAt": "2026-08-11T05:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed"
+  },
+  {
+    "eventId": "EVT-MONSOON",
+    "eventName": "Monsoon Wearables Campaign",
+    "eventType": "TRADE_CAMPAIGN",
+    "startWeek": "2026-W15",
+    "endWeek": "2026-W16",
+    "affectedSkus": [
+      "SKU-BOAT-LD100",
+      "SKU-BOAT-XT200"
+    ],
+    "affectedChannels": [],
+    "upliftPercent": 18,
+    "status": "COMPLETED",
+    "actualUpliftPercent": 16,
+    "createdAt": "2026-08-11T05:54:52.680Z",
+    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "updatedBy": "system.seed"
+  }
+]

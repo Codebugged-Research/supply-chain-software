@@ -34,13 +34,16 @@ export default function SupplyOverviewPage() {
   const [earlyWarnings, setEarlyWarnings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [horizon, setHorizon] = useState('short')
+  const [demandSignal, setDemandSignal] = useState('consensusDemand')
+  const [portfolio, setPortfolio] = useState('all')
 
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true)
         const [resOverview, resWarnings] = await Promise.all([
-          fetch('/api/v1/supply-planning?action=overview'),
+          fetch(`/api/v1/supply-planning?action=overview&portfolio=${portfolio}`),
           fetch('/api/v1/supply-planning?action=early_warning_system')
         ])
         const jsonOverview = await resOverview.json()
@@ -55,9 +58,15 @@ export default function SupplyOverviewPage() {
       }
     }
     fetchData()
-  }, [])
+  }, [portfolio])
 
   const trendData = data?.demandVsSupplyTrend || []
+  const horizonRows = horizon === 'short' ? trendData.slice(0, 4) : trendData.slice(4, 26)
+  const displayTrendData = horizonRows.map((row) => ({
+    ...row,
+    selectedDemand: Math.round(row[demandSignal] ?? row.demand),
+    selectedSupply: Math.round(row.totalSupply)
+  }))
 
   return (
     <SupplyChainLayout activeTitle="Supply Overview & Executive Cockpit">
@@ -94,7 +103,7 @@ export default function SupplyOverviewPage() {
                 Predictive Early Warning Radar (4 to 12 Weeks Out)
               </h3>
               <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
-                <strong>{earlyWarnings[0]?.category} ({earlyWarnings[0]?.probability} Risk):</strong> {earlyWarnings[0]?.triggerDescription} ({earlyWarnings[0]?.horizonWeek})
+                <strong>{earlyWarnings[0]?.riskCategory} ({earlyWarnings[0]?.probability}):</strong> {earlyWarnings[0]?.impact} ({earlyWarnings[0]?.horizonWeek})
               </p>
             </div>
           </div>
@@ -112,7 +121,7 @@ export default function SupplyOverviewPage() {
         <KpiCard
           title="Order Fulfillment Rate"
           value={data ? `${data.serviceLevel}%` : '94.2%'}
-          subtitle="198.2k units committed / 210.5k demand"
+          subtitle={data ? `${data.committedUnits.toLocaleString()} units committed / ${data.totalForecastUnits.toLocaleString()} demand` : ''}
           trend="neutral"
           trendValue="Target SLA: 95.0%"
           loading={loading}
@@ -123,7 +132,7 @@ export default function SupplyOverviewPage() {
         <KpiCard
           title="Expected Stock Shortage"
           value={data ? `${data.totalDeficitUnits.toLocaleString()} Units` : '1,200 Units'}
-          subtitle="₹18.0 Lakhs revenue risk in Week 34"
+          subtitle={data ? `₹${data.revenueAtRiskLakhs} Lakhs revenue risk` : ''}
           trend="down"
           trendValue="Needs PO Requisition"
           loading={loading}
@@ -134,7 +143,7 @@ export default function SupplyOverviewPage() {
         <KpiCard
           title="Factory Line Bottlenecks"
           value={data ? `${data.activeConstraintsCount} Alert` : '1 Alert'}
-          subtitle="Noida Factory Line-2 overloaded in W34"
+          subtitle={data?.activeConstraintsCount ? 'Open constraints from supply_constraints' : 'No active constraint'}
           trend="neutral"
           trendValue="Shift Rebalancing Required"
           loading={loading}
@@ -145,7 +154,7 @@ export default function SupplyOverviewPage() {
         <KpiCard
           title="Warehouse Stock Available"
           value={data ? `${(data.totalStockUnits / 1000).toFixed(1)}k Units` : '193.8k Units'}
-          subtitle="43 Days of Stock Coverage across 4 DCs"
+          subtitle={data ? `${data.daysOfSupply} Days of Stock Coverage across 4 DCs` : ''}
           trend="up"
           trendValue="Healthy Buffer"
           loading={loading}
@@ -153,6 +162,13 @@ export default function SupplyOverviewPage() {
           badgeText="Normal"
           badgeType="info"
         />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KpiCard title="PO Handover Adherence" value={data ? `${data.poHandoverAdherencePct}%` : '—'} subtitle="Persisted 13-week adherence history" badgeText="Target 95%" badgeType="warning" loading={loading} />
+        <KpiCard title="Supplier / ODM Reliability" value={data?.supplierReliabilityScore ?? '—'} subtitle="Persisted supplier performance inputs" badgeText="Reliability" badgeType="success" loading={loading} />
+        <KpiCard title="RM & FG Imports In-Transit" value={data ? `${(data.importsInTransitUnits / 1000).toFixed(1)}k Units` : '—'} subtitle={data ? `${data.importShipmentCount} shipments; ${data.importCustomsHoldCount} customs hold` : ''} trendValue={data ? `₹${(data.importLandedLogisticsInr / 100000).toFixed(1)}L landed logistics` : ''} badgeText={data ? `${data.importAtRiskCount} At Risk` : ''} badgeType="warning" loading={loading} />
+        <KpiCard title="NPI Supply Readiness" value={data?.npiSupplyReadinessPct == null ? '—' : `${data.npiSupplyReadinessPct}%`} subtitle={data ? `${data.npiLaunchCount} persisted launch plans` : ''} badgeText="DB-backed" badgeType="info" loading={loading} />
       </div>
 
       {/* Demand vs. Supply Trend Chart Component */}
@@ -169,7 +185,22 @@ export default function SupplyOverviewPage() {
             </p>
           </div>
 
-          <div className="flex items-center space-x-4 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+            <select value={horizon} onChange={(e) => setHorizon(e.target.value)} aria-label="Planning horizon" className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-none">
+              <option value="short">Short term · W1–W4</option>
+              <option value="medium">Medium term · W5–W26</option>
+            </select>
+            <select value={demandSignal} onChange={(e) => setDemandSignal(e.target.value)} aria-label="Demand signal" className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-none">
+              <option value="consensusDemand">Consensus demand</option>
+              <option value="customerOrders">Customer orders</option>
+              <option value="statisticalDemand">Statistical forecast</option>
+            </select>
+            <select value={portfolio} onChange={(e) => setPortfolio(e.target.value)} aria-label="Product portfolio" className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-none">
+              <option value="all">All product families</option>
+              <option value="tws">TWS & Airdopes</option>
+              <option value="wearables">Wearables</option>
+              <option value="audio">Audio & Speakers</option>
+            </select>
             <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/50 text-indigo-700 dark:text-indigo-300">
               <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
               <span>Customer Demand</span>
@@ -189,7 +220,7 @@ export default function SupplyOverviewPage() {
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <AreaChart data={displayTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDemand" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
@@ -244,7 +275,7 @@ export default function SupplyOverviewPage() {
                 />
                 <Area
                   type="monotone"
-                  dataKey="demand"
+                  dataKey="selectedDemand"
                   name="Consensus Demand"
                   stroke="#6366f1"
                   strokeWidth={2.5}
@@ -253,7 +284,7 @@ export default function SupplyOverviewPage() {
                 />
                 <Area
                   type="monotone"
-                  dataKey="totalSupply"
+                  dataKey="selectedSupply"
                   name="Committed Supply"
                   stroke="#10b981"
                   strokeWidth={2.5}
@@ -263,6 +294,10 @@ export default function SupplyOverviewPage() {
               </AreaChart>
             </ResponsiveContainer>
           )}
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2 text-[10px] text-slate-500 dark:text-slate-400">
+          <span><strong className="text-slate-700 dark:text-slate-300">{horizon === 'short' ? 'Frozen execution zone:' : 'Tactical balancing zone:'}</strong> {horizon === 'short' ? 'W1–W4 is locked to approved orders and committed supply.' : 'W5–W26 remains open for PO, production and capacity balancing.'}</span>
+          <span>Refresh cadence: {horizon === 'short' ? 'Daily' : 'Weekly S&OP cycle'}</span>
         </div>
       </div>
 

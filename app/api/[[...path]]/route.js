@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
+import fs from 'fs'
+import pathModule from 'path'
 import {
   getDataset,
+  setDatasetFromStorage,
   filterWeekly,
   aggregate,
   kpis,
@@ -12,7 +15,8 @@ import {
   DISTRIBUTORS,
   SKUS,
 } from '@/lib/dummyData'
-import { getOrdersCollection } from '@/lib/mongodb'
+import { getDb, getOrdersCollection } from '@/lib/mongodb'
+import { getOverviewMetrics, getCapacityGapAnalysis, getPurchaseOrdersWorkbench, getOdmEmsMaster } from '@/lib/supplyChainService'
 import {
   fmtInrMoney,
   fmtInrInteger,
@@ -26,6 +30,664 @@ function q(request) {
 }
 
 // -----------------------------------------------------------------------
+// Demand Planning masters (POC server-memory persistence)
+// -----------------------------------------------------------------------
+let demandPlanningMasters = null
+let dashboardReviewCycle = null
+let inventoryPlanningPolicies = null
+let persistedOrderRules = null
+
+const DEMAND_COLLECTIONS = {
+  channelIntegrations: 'demand_channel_integrations',
+  listings: 'demand_listings',
+  lifecycle: 'demand_lifecycle',
+  npiForecasts: 'demand_npi_forecasts',
+  events: 'demand_events',
+  inventoryNorms: 'demand_inventory_norms',
+  consensusWorkflows: 'demand_consensus_workflows',
+}
+
+function readRouteJson(collectionName) {
+  try {
+    const file = pathModule.resolve(process.cwd(), 'output', `${collectionName}.json`)
+    return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : []
+  } catch {
+    return []
+  }
+}
+
+async function readPersistedCollection(collectionName) {
+  try {
+    const db = await getDb()
+    const rows = await db.collection(collectionName).find({}).project({ _id: 0 }).toArray()
+    if (rows.length) return rows
+  } catch (error) {
+    console.warn(`MongoDB query failed for ${collectionName}; using persistence fallback:`, error.message)
+  }
+  return readRouteJson(collectionName)
+}
+
+async function hydratePersistedState() {
+  const [regions, distributors, skus, weeks, weekly] = await Promise.all([
+    readPersistedCollection('sop_regions'),
+    readPersistedCollection('sop_distributors'),
+    readPersistedCollection('sop_skus'),
+    readPersistedCollection('sop_weeks'),
+    readPersistedCollection('sop_weekly'),
+  ])
+  setDatasetFromStorage({ regions, distributors, skus, weeks, weekly })
+
+  const demandRows = await Promise.all(Object.values(DEMAND_COLLECTIONS).map(readPersistedCollection))
+  if (demandRows.every((rows) => rows.length > 0)) {
+    demandPlanningMasters = Object.fromEntries(Object.keys(DEMAND_COLLECTIONS).map((key, idx) => [key, demandRows[idx]]))
+  }
+  const [reviewCycles, policies, storedSessions, storedOrderRules] = await Promise.all([
+    readPersistedCollection('dashboard_review_cycles'),
+    readPersistedCollection('inventory_policies'),
+    readPersistedCollection('chat_sessions'),
+    readPersistedCollection('order_rules'),
+  ])
+  if (reviewCycles.length) dashboardReviewCycle = reviewCycles[0]
+  if (policies.length) inventoryPlanningPolicies = policies
+  if (storedOrderRules.length) persistedOrderRules = storedOrderRules
+  if (storedSessions.length) {
+    chatSessions.clear()
+    storedSessions.forEach((session) => chatSessions.set(session.sessionId, session))
+  }
+}
+
+async function replacePersisted(collectionName, filter, value) {
+  const db = await getDb()
+  const persisted = { ...value }
+  delete persisted._id
+  await db.collection(collectionName).replaceOne(filter, persisted, { upsert: true })
+}
+
+async function syncDispatchRecords(orderId, distributorId, lines) {
+  const db = await getDb()
+  const collection = db.collection('dispatch_records')
+  const skuIds = lines.map((line) => line.skuId)
+  await collection.deleteMany({ orderId, skuId: { $nin: skuIds } })
+  for (const line of lines) {
+    const existing = await collection.findOne({ orderId, skuId: line.skuId })
+    const dispatchedQty = Number(existing?.dispatchedQty || 0)
+    const orderedQty = Number(line.qty || 0)
+    const gap = Math.max(0, orderedQty - dispatchedQty)
+    const status = gap === 0 ? 'Fully fulfilled' : dispatchedQty === 0 ? 'Pending' : 'Partial'
+    await collection.replaceOne({ orderId, skuId: line.skuId }, {
+      dispatchId: existing?.dispatchId || `DSP-${orderId}-${line.skuId}`,
+      orderId,
+      distributorId,
+      skuId: line.skuId,
+      skuName: line.skuName,
+      orderedQty,
+      dispatchedQty: Math.min(dispatchedQty, orderedQty),
+      gap,
+      status,
+      fillRatePct: orderedQty ? Math.round(Math.min(dispatchedQty, orderedQty) / orderedQty * 1000) / 10 : 0,
+      updatedAt: new Date().toISOString(),
+    }, { upsert: true })
+  }
+}
+
+function nextReviewAt(cadence, from = new Date()) {
+  if (cadence === 'ON_DEMAND') return null
+  const days = cadence === 'WEEKLY' ? 7 : cadence === 'FORTNIGHTLY' ? 14 : 30
+  return new Date(from.getTime() + days * 86400000).toISOString()
+}
+
+function getDashboardReviewCycle() {
+  if (!dashboardReviewCycle) {
+    const now = new Date()
+    dashboardReviewCycle = { cycleId: `SOP-${now.toISOString().slice(0, 10)}`, cadence: 'MONTHLY', status: 'OPEN', startedAt: now.toISOString(), nextReviewAt: nextReviewAt('MONTHLY', now), completedRoles: [], closedAt: null, closedBy: null, history: [] }
+  }
+  return dashboardReviewCycle
+}
+
+function serviceLevelZ(serviceLevelPct) {
+  if (serviceLevelPct >= 99) return 2.33
+  if (serviceLevelPct >= 98) return 2.05
+  if (serviceLevelPct >= 97) return 1.88
+  if (serviceLevelPct >= 95) return 1.65
+  if (serviceLevelPct >= 90) return 1.28
+  return 1.04
+}
+
+function enrichInventoryPolicy(row) {
+  const effectiveSafetyStockUnits = row.overrideSafetyStockUnits ?? row.suggestedSafetyStockUnits
+  const effectiveDos = row.overrideDos ?? row.suggestedDos
+  const reorderPointUnits = Math.round(row.avgDailyDemand * row.leadTimeDays + effectiveSafetyStockUnits)
+  const maxInventoryUnits = Math.round(row.avgDailyDemand * effectiveDos + effectiveSafetyStockUnits)
+  const inventoryStatus = row.currentInventoryUnits < reorderPointUnits ? 'REORDER' : row.currentInventoryUnits > maxInventoryUnits * 1.25 ? 'EXCESS' : 'HEALTHY'
+  return { ...row, effectiveSafetyStockUnits, effectiveDos, reorderPointUnits, maxInventoryUnits, inventoryStatus }
+}
+
+async function getInventoryPlanningPolicies() {
+  if (inventoryPlanningPolicies) return inventoryPlanningPolicies
+  const dataset = getDataset()
+  const odmEms = await getOdmEmsMaster()
+  const leadTimeBySku = new Map()
+  odmEms.forEach((vendor) => (vendor.lines || []).forEach((line) => {
+    const current = leadTimeBySku.get(line.skuCode)
+    if (!current || line.leadTimeDays < current.leadTimeDays) leadTimeBySku.set(line.skuCode, {
+      leadTimeDays: line.leadTimeDays,
+      source: `${vendor.supplierName} · ${line.lineId}`,
+      supplierName: vendor.supplierName,
+      minimumOrderQuantity: Number(line.minimumOrderQuantity || 0),
+      orderMultiple: Number(line.orderMultiple || 1),
+    })
+  }))
+
+  const analytics = SKUS.map((sku) => {
+    const history = (dataset.weekly || []).filter((row) => row.skuId === sku.id).sort((a, b) => a.weekId.localeCompare(b.weekId))
+    const weeklyTotals = new Map()
+    history.forEach((row) => weeklyTotals.set(row.weekId, (weeklyTotals.get(row.weekId) || 0) + (row.tertiary || 0)))
+    const demand = Array.from(weeklyTotals.values())
+    const avgWeeklyDemand = demand.length ? demand.reduce((sum, value) => sum + value, 0) / demand.length : 0
+    const stdDevWeeklyDemand = demand.length ? Math.sqrt(demand.reduce((sum, value) => sum + Math.pow(value - avgWeeklyDemand, 2), 0) / demand.length) : 0
+    const demandCv = avgWeeklyDemand ? stdDevWeeklyDemand / avgWeeklyDemand : 0
+    const consumptionValue = history.reduce((sum, row) => sum + (row.tertiary || 0) * (row.price || sku.price || 0), 0)
+    const latestWeek = demand.length ? Array.from(weeklyTotals.keys()).sort().at(-1) : null
+    const currentInventoryUnits = history.filter((row) => row.weekId === latestWeek).reduce((sum, row) => sum + (row.distributorStock || 0) + (row.retailStock || 0), 0)
+    return { sku, avgWeeklyDemand, stdDevWeeklyDemand, demandCv, consumptionValue, currentInventoryUnits }
+  }).sort((a, b) => b.consumptionValue - a.consumptionValue)
+
+  const totalValue = analytics.reduce((sum, row) => sum + row.consumptionValue, 0) || 1
+  let cumulativeValue = 0
+  inventoryPlanningPolicies = analytics.map((item) => {
+    cumulativeValue += item.consumptionValue
+    const cumulativePct = cumulativeValue / totalValue * 100
+    const abcClass = cumulativePct <= 80 ? 'A' : cumulativePct <= 95 ? 'B' : 'C'
+    const xyzClass = item.demandCv <= 0.25 ? 'X' : item.demandCv <= 0.5 ? 'Y' : 'Z'
+    const serviceLevelTargetPct = abcClass === 'A' ? 98 : abcClass === 'B' ? 95 : 90
+    const lead = leadTimeBySku.get(item.sku.id) || { leadTimeDays: 14, source: 'Supply Planning default lead time', supplierName: 'Unmapped supplier', minimumOrderQuantity: 0, orderMultiple: 1 }
+    const avgDailyDemand = item.avgWeeklyDemand / 7
+    const dailyStdDev = item.stdDevWeeklyDemand / Math.sqrt(7)
+    const suggestedSafetyStockUnits = Math.ceil(serviceLevelZ(serviceLevelTargetPct) * dailyStdDev * Math.sqrt(lead.leadTimeDays))
+    const suggestedDos = Math.max(7, Math.min(90, Math.ceil(lead.leadTimeDays + (avgDailyDemand ? suggestedSafetyStockUnits / avgDailyDemand : 0))))
+    return {
+      policyId: `INV-${item.sku.id}`,
+      skuId: item.sku.id,
+      skuName: item.sku.name,
+      category: item.sku.category,
+      abcClass,
+      xyzClass,
+      segment: `${abcClass}${xyzClass}`,
+      velocityClass: abcClass === 'A' ? 'FAST' : abcClass === 'B' ? 'MEDIUM' : 'SLOW',
+      variabilityClass: xyzClass === 'X' ? 'STABLE' : xyzClass === 'Y' ? 'VARIABLE' : 'ERRATIC',
+      consumptionValue: Math.round(item.consumptionValue),
+      avgWeeklyDemand: Math.round(item.avgWeeklyDemand),
+      avgDailyDemand,
+      stdDevWeeklyDemand: Math.round(item.stdDevWeeklyDemand),
+      demandCv: Number(item.demandCv.toFixed(3)),
+      leadTimeDays: lead.leadTimeDays,
+      leadTimeSource: lead.source,
+      supplierName: lead.supplierName,
+      minimumOrderQuantity: lead.minimumOrderQuantity,
+      orderMultiple: lead.orderMultiple,
+      serviceLevelTargetPct,
+      suggestedSafetyStockUnits,
+      overrideSafetyStockUnits: null,
+      suggestedDos,
+      overrideDos: null,
+      currentInventoryUnits: item.currentInventoryUnits,
+      overrideReason: null,
+      updatedAt: new Date().toISOString(),
+      updatedBy: 'system.optimizer',
+      auditTrail: [],
+    }
+  })
+  return inventoryPlanningPolicies
+}
+
+function roundProcurementQuantity(quantity, minimumOrderQuantity, orderMultiple) {
+  if (quantity <= 0) return 0
+  const minimum = Math.max(0, Number(minimumOrderQuantity) || 0)
+  const multiple = Math.max(1, Number(orderMultiple) || 1)
+  return Math.ceil(Math.max(quantity, minimum) / multiple) * multiple
+}
+
+async function buildInventoryPlanning(cadence = 'WEEKLY', assumptions = {}) {
+  const normalizedCadence = ['WEEKLY', 'MONTHLY', 'ON_REQUEST'].includes(cadence) ? cadence : 'WEEKLY'
+  const reviewDays = normalizedCadence === 'WEEKLY' ? 7 : normalizedCadence === 'MONTHLY' ? 30 : 0
+  const demandAdjustmentPct = Math.max(-50, Math.min(100, Number(assumptions.demandAdjustmentPct) || 0))
+  const dosAdjustmentDays = Math.max(-30, Math.min(60, Number(assumptions.dosAdjustmentDays) || 0))
+  const inboundRealizationPct = Math.max(0, Math.min(120, Number(assumptions.inboundRealizationPct) || 100))
+  const now = new Date()
+  const policies = (await getInventoryPlanningPolicies()).map(enrichInventoryPolicy)
+  const purchaseOrders = await getPurchaseOrdersWorkbench()
+  const poBySku = new Map()
+  purchaseOrders.forEach((po) => {
+    const outstandingUnits = Math.max(0, Number(po.orderedQty || 0) - Number(po.receivedQty || 0))
+    if (!outstandingUnits || ['CANCELLED', 'CLOSED'].includes(po.status)) return
+    const rows = poBySku.get(po.skuCode) || []
+    rows.push({ poNumber: po.poNumber, outstandingUnits, expectedDeliveryDate: po.expectedDeliveryDate, supplierName: po.supplierName, status: po.status })
+    poBySku.set(po.skuCode, rows)
+  })
+
+  const recommendations = policies.map((policy) => {
+    const openPos = poBySku.get(policy.skuId) || []
+    const openPoUnits = openPos.reduce((sum, po) => sum + po.outstandingUnits, 0)
+    const dueWithinLeadTimeUnits = openPos.filter((po) => {
+      if (!po.expectedDeliveryDate) return false
+      const days = (new Date(po.expectedDeliveryDate).getTime() - now.getTime()) / 86400000
+      return days >= 0 && days <= policy.leadTimeDays
+    }).reduce((sum, po) => sum + po.outstandingUnits, 0)
+    const nextPoDueDate = openPos.map((po) => po.expectedDeliveryDate).filter(Boolean).sort()[0] || null
+    const adjustedDailyDemand = policy.avgDailyDemand * (1 + demandAdjustmentPct / 100)
+    const inventoryPositionUnits = policy.currentInventoryUnits + openPoUnits
+    const targetCoverageDays = Math.max(policy.effectiveDos + dosAdjustmentDays, policy.leadTimeDays + reviewDays)
+    const orderUpToUnits = Math.round(adjustedDailyDemand * targetCoverageDays + policy.effectiveSafetyStockUnits)
+    const rawRecommendedOrderUnits = Math.max(0, orderUpToUnits - inventoryPositionUnits)
+    const recommendedOrderUnits = roundProcurementQuantity(rawRecommendedOrderUnits, policy.minimumOrderQuantity, policy.orderMultiple)
+    const daysUntilReorderPoint = adjustedDailyDemand ? Math.max(0, (inventoryPositionUnits - policy.reorderPointUnits) / adjustedDailyDemand) : 0
+    const orderInDays = Math.max(0, Math.floor(daysUntilReorderPoint - policy.leadTimeDays))
+    const recommendedOrderDate = new Date(now.getTime() + orderInDays * 86400000).toISOString().slice(0, 10)
+    const projectedAtReceiptUnits = Math.round(policy.currentInventoryUnits + dueWithinLeadTimeUnits - adjustedDailyDemand * policy.leadTimeDays)
+    return {
+      ...policy,
+      cadence: normalizedCadence,
+      reviewDays,
+      openPoCount: openPos.length,
+      openPoUnits,
+      dueWithinLeadTimeUnits,
+      nextPoDueDate,
+      inventoryPositionUnits,
+      orderUpToUnits,
+      recommendedOrderUnits,
+      recommendedOrderDate,
+      projectedAtReceiptUnits,
+      recommendationStatus: recommendedOrderUnits > 0 ? (orderInDays === 0 ? 'ORDER_NOW' : 'PLANNED') : 'COVERED',
+      recommendationReason: recommendedOrderUnits > 0
+        ? `${normalizedCadence.replace('_', '-')} review: replenish to ${targetCoverageDays} days after ${openPoUnits.toLocaleString('en-IN')} open-PO units.`
+        : `Inventory position and ${openPoUnits.toLocaleString('en-IN')} open-PO units cover the ${normalizedCadence.replace('_', '-')} review window.`,
+    }
+  }).sort((a, b) => b.recommendedOrderUnits - a.recommendedOrderUnits)
+
+  const health = policies.map((policy) => {
+    const recommendation = recommendations.find((row) => row.policyId === policy.policyId)
+    const daysOfSupply = policy.avgDailyDemand ? policy.currentInventoryUnits / policy.avgDailyDemand : 999
+    const flags = []
+    if (recommendation.projectedAtReceiptUnits < policy.effectiveSafetyStockUnits) flags.push('STOCKOUT_RISK')
+    if (policy.abcClass === 'C' && daysOfSupply > Math.max(90, policy.effectiveDos * 2)) flags.push('OBSOLETE_CANDIDATE')
+    else if (policy.currentInventoryUnits > policy.maxInventoryUnits * 1.25) flags.push('EXCESS')
+    if (daysOfSupply < policy.effectiveDos * 0.5 || daysOfSupply > policy.effectiveDos * 1.5) flags.push('DOS_OUTLIER')
+    return {
+      ...policy,
+      daysOfSupply: Number(daysOfSupply.toFixed(1)),
+      projectedAtReceiptUnits: recommendation.projectedAtReceiptUnits,
+      openPoUnits: recommendation.openPoUnits,
+      flags,
+      primaryHealthStatus: flags[0] || 'HEALTHY',
+      excessUnits: Math.max(0, policy.currentInventoryUnits - policy.maxInventoryUnits),
+      stockoutExposureUnits: Math.max(0, policy.effectiveSafetyStockUnits - recommendation.projectedAtReceiptUnits),
+    }
+  })
+
+  function simulateScenario(name, scenarioAssumptions) {
+    const demandFactor = 1 + scenarioAssumptions.demandAdjustmentPct / 100
+    const inboundFactor = scenarioAssumptions.inboundRealizationPct / 100
+    const skuStates = policies.map((policy) => ({ policy, closing: policy.currentInventoryUnits }))
+    let lostDemandUnits = 0
+    const projection = Array.from({ length: 12 }, (_, index) => {
+      const weekStart = new Date(now.getTime() + index * 7 * 86400000)
+      const weekEnd = new Date(weekStart.getTime() + 7 * 86400000)
+      let openingInventoryUnits = 0
+      let inboundUnits = 0
+      let demandUnits = 0
+      let closingInventoryUnits = 0
+      skuStates.forEach((state) => {
+        const { policy } = state
+        const opening = state.closing
+        const poInbound = (poBySku.get(policy.skuId) || []).filter((po) => {
+          const due = new Date(po.expectedDeliveryDate)
+          return due >= weekStart && due < weekEnd
+        }).reduce((sum, po) => sum + po.outstandingUnits, 0) * inboundFactor
+        const targetDays = Math.max(0, policy.effectiveDos + scenarioAssumptions.dosAdjustmentDays)
+        const desiredInventory = policy.avgDailyDemand * targetDays + policy.effectiveSafetyStockUnits
+        const policyReplenishment = index === Math.max(0, Math.ceil(policy.leadTimeDays / 7) - 1) ? Math.max(0, desiredInventory - policy.currentInventoryUnits - (poBySku.get(policy.skuId) || []).reduce((sum, po) => sum + po.outstandingUnits * inboundFactor, 0)) : 0
+        const inbound = poInbound + policyReplenishment
+        const demand = policy.avgWeeklyDemand * demandFactor
+        const available = opening + inbound
+        const closing = Math.max(0, available - demand)
+        lostDemandUnits += Math.max(0, demand - available)
+        state.closing = closing
+        openingInventoryUnits += opening
+        inboundUnits += inbound
+        demandUnits += demand
+        closingInventoryUnits += closing
+      })
+      return { week: `W${index + 1}`, openingInventoryUnits: Math.round(openingInventoryUnits), inboundUnits: Math.round(inboundUnits), demandUnits: Math.round(demandUnits), closingInventoryUnits: Math.round(closingInventoryUnits) }
+    })
+    const averageInventoryUnits = Math.round(projection.reduce((sum, row) => sum + row.closingInventoryUnits, 0) / projection.length)
+    return { name, assumptions: scenarioAssumptions, projection, summary: { averageInventoryUnits, endingInventoryUnits: projection.at(-1)?.closingInventoryUnits || 0, lostDemandUnits: Math.round(lostDemandUnits) } }
+  }
+
+  const customAssumptions = { demandAdjustmentPct, dosAdjustmentDays, inboundRealizationPct }
+  const scenarios = [
+    simulateScenario('Lean', { demandAdjustmentPct: 0, dosAdjustmentDays: -7, inboundRealizationPct: 90 }),
+    simulateScenario('Baseline', { demandAdjustmentPct: 0, dosAdjustmentDays: 0, inboundRealizationPct: 100 }),
+    simulateScenario('Resilient', { demandAdjustmentPct: 10, dosAdjustmentDays: 14, inboundRealizationPct: 100 }),
+    simulateScenario('Custom', customAssumptions),
+  ]
+
+  return {
+    generatedAt: now.toISOString(),
+    cadence: normalizedCadence,
+    nextReviewDate: normalizedCadence === 'ON_REQUEST' ? null : new Date(now.getTime() + reviewDays * 86400000).toISOString().slice(0, 10),
+    recommendations,
+    recommendationSummary: {
+      totalRecommendedUnits: recommendations.reduce((sum, row) => sum + row.recommendedOrderUnits, 0),
+      orderNowCount: recommendations.filter((row) => row.recommendationStatus === 'ORDER_NOW').length,
+      plannedCount: recommendations.filter((row) => row.recommendationStatus === 'PLANNED').length,
+      coveredCount: recommendations.filter((row) => row.recommendationStatus === 'COVERED').length,
+    },
+    health,
+    healthSummary: {
+      healthyCount: health.filter((row) => row.primaryHealthStatus === 'HEALTHY').length,
+      stockoutRiskCount: health.filter((row) => row.flags.includes('STOCKOUT_RISK')).length,
+      excessCount: health.filter((row) => row.flags.includes('EXCESS')).length,
+      obsoleteCandidateCount: health.filter((row) => row.flags.includes('OBSOLETE_CANDIDATE')).length,
+      dosOutlierCount: health.filter((row) => row.flags.includes('DOS_OUTLIER')).length,
+      excessUnits: health.reduce((sum, row) => sum + row.excessUnits, 0),
+      stockoutExposureUnits: health.reduce((sum, row) => sum + row.stockoutExposureUnits, 0),
+    },
+    scenarios,
+  }
+}
+
+const CHANNEL_TYPES = ['ONLINE_MARKETPLACE', 'MODERN_TRADE_ONLINE', 'MODERN_TRADE_OFFLINE', 'QUICK_COMMERCE', 'D2C', 'GENERAL_TRADE', 'EXPORT', 'B2B']
+const CHANNEL_SOURCES = ['API_PULL', 'WEBHOOK', 'EDI_SFTP', 'BRAND_PORTAL_EXPORT', 'INTERNAL_API', 'MANUAL_UPLOAD']
+const CHANNEL_DATA_DOMAINS = ['TERTIARY_SALES', 'CHANNEL_STOCK', 'DOS', 'RETURNS']
+const LISTING_STATUSES = ['ACTIVE', 'PENDING_ACTIVATION', 'SUSPENDED', 'DELISTED']
+
+function seedListingStatus(skuIdx, distIdx) {
+  const seed = (skuIdx * 7 + distIdx * 3) % 10
+  if (seed < 7) return 'ACTIVE'
+  if (seed < 8) return 'PENDING_ACTIVATION'
+  if (seed < 9) return 'SUSPENDED'
+  return 'DELISTED'
+}
+
+function lifecycleMethods(stage) {
+  const methods = {
+    NPI: { short: 'NPI_CURVE', mid: 'NPI_CURVE', long: 'ANALOG_FORECAST' },
+    LAUNCH: { short: 'XGBF', mid: 'MLRF', long: 'ANALOG_FORECAST' },
+    GROWTH: { short: 'XGBF', mid: 'MLRF', long: 'XGBF' },
+    MATURITY: { short: 'XGBF', mid: 'MLRF', long: 'STATISTICAL' },
+    DECLINE: { short: 'STATISTICAL', mid: 'STATISTICAL', long: 'RAMP_DOWN' },
+    EOL: { short: 'RAMP_DOWN', mid: 'RAMP_DOWN', long: 'RAMP_DOWN' },
+  }
+  return methods[stage] || methods.MATURITY
+}
+
+function npiProjection(row) {
+  if (Array.isArray(row.projection) && row.projection.length) return row.projection
+  return Array.from({ length: 12 }, (_, idx) => {
+    const progress = (idx + 1) / 12
+    let factor = progress
+    if (row.curveTemplate === 'S_CURVE') factor = 1 / (1 + Math.exp(-8 * (progress - 0.5)))
+    if (row.curveTemplate === 'HOCKEY_STICK') factor = progress < 0.55 ? progress * 0.45 : 0.25 + ((progress - 0.55) / 0.45) * 0.75
+    return { week: `Launch +${idx + 1}`, units: Math.round(row.peakWeeklyUnits * Math.min(1, factor)) }
+  })
+}
+
+function enrichInventoryNorm(row) {
+  const target = row.overrideDos ?? row.suggestedDos
+  const minDos = row.overrideDos == null ? row.minDos : Math.max(0, target - 5)
+  const maxDos = row.overrideDos == null ? row.maxDos : target + 7
+  const variance = row.actualDos - target
+  const normStatus = row.actualDos < minDos ? 'CRITICAL' : row.actualDos > maxDos ? 'OVERSTOCK' : Math.abs(variance) <= 3 ? 'HEALTHY' : 'WATCH'
+  return { ...row, minDos, maxDos, effectiveDos: target, varianceDays: variance, normStatus }
+}
+
+const CONSENSUS_STEPS = [
+  { status: 'CATEGORY_REVIEW', role: 'Category Manager', next: 'SALES_REVIEW' },
+  { status: 'SALES_REVIEW', role: 'Sales Head', next: 'SOP_REVIEW' },
+  { status: 'SOP_REVIEW', role: 'S&OP Lead', next: 'FINANCE_REVIEW' },
+  { status: 'FINANCE_REVIEW', role: 'Finance', next: 'LOCKED' },
+]
+
+function getDemandPlanningMasters() {
+  if (demandPlanningMasters) return demandPlanningMasters
+
+  const sourceByTier = {
+    A: { sourceType: 'EDI_SFTP', expectedCadenceHours: 4 },
+    B: { sourceType: 'API_PULL', expectedCadenceHours: 8 },
+    C: { sourceType: 'MANUAL_UPLOAD', expectedCadenceHours: 24 },
+  }
+  const channelTypes = ['GENERAL_TRADE', 'MODERN_TRADE_OFFLINE', 'ONLINE_MARKETPLACE', 'D2C', 'GENERAL_TRADE']
+  const now = Date.now()
+  const generatedDataset = getDataset()
+
+  const channelIntegrations = DISTRIBUTORS.map((d, idx) => {
+    const source = sourceByTier[d.tier] || sourceByTier.B
+    const freshnessHours = d.tier === 'C' ? 36 : source.expectedCadenceHours - 1
+    return {
+      distributorId: d.id,
+      distributorName: d.name,
+      region: d.region,
+      tier: d.tier,
+      channelType: channelTypes[idx] || 'GENERAL_TRADE',
+      sourceType: source.sourceType,
+      expectedCadenceHours: source.expectedCadenceHours,
+      dataDomains: idx === 2
+        ? ['TERTIARY_SALES', 'CHANNEL_STOCK']
+        : ['TERTIARY_SALES', 'CHANNEL_STOCK', 'DOS'],
+      enabled: true,
+      lastSyncAt: new Date(now - freshnessHours * 3600000).toISOString(),
+      updatedAt: new Date(now).toISOString(),
+      updatedBy: 'system.seed',
+    }
+  })
+
+  const listings = []
+  SKUS.forEach((sku, skuIdx) => {
+    DISTRIBUTORS.forEach((d, distIdx) => {
+      const status = seedListingStatus(skuIdx, distIdx)
+      listings.push({
+        listingId: `LST-${sku.id}-${d.id}`,
+        skuId: sku.id,
+        skuName: sku.name,
+        category: sku.category,
+        distributorId: d.id,
+        distributorName: d.name,
+        region: d.region,
+        status,
+        effectiveDate: `2026-${String((distIdx % 6) + 1).padStart(2, '0')}-01`,
+        delistingDate: status === 'DELISTED' ? '2026-07-31' : null,
+        moq: 100,
+        exclusivity: false,
+        updatedAt: new Date(now).toISOString(),
+        updatedBy: 'system.seed',
+      })
+    })
+  })
+
+  const lifecycle = generatedDataset.lifecycle.map((row) => ({ ...row }))
+  const npiForecasts = generatedDataset.npiForecasts.map((row) => ({ ...row }))
+
+  const weeks = getDataset().weeks || []
+  const weekAt = (idx) => weeks[Math.min(Math.max(idx, 0), Math.max(weeks.length - 1, 0))]?.weekId || `2026-W${String(idx + 1).padStart(2, '0')}`
+  const events = generatedDataset.demandEvents.map((row) => ({ ...row }))
+  const inventoryNorms = generatedDataset.inventoryNorms.map((row) => ({ ...row }))
+
+  const consensusWorkflows = SKUS.slice(0, 5).map((sku, idx) => {
+    const statistical = Math.round(sku.baseWeekly * 4)
+    const proposed = Math.round(statistical * (1 + [0.06, -0.04, 0.11, 0.02, -0.08][idx]))
+    const status = ['CATEGORY_REVIEW', 'SALES_REVIEW', 'SOP_REVIEW', 'FINANCE_REVIEW', 'LOCKED'][idx]
+    return {
+      workflowId: `DCW-${sku.id}`,
+      skuId: sku.id,
+      skuName: sku.name,
+      planningWeek: weekAt(25),
+      horizonType: idx < 2 ? 'SHORT' : 'MID',
+      statisticalFcst: statistical,
+      channelSubmittedFcst: Math.round(statistical * 1.04),
+      proposedConsensusFcst: proposed,
+      finalConsensusFcst: status === 'LOCKED' ? proposed : null,
+      status,
+      currentStepOwner: CONSENSUS_STEPS.find((step) => step.status === status)?.role || null,
+      auditTrail: [{ auditId: `AUD-${idx}-1`, action: 'CREATED', actorRole: 'Demand Planner', actor: 'demand.planner@boat.com', oldValue: null, newValue: proposed, reason: 'Initial consensus proposal', at: new Date(now - (idx + 1) * 3600000).toISOString() }],
+      updatedAt: new Date(now).toISOString(),
+    }
+  })
+
+  demandPlanningMasters = { channelIntegrations, listings, lifecycle, npiForecasts, events, inventoryNorms, consensusWorkflows }
+  return demandPlanningMasters
+}
+
+function enrichChannelIntegrations() {
+  const masters = getDemandPlanningMasters()
+  const weekly = getDataset().weekly || []
+  const now = Date.now()
+  return masters.channelIntegrations.map((row) => {
+    const freshnessHours = Math.max(0, Math.round((now - new Date(row.lastSyncAt).getTime()) / 360000) / 10)
+    const recordCount = weekly.filter((w) => w.distributorId === row.distributorId).length
+    const activeListings = masters.listings.filter((l) => l.distributorId === row.distributorId && l.status === 'ACTIVE').length
+    const healthStatus = !row.enabled ? 'DISABLED' : freshnessHours > row.expectedCadenceHours ? 'DEGRADED' : 'HEALTHY'
+    const missingDomains = ['TERTIARY_SALES', 'CHANNEL_STOCK', 'DOS'].filter((domain) => !row.dataDomains.includes(domain))
+    return {
+      ...row,
+      freshnessHours,
+      recordCount,
+      activeListings,
+      healthStatus,
+      gapFlag: healthStatus === 'DEGRADED'
+        ? `Last feed exceeds the ${row.expectedCadenceHours}h cadence SLA.`
+        : missingDomains.length
+          ? `Missing feed coverage: ${missingDomains.join(', ')}.`
+          : null,
+    }
+  })
+}
+
+async function buildDashboardPlanBalance() {
+  const dataset = getDataset()
+  const masters = getDemandPlanningMasters()
+  const [overview, capacity, purchaseOrders, inventoryPolicies] = await Promise.all([
+    getOverviewMetrics(),
+    getCapacityGapAnalysis(null, { weekCount: 26 }),
+    getPurchaseOrdersWorkbench(),
+    getInventoryPlanningPolicies(),
+  ])
+  const generatedAt = new Date()
+  const supplyTrend = overview.demandVsSupplyTrend || []
+
+  // Live Demand Planning signal: current secondary baseline, overwritten by the
+  // latest workflow proposal/final consensus and then uplifted by active/planned events.
+  const workflowBySkuWeek = new Map(masters.consensusWorkflows.map((row) => [`${row.skuId}|${row.planningWeek}`, row.finalConsensusFcst ?? row.proposedConsensusFcst]))
+  const forecastByWeek = new Map()
+  ;(dataset.weekly || []).forEach((row) => {
+    const workflowValue = workflowBySkuWeek.get(`${row.skuId}|${row.weekId}`)
+    const matchingEvents = masters.events.filter((event) => ['PLANNED', 'ACTIVE'].includes(event.status)
+      && row.weekId >= event.startWeek && row.weekId <= event.endWeek
+      && (!event.affectedSkus?.length || event.affectedSkus.includes(row.skuId))
+      && (!event.affectedChannels?.length || event.affectedChannels.includes(row.distributorId)))
+    const eventFactor = matchingEvents.reduce((factor, event) => factor * (1 + Number(event.upliftPercent || 0) / 100), 1)
+    const base = workflowValue === undefined ? Number(row.secondary || 0) : Number(workflowValue || 0) / Math.max(1, DISTRIBUTORS.length)
+    const currentForecast = Math.round(base * eventFactor)
+    const current = forecastByWeek.get(row.weekId) || { sourceWeek: row.weekId, forecastUnits: 0, consensusUnits: 0, eventUpliftUnits: 0 }
+    current.forecastUnits += currentForecast
+    current.consensusUnits += Math.round(base)
+    current.eventUpliftUnits += Math.max(0, currentForecast - Math.round(base))
+    forecastByWeek.set(row.weekId, current)
+  })
+  const phase3Forecast = Array.from(forecastByWeek.values()).sort((a, b) => a.sourceWeek.localeCompare(b.sourceWeek))
+
+  // Dated PO commitments are assigned to their actual expected receipt bucket.
+  const poReceiptsByBucket = Array(26).fill(0)
+  let openPoUnits = 0
+  purchaseOrders.forEach((po) => {
+    if (['CANCELLED', 'CLOSED', 'FULLY_RECEIVED'].includes(po.status)) return
+    const outstanding = Math.max(0, Number(po.orderedQty || 0) - Number(po.receivedQty || 0))
+    if (!outstanding) return
+    openPoUnits += outstanding
+    const dueAt = po.expectedDeliveryDate ? new Date(po.expectedDeliveryDate) : generatedAt
+    const rawIndex = Number.isNaN(dueAt.getTime()) ? 0 : Math.floor((dueAt.getTime() - generatedAt.getTime()) / (7 * 86400000))
+    const bucketIndex = Math.max(0, Math.min(25, rawIndex))
+    poReceiptsByBucket[bucketIndex] += outstanding
+  })
+
+  const currentInventoryUnits = inventoryPolicies.reduce((sum, row) => sum + Number(row.currentInventoryUnits || 0), 0)
+  const safetyStockUnits = inventoryPolicies.reduce((sum, row) => sum + Number(row.overrideSafetyStockUnits ?? row.suggestedSafetyStockUnits ?? 0), 0)
+  let rollingInventoryUnits = currentInventoryUnits
+  const rows = Array.from({ length: 26 }, (_, idx) => {
+    const demand = phase3Forecast[idx % Math.max(phase3Forecast.length, 1)] || { sourceWeek: `Phase3-W${idx + 1}`, forecastUnits: 0 }
+    const supply = supplyTrend[idx % Math.max(supplyTrend.length, 1)] || {}
+    const cap = capacity[idx] || {}
+    const plannedProduction = supply.plannedProduction || Math.round((cap.plannedWorkload || 0) * 0.72)
+    const plannedPurchase = supply.plannedPurchase || Math.round((cap.plannedWorkload || 0) * 0.28)
+    const operatingPlanUnits = plannedProduction + plannedPurchase
+    const constrainedProduction = Math.min(plannedProduction, cap.ratedWeeklyCapacity || plannedProduction)
+    const confirmedPoReceipts = poReceiptsByBucket[idx]
+    const netSupplyUnits = constrainedProduction + confirmedPoReceipts
+    const gapUnits = netSupplyUnits - demand.forecastUnits
+    const openingInventoryUnits = rollingInventoryUnits
+    const projectedInventoryUnits = Math.max(0, openingInventoryUnits + netSupplyUnits - demand.forecastUnits)
+    const unmetDemandUnits = Math.max(0, demand.forecastUnits - openingInventoryUnits - netSupplyUnits)
+    rollingInventoryUnits = projectedInventoryUnits
+    const inventoryRisk = projectedInventoryUnits < safetyStockUnits
+    return {
+      bucket: `W${String(idx + 1).padStart(2, '0')}`,
+      horizon: idx < 5 ? 'SHORT' : 'MEDIUM',
+      planningWeek: cap.week || supply.week || demand.sourceWeek,
+      demandSourceWeek: demand.sourceWeek,
+      forecastUnits: demand.forecastUnits,
+      consensusUnits: demand.consensusUnits || demand.forecastUnits,
+      eventUpliftUnits: demand.eventUpliftUnits || 0,
+      netSupplyUnits,
+      operatingPlanUnits,
+      plannedProduction,
+      plannedPurchase,
+      constrainedProduction,
+      confirmedPoReceipts,
+      ratedCapacityUnits: cap.ratedWeeklyCapacity || 0,
+      capacityUtilizationPct: Number(cap.utilizationPct || 0),
+      gapUnits,
+      openingInventoryUnits,
+      projectedInventoryUnits,
+      safetyStockUnits,
+      unmetDemandUnits,
+      status: unmetDemandUnits > 0 ? 'STOCKOUT' : inventoryRisk ? 'INVENTORY_RISK' : gapUnits < 0 ? 'DEFICIT' : gapUnits < demand.forecastUnits * 0.05 ? 'TIGHT' : 'COVERED',
+    }
+  })
+  const totalForecast = rows.reduce((sum, row) => sum + row.forecastUnits, 0)
+  const totalNetSupply = rows.reduce((sum, row) => sum + row.netSupplyUnits, 0)
+  return {
+    rows,
+    summary: {
+      totalForecast,
+      totalNetSupply,
+      totalOperatingPlan: rows.reduce((sum, row) => sum + row.operatingPlanUnits, 0),
+      coveragePct: totalForecast ? Number((totalNetSupply / totalForecast * 100).toFixed(1)) : 0,
+      deficitUnits: rows.reduce((sum, row) => sum + row.unmetDemandUnits, 0),
+      deficitWeeks: rows.filter((row) => ['STOCKOUT', 'INVENTORY_RISK', 'DEFICIT'].includes(row.status)).length,
+      capacityRiskWeeks: rows.filter((row) => row.capacityUtilizationPct > 90).length,
+      openPoUnits,
+      currentInventoryUnits,
+      safetyStockUnits,
+      projectedEndingInventoryUnits: rows.at(-1)?.projectedInventoryUnits || 0,
+      inventoryRiskWeeks: rows.filter((row) => row.projectedInventoryUnits < row.safetyStockUnits).length,
+    },
+    sources: {
+      forecast: 'Current Demand Planning secondary baseline + latest consensus workflow + active event uplifts',
+      netSupply: 'Supply Planning constrained capacity + purchase commitments on expected delivery dates',
+      operatingPlan: 'Supply Planning planned production + planned purchase',
+      inventory: 'Current Inventory Planning position aggregated from latest channel stock snapshots',
+    },
+    freshness: {
+      generatedAt: generatedAt.toISOString(),
+      demandUpdatedAt: masters.consensusWorkflows.map((row) => row.updatedAt).filter(Boolean).sort().at(-1) || null,
+      supplyAsOf: generatedAt.toISOString(),
+      inventoryUpdatedAt: inventoryPolicies.map((row) => row.updatedAt).filter(Boolean).sort().at(-1) || null,
+      refreshSeconds: 30,
+    },
+    isLive: true,
+  }
+}
+
+// -----------------------------------------------------------------------
 // Order Freeze Logic
 // -----------------------------------------------------------------------
 //   • day < 25  → "editable"   (fully editable)
@@ -36,6 +698,10 @@ function computeLockState(simDay) {
   const raw = simDay !== undefined && simDay !== null && simDay !== ''
     ? Math.max(1, Math.min(31, Math.floor(Number(simDay))))
     : new Date().getUTCDate()
+  if (persistedOrderRules?.length) {
+    const rule = persistedOrderRules.find((item) => raw >= Number(item.startDay || 1) && (item.endDay == null || raw <= Number(item.endDay)))
+    if (rule) return { state: rule.state, label: rule.label, day: raw, maxDeltaPct: rule.maxDeltaPct, hint: `Day ${raw} of month · ${rule.label}` }
+  }
   if (raw < 25) return { state: 'editable', label: 'Editable', day: raw, maxDeltaPct: null,
     hint: `Day ${raw} of month · fully editable until the 25th` }
   if (raw <= 28) return { state: 'restricted', label: 'Restricted', day: raw, maxDeltaPct: 10,
@@ -46,8 +712,8 @@ function computeLockState(simDay) {
 
 // Rebuild enriched lines (with scheme pricing) from raw {skuId, qty} inputs.
 // Used by both POST /orders/place and PATCH /orders/update so behaviour is identical.
-function enrichLines(distributorId, inputLines) {
-  const suggestion = suggestOrders(distributorId)
+function enrichLines(distributorId, inputLines, storedSuggestion = null) {
+  const suggestion = storedSuggestion || suggestOrders(distributorId)
   const lineMap = Object.fromEntries(suggestion.lines.map((l) => [l.skuId, l]))
   const enriched = []
   let totalQty = 0
@@ -533,7 +1199,7 @@ function buildChatSystemPrompt(dataset, insights, intent) {
       }).join('\n'))
   }
 
-  return `You are an S&OP AI analyst for a consumer electronics enterprise (mobile devices and accessories). You provide crisp, executive-style answers grounded in the data below. You NEVER invent SKUs, distributors, numbers, or revenues that are not present in the context.
+  return `You are an S&OP AI analyst for a consumer audio and wearables enterprise (TWS earbuds, neckbands, smartwatches, and speakers). You provide crisp, executive-style answers grounded in the data below. You NEVER invent SKUs, distributors, numbers, or revenues that are not present in the context.
 
 ## How to read the data (IMPORTANT)
 - "Weeks of cover" = distributor stock ÷ weekly secondary demand.
@@ -564,6 +1230,7 @@ Now answer the user's question using ONLY this data.`
 }
 
 export async function GET(request, { params }) {
+  await hydratePersistedState()
   const path = (params?.path || []).join('/')
 
   // ---- Health ----------------------------------------------------------
@@ -592,6 +1259,94 @@ export async function GET(request, { params }) {
     return NextResponse.json({ groupBy: by, count: agg.length, rows: agg })
   }
 
+  if (path === 'dashboard/plan-balance') {
+    return NextResponse.json(await buildDashboardPlanBalance())
+  }
+
+  if (path === 'dashboard/review-cycle') {
+    return NextResponse.json(getDashboardReviewCycle())
+  }
+
+  if (path === 'dashboard/alerts') {
+    return NextResponse.json({ rows: await readPersistedCollection('dashboard_alerts') })
+  }
+
+  if (path === 'scenarios') {
+    return NextResponse.json({ rows: await readPersistedCollection('what_if_scenarios') })
+  }
+
+  if (path === 'demand/market-benchmarks') {
+    return NextResponse.json({ rows: await readPersistedCollection('demand_market_benchmarks') })
+  }
+
+  if (path === 'demand/factor-config') {
+    const rows = await readPersistedCollection('demand_factor_config')
+    return NextResponse.json(rows[0] || {})
+  }
+
+  if (path === 'financial/config') {
+    const rows = await readPersistedCollection('financial_planning_config')
+    return NextResponse.json(rows[0] || {})
+  }
+
+  if (path === 'inventory/policies') {
+    const rows = (await getInventoryPlanningPolicies()).map(enrichInventoryPolicy)
+    return NextResponse.json({
+      count: rows.length,
+      rows,
+      methodology: {
+        segmentation: 'ABC by cumulative tertiary consumption value (80/15/5); XYZ by weekly-demand coefficient of variation (X <= 0.25, Y <= 0.50, Z > 0.50)',
+        safetyStock: 'service-level z-score × daily demand standard deviation × square root of lead time in days',
+        demandSource: 'Demand Planning tertiary history aggregated to SKU-week',
+        leadTimeSource: 'Supply Planning supplier-product lead time, with supplier/default fallback',
+      },
+    })
+  }
+
+  if (path === 'inventory/planning') {
+    const query = q(request)
+    return NextResponse.json(await buildInventoryPlanning(String(query.cadence || 'WEEKLY').toUpperCase(), {
+      demandAdjustmentPct: query.demandAdjustmentPct,
+      dosAdjustmentDays: query.dosAdjustmentDays,
+      inboundRealizationPct: query.inboundRealizationPct,
+    }))
+  }
+
+  if (path === 'demand/channel-integrations') {
+    const rows = enrichChannelIntegrations()
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/listings') {
+    const rows = getDemandPlanningMasters().listings
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/lifecycle') {
+    const rows = getDemandPlanningMasters().lifecycle
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/npi-forecasts') {
+    const rows = getDemandPlanningMasters().npiForecasts.map((row) => ({ ...row, projection: npiProjection(row) }))
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/events') {
+    const rows = getDemandPlanningMasters().events
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/inventory-norms') {
+    const rows = getDemandPlanningMasters().inventoryNorms.map(enrichInventoryNorm)
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/consensus-workflows') {
+    const rows = getDemandPlanningMasters().consensusWorkflows
+    return NextResponse.json({ count: rows.length, rows, steps: CONSENSUS_STEPS })
+  }
+
   // ---- Order endpoints -------------------------------------------------
   // GET /api/orders/suggest?distributorId=DST-001
   if (path === 'orders/suggest') {
@@ -599,7 +1354,8 @@ export async function GET(request, { params }) {
     if (!distributorId) {
       return NextResponse.json({ error: 'distributorId required' }, { status: 400 })
     }
-    const suggestion = suggestOrders(distributorId)
+    const persistedSuggestions = await readPersistedCollection('order_suggestions')
+    const suggestion = persistedSuggestions.find((row) => row.distributor?.id === distributorId || row.distributorId === distributorId) || suggestOrders(distributorId)
     if (!suggestion.distributor) {
       return NextResponse.json({ error: `Unknown distributor ${distributorId}` }, { status: 404 })
     }
@@ -613,7 +1369,8 @@ export async function GET(request, { params }) {
     if (!distributorId) {
       return NextResponse.json({ error: 'distributorId required' }, { status: 400 })
     }
-    const payload = buildDealerActivationGap(distributorId)
+    const persistedGaps = await readPersistedCollection('dealer_activation_gaps')
+    const payload = persistedGaps.find((row) => row.distributor?.id === distributorId || row.distributorId === distributorId) || buildDealerActivationGap(distributorId)
     if (!payload.distributor) {
       return NextResponse.json({ error: `Unknown distributor ${distributorId}` }, { status: 404 })
     }
@@ -633,7 +1390,9 @@ export async function GET(request, { params }) {
   }
 
   if (path === 'chat/suggestions') {
-    return NextResponse.json({ count: SUGGESTED_QUESTIONS.length, suggestions: SUGGESTED_QUESTIONS })
+    const rows = await readPersistedCollection('chat_suggestions')
+    const suggestions = rows.length ? rows.map((row) => row.question || row.text).filter(Boolean) : SUGGESTED_QUESTIONS
+    return NextResponse.json({ count: suggestions.length, suggestions })
   }
 
   if (path === 'chat/health') {
@@ -647,9 +1406,10 @@ export async function GET(request, { params }) {
   // GET /api/orders/rules?simDay=N   — expose current lock state + rule schema
   if (path === 'orders/rules') {
     const { simDay } = q(request)
+    const storedRules = await readPersistedCollection('order_rules')
     return NextResponse.json({
       lockState: computeLockState(simDay),
-      rules: [
+      rules: storedRules.length ? storedRules : [
         { window: 'Day 1–24',  state: 'editable',   label: 'Fully editable',            maxDeltaPct: null },
         { window: 'Day 25–28', state: 'restricted', label: 'Max ±10% per-line change',  maxDeltaPct: 10 },
         { window: 'Day 29+',   state: 'locked',     label: 'Locked · approval required', maxDeltaPct: 0 },
@@ -671,10 +1431,35 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: `Unknown distributor ${distributorId}` }, { status: 404 })
     }
 
-    let dataSource = 'placed_orders'
+    let dataSource = 'dispatch_records'
     let orderedInputs = []
 
     try {
+      const storedDispatches = (await readPersistedCollection('dispatch_records')).filter((row) => row.distributorId === distributorId)
+      if (storedDispatches.length) {
+        const totalOrdered = storedDispatches.reduce((sum, row) => sum + Number(row.orderedQty || 0), 0)
+        const totalDispatched = storedDispatches.reduce((sum, row) => sum + Number(row.dispatchedQty || 0), 0)
+        const totalGap = totalOrdered - totalDispatched
+        const byStatus = { 'Fully fulfilled': 0, Partial: 0, Pending: 0 }
+        storedDispatches.forEach((row) => { byStatus[row.status] = (byStatus[row.status] || 0) + 1 })
+        return NextResponse.json({
+          distributorId,
+          distributorName: distributor.name,
+          region: distributor.region,
+          tier: distributor.tier,
+          dataSource,
+          dataSourceHint: 'Read from persisted dispatch records.',
+          summary: {
+            skuLines: storedDispatches.length,
+            totalOrdered,
+            totalDispatched,
+            totalGap,
+            fulfilmentPct: totalOrdered ? Math.round((totalDispatched / totalOrdered) * 1000) / 10 : 0,
+            byStatus,
+          },
+          rows: storedDispatches,
+        })
+      }
       const col = await getOrdersCollection()
       const orders = await col
         .find({ distributorId }, { projection: { _id: 0, status: 1, lines: 1 } })
@@ -697,12 +1482,14 @@ export async function GET(request, { params }) {
         const sku = SKUS.find((s) => s.id === skuId)
         return { skuId, orderedQty, skuName: sku?.name }
       })
+      if (orderedInputs.length) dataSource = 'placed_orders'
     } catch {
       orderedInputs = []
     }
 
     if (!orderedInputs.length) {
-      const suggestion = suggestOrders(distributorId)
+      const storedSuggestions = await readPersistedCollection('order_suggestions')
+      const suggestion = storedSuggestions.find((row) => row.distributor?.id === distributorId || row.distributorId === distributorId) || suggestOrders(distributorId)
       orderedInputs = (suggestion.lines || [])
         .filter((l) => l.suggestedQty > 0)
         .map((l) => ({
@@ -769,7 +1556,34 @@ export async function GET(request, { params }) {
 }
 
 export async function POST(request, { params }) {
+  await hydratePersistedState()
   const path = (params?.path || []).join('/')
+
+  if (path === 'demand/events') {
+    const body = await request.json()
+    if (!body?.eventName || !body?.startWeek || !body?.endWeek) return NextResponse.json({ error: 'eventName, startWeek and endWeek are required' }, { status: 400 })
+    if (body.endWeek < body.startWeek) return NextResponse.json({ error: 'endWeek cannot precede startWeek' }, { status: 400 })
+    if (body.affectedSkus?.some((skuId) => !SKUS.some((sku) => sku.id === skuId))) return NextResponse.json({ error: 'Unknown affected SKU' }, { status: 400 })
+    if (body.affectedChannels?.some((channelId) => !DISTRIBUTORS.some((d) => d.id === channelId))) return NextResponse.json({ error: 'Unknown affected channel' }, { status: 400 })
+    const row = {
+      eventId: `EVT-${uuidv4().slice(0, 8).toUpperCase()}`,
+      eventName: body.eventName,
+      eventType: body.eventType || 'PROMOTIONAL',
+      startWeek: body.startWeek,
+      endWeek: body.endWeek,
+      affectedSkus: Array.isArray(body.affectedSkus) ? body.affectedSkus : [],
+      affectedChannels: Array.isArray(body.affectedChannels) ? body.affectedChannels : [],
+      upliftPercent: Math.max(-100, Math.min(500, Number(body.upliftPercent) || 0)),
+      status: body.status || 'PLANNED',
+      actualUpliftPercent: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      updatedBy: 'category.manager@boat.com',
+    }
+    getDemandPlanningMasters().events.push(row)
+    await replacePersisted('demand_events', { eventId: row.eventId }, row)
+    return NextResponse.json({ ok: true, row }, { status: 201 })
+  }
 
   // -------- CHATBOT endpoints (POST) ----------------------------------
   if (path === 'chat/message') {
@@ -815,6 +1629,7 @@ export async function POST(request, { params }) {
       // Persist turn
       session.messages.push({ role: 'user', content: message.trim(), ts: new Date().toISOString() })
       session.messages.push({ role: 'assistant', content: replyContent, ts: new Date().toISOString(), intent })
+      await replacePersisted('chat_sessions', { sessionId: session.sessionId }, session)
 
       // Build structured cards from the rule engine (always, even when LLM fails)
       const cards = buildCards(intent, insights, dataset)
@@ -840,8 +1655,13 @@ export async function POST(request, { params }) {
     try {
       const body = await request.json().catch(() => ({}))
       const { sessionId } = body || {}
-      if (sessionId && chatSessions.has(sessionId)) chatSessions.delete(sessionId)
+      if (sessionId && chatSessions.has(sessionId)) {
+        chatSessions.delete(sessionId)
+        const db = await getDb()
+        await db.collection('chat_sessions').deleteOne({ sessionId })
+      }
       const fresh = getOrCreateSession(null)
+      await replacePersisted('chat_sessions', { sessionId: fresh.sessionId }, fresh)
       return NextResponse.json({ sessionId: fresh.sessionId, ok: true })
     } catch (e) {
       return NextResponse.json({ error: e.message }, { status: 500 })
@@ -864,7 +1684,7 @@ export async function POST(request, { params }) {
 
       // Recompute suggestions so we can enrich the saved lines with price/scheme
       const suggestion = suggestOrders(distributorId)
-      const built = enrichLines(distributorId, lines)
+      const built = enrichLines(distributorId, lines, suggestion)
 
       if (!built.lines.length) {
         return NextResponse.json({ error: 'All order lines were empty/invalid' }, { status: 400 })
@@ -890,6 +1710,7 @@ export async function POST(request, { params }) {
 
       const col = await getOrdersCollection()
       await col.insertOne(orderDoc)
+      await syncDispatchRecords(orderDoc.orderId, distributorId, built.lines)
 
       // Strip Mongo _id from response & decorate with current lockState
       const { _id, ...clean } = orderDoc
@@ -922,7 +1743,234 @@ export async function POST(request, { params }) {
 //   • action=reject  → discards pendingApproval, status='Rejected'
 // =======================================================================
 export async function PATCH(request, { params }) {
+  await hydratePersistedState()
   const path = (params?.path || []).join('/')
+
+  if (path === 'inventory/policies') {
+    const body = await request.json()
+    const { policyId, overrideDos, overrideSafetyStockUnits, serviceLevelTargetPct, overrideReason } = body || {}
+    const policies = await getInventoryPlanningPolicies()
+    const row = policies.find((item) => item.policyId === policyId)
+    if (!row) return NextResponse.json({ error: 'Unknown inventory policy' }, { status: 404 })
+
+    const nextServiceLevel = Number(serviceLevelTargetPct ?? row.serviceLevelTargetPct)
+    const nextDos = overrideDos === null || overrideDos === '' || overrideDos === undefined ? null : Number(overrideDos)
+    const nextSafetyStock = overrideSafetyStockUnits === null || overrideSafetyStockUnits === '' || overrideSafetyStockUnits === undefined ? null : Number(overrideSafetyStockUnits)
+    if (!Number.isFinite(nextServiceLevel) || nextServiceLevel < 80 || nextServiceLevel > 99.9) return NextResponse.json({ error: 'Service level must be between 80% and 99.9%' }, { status: 400 })
+    if (nextDos !== null && (!Number.isInteger(nextDos) || nextDos < 0 || nextDos > 180)) return NextResponse.json({ error: 'DOS override must be a whole number between 0 and 180' }, { status: 400 })
+    if (nextSafetyStock !== null && (!Number.isInteger(nextSafetyStock) || nextSafetyStock < 0 || nextSafetyStock > 10_000_000)) return NextResponse.json({ error: 'Safety-stock override must be a non-negative whole number' }, { status: 400 })
+
+    const changed = nextServiceLevel !== row.serviceLevelTargetPct || nextDos !== row.overrideDos || nextSafetyStock !== row.overrideSafetyStockUnits
+    if (changed && !String(overrideReason || '').trim()) return NextResponse.json({ error: 'A reason is required for policy changes' }, { status: 400 })
+
+    const before = enrichInventoryPolicy(row)
+    row.serviceLevelTargetPct = nextServiceLevel
+    const dailyStdDev = row.stdDevWeeklyDemand / Math.sqrt(7)
+    row.suggestedSafetyStockUnits = Math.ceil(serviceLevelZ(nextServiceLevel) * dailyStdDev * Math.sqrt(row.leadTimeDays))
+    row.suggestedDos = Math.max(7, Math.min(90, Math.ceil(row.leadTimeDays + (row.avgDailyDemand ? row.suggestedSafetyStockUnits / row.avgDailyDemand : 0))))
+    row.overrideDos = nextDos
+    row.overrideSafetyStockUnits = nextSafetyStock
+    row.overrideReason = String(overrideReason || '').trim() || null
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'inventory.planner@boat.com'
+    if (changed) row.auditTrail.push({
+      at: row.updatedAt,
+      actor: row.updatedBy,
+      reason: row.overrideReason,
+      before: { serviceLevelTargetPct: before.serviceLevelTargetPct, effectiveDos: before.effectiveDos, effectiveSafetyStockUnits: before.effectiveSafetyStockUnits },
+      after: { serviceLevelTargetPct: row.serviceLevelTargetPct, effectiveDos: row.overrideDos ?? row.suggestedDos, effectiveSafetyStockUnits: row.overrideSafetyStockUnits ?? row.suggestedSafetyStockUnits },
+    })
+    await replacePersisted('inventory_policies', { policyId: row.policyId }, row)
+    return NextResponse.json({ ok: true, row: enrichInventoryPolicy(row) })
+  }
+
+  if (path === 'dashboard/review-cycle') {
+    const body = await request.json()
+    const { action, actorRole, cadence } = body || {}
+    const roles = ['Production', 'Sourcing', 'S&OP', 'NPI', 'Category', 'Sales', 'Finance']
+    const cycle = getDashboardReviewCycle()
+    if (!roles.includes(actorRole)) return NextResponse.json({ error: 'Invalid actorRole' }, { status: 400 })
+    const now = new Date()
+    const record = (event, detail) => cycle.history.push({ event, detail, actorRole, at: now.toISOString() })
+    if (action === 'set_cadence') {
+      if (!['WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'ON_DEMAND'].includes(cadence)) return NextResponse.json({ error: 'Invalid cadence' }, { status: 400 })
+      cycle.cadence = cadence
+      cycle.nextReviewAt = nextReviewAt(cadence, now)
+      record('CADENCE_CHANGED', cadence)
+    } else if (action === 'mark_reviewed') {
+      if (cycle.status === 'CLOSED') return NextResponse.json({ error: 'Closed cycles cannot accept reviews' }, { status: 409 })
+      if (!cycle.completedRoles.includes(actorRole)) cycle.completedRoles.push(actorRole)
+      cycle.status = 'IN_REVIEW'
+      record('ROLE_REVIEWED', actorRole)
+    } else if (action === 'close_cycle') {
+      if (actorRole !== 'S&OP') return NextResponse.json({ error: 'Only S&OP can close a review cycle' }, { status: 403 })
+      cycle.status = 'CLOSED'
+      cycle.closedAt = now.toISOString()
+      cycle.closedBy = actorRole
+      record('CYCLE_CLOSED', `${cycle.completedRoles.length}/${roles.length} roles reviewed`)
+    } else if (action === 'open_cycle') {
+      if (actorRole !== 'S&OP') return NextResponse.json({ error: 'Only S&OP can open a review cycle' }, { status: 403 })
+      cycle.cycleId = `SOP-${now.toISOString().replaceAll(/[:.]/g, '-')}`
+      cycle.status = 'OPEN'
+      cycle.startedAt = now.toISOString()
+      cycle.completedRoles = []
+      cycle.closedAt = null
+      cycle.closedBy = null
+      cycle.nextReviewAt = nextReviewAt(cycle.cadence, now)
+      record('CYCLE_OPENED', cycle.cadence)
+    } else {
+      return NextResponse.json({ error: 'Unknown review-cycle action' }, { status: 400 })
+    }
+    await replacePersisted('dashboard_review_cycles', { cycleId: cycle.cycleId }, cycle)
+    return NextResponse.json({ ok: true, row: cycle })
+  }
+
+  if (path === 'demand/channel-integrations') {
+    const body = await request.json()
+    const { distributorId, action, ...changes } = body || {}
+    const masters = getDemandPlanningMasters()
+    const row = masters.channelIntegrations.find((item) => item.distributorId === distributorId)
+    if (!row) return NextResponse.json({ error: 'Unknown distributorId' }, { status: 404 })
+    if (changes.channelType !== undefined && !CHANNEL_TYPES.includes(changes.channelType)) return NextResponse.json({ error: 'Invalid channelType' }, { status: 400 })
+    if (changes.sourceType !== undefined && !CHANNEL_SOURCES.includes(changes.sourceType)) return NextResponse.json({ error: 'Invalid sourceType' }, { status: 400 })
+    if (changes.dataDomains !== undefined && (!Array.isArray(changes.dataDomains) || changes.dataDomains.some((domain) => !CHANNEL_DATA_DOMAINS.includes(domain)))) return NextResponse.json({ error: 'Invalid dataDomains' }, { status: 400 })
+    const allowed = ['channelType', 'sourceType', 'expectedCadenceHours', 'dataDomains', 'enabled']
+    allowed.forEach((field) => {
+      if (changes[field] !== undefined) row[field] = changes[field]
+    })
+    if (action === 'mark_received') row.lastSyncAt = new Date().toISOString()
+    row.expectedCadenceHours = Math.max(1, Number(row.expectedCadenceHours) || 24)
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'demand.planner@boat.com'
+    await replacePersisted('demand_channel_integrations', { distributorId }, row)
+    return NextResponse.json({ ok: true, row: enrichChannelIntegrations().find((item) => item.distributorId === distributorId) })
+  }
+
+  if (path === 'demand/listings') {
+    const body = await request.json()
+    const { listingId, ...changes } = body || {}
+    const masters = getDemandPlanningMasters()
+    const row = masters.listings.find((item) => item.listingId === listingId)
+    if (!row) return NextResponse.json({ error: 'Unknown listingId' }, { status: 404 })
+    if (changes.status !== undefined && !LISTING_STATUSES.includes(changes.status)) return NextResponse.json({ error: 'Invalid listing status' }, { status: 400 })
+    const effectiveDate = changes.effectiveDate ?? row.effectiveDate
+    const delistingDate = changes.delistingDate ?? row.delistingDate
+    if (effectiveDate && delistingDate && delistingDate < effectiveDate) return NextResponse.json({ error: 'De-listing date cannot precede the effective date' }, { status: 400 })
+    const allowed = ['status', 'effectiveDate', 'delistingDate', 'region', 'moq', 'exclusivity']
+    allowed.forEach((field) => {
+      if (changes[field] !== undefined) row[field] = changes[field]
+    })
+    row.moq = Math.max(0, Math.round(Number(row.moq) || 0))
+    if (row.status === 'DELISTED' && !row.delistingDate) row.delistingDate = new Date().toISOString().slice(0, 10)
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'sales.operations@boat.com'
+    await replacePersisted('demand_listings', { listingId }, row)
+    return NextResponse.json({ ok: true, row })
+  }
+
+  if (path === 'demand/lifecycle') {
+    const body = await request.json()
+    const { skuId, stage } = body || {}
+    const row = getDemandPlanningMasters().lifecycle.find((item) => item.skuId === skuId)
+    if (!row) return NextResponse.json({ error: 'Unknown skuId' }, { status: 404 })
+    if (!['NPI', 'LAUNCH', 'GROWTH', 'MATURITY', 'DECLINE', 'EOL'].includes(stage)) return NextResponse.json({ error: 'Invalid lifecycle stage' }, { status: 400 })
+    row.stage = stage
+    row.stageSince = new Date().toISOString().slice(0, 10)
+    row.forecastMethods = lifecycleMethods(stage)
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'category.manager@boat.com'
+    await replacePersisted('demand_lifecycle', { skuId }, row)
+    return NextResponse.json({ ok: true, row })
+  }
+
+  if (path === 'demand/npi-forecasts') {
+    const body = await request.json()
+    const { npiId, ...changes } = body || {}
+    const row = getDemandPlanningMasters().npiForecasts.find((item) => item.npiId === npiId)
+    if (!row) return NextResponse.json({ error: 'Unknown npiId' }, { status: 404 })
+    if (changes.launchWeek !== undefined && !/^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/.test(changes.launchWeek)) return NextResponse.json({ error: 'launchWeek must use YYYY-Www format with week 01-53' }, { status: 400 })
+    if (changes.curveTemplate !== undefined && !['S_CURVE', 'LINEAR', 'HOCKEY_STICK'].includes(changes.curveTemplate)) return NextResponse.json({ error: 'Invalid curveTemplate' }, { status: 400 })
+    if (changes.analogSkuId !== undefined && !SKUS.some((sku) => sku.id === changes.analogSkuId)) return NextResponse.json({ error: 'Unknown analogSkuId' }, { status: 400 })
+    const allowed = ['launchWeek', 'curveTemplate', 'peakWeeklyUnits', 'analogSkuId', 'cannibalizationRatePct', 'readinessPct']
+    allowed.forEach((field) => { if (changes[field] !== undefined) row[field] = changes[field] })
+    row.peakWeeklyUnits = Math.max(0, Math.round(Number(row.peakWeeklyUnits) || 0))
+    row.cannibalizationRatePct = Math.max(0, Math.min(100, Number(row.cannibalizationRatePct) || 0))
+    row.readinessPct = Math.max(0, Math.min(100, Number(row.readinessPct) || 0))
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'npi.manager@boat.com'
+    await replacePersisted('demand_npi_forecasts', { npiId }, row)
+    return NextResponse.json({ ok: true, row: { ...row, projection: npiProjection(row) } })
+  }
+
+  if (path === 'demand/events') {
+    const body = await request.json()
+    const { eventId, ...changes } = body || {}
+    const row = getDemandPlanningMasters().events.find((item) => item.eventId === eventId)
+    if (!row) return NextResponse.json({ error: 'Unknown eventId' }, { status: 404 })
+    if (changes.status !== undefined && !['PLANNED', 'ACTIVE', 'COMPLETED', 'CANCELLED'].includes(changes.status)) return NextResponse.json({ error: 'Invalid event status' }, { status: 400 })
+    const startWeek = changes.startWeek ?? row.startWeek
+    const endWeek = changes.endWeek ?? row.endWeek
+    if (endWeek < startWeek) return NextResponse.json({ error: 'endWeek cannot precede startWeek' }, { status: 400 })
+    const allowed = ['eventName', 'eventType', 'startWeek', 'endWeek', 'affectedSkus', 'affectedChannels', 'upliftPercent', 'actualUpliftPercent', 'status']
+    allowed.forEach((field) => { if (changes[field] !== undefined) row[field] = changes[field] })
+    row.upliftPercent = Math.max(-100, Math.min(500, Number(row.upliftPercent) || 0))
+    if (row.actualUpliftPercent !== null) row.actualUpliftPercent = Number(row.actualUpliftPercent)
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'category.manager@boat.com'
+    await replacePersisted('demand_events', { eventId }, row)
+    return NextResponse.json({ ok: true, row })
+  }
+
+  if (path === 'demand/inventory-norms') {
+    const body = await request.json()
+    const { normId, overrideDos, overrideReason } = body || {}
+    const row = getDemandPlanningMasters().inventoryNorms.find((item) => item.normId === normId)
+    if (!row) return NextResponse.json({ error: 'Unknown normId' }, { status: 404 })
+    if (overrideDos !== null && (!Number.isFinite(Number(overrideDos)) || Number(overrideDos) < 0 || Number(overrideDos) > 180)) return NextResponse.json({ error: 'overrideDos must be between 0 and 180 days' }, { status: 400 })
+    row.overrideDos = overrideDos === null ? null : Math.round(Number(overrideDos))
+    row.overrideReason = row.overrideDos === null ? null : (overrideReason || 'Planner override')
+    row.updatedAt = new Date().toISOString()
+    row.updatedBy = 'inventory.planner@boat.com'
+    await replacePersisted('demand_inventory_norms', { normId }, row)
+    return NextResponse.json({ ok: true, row: enrichInventoryNorm(row) })
+  }
+
+  if (path === 'demand/consensus-workflows') {
+    const body = await request.json()
+    const { workflowId, action, actorRole, reason } = body || {}
+    const row = getDemandPlanningMasters().consensusWorkflows.find((item) => item.workflowId === workflowId)
+    if (!row) return NextResponse.json({ error: 'Unknown workflowId' }, { status: 404 })
+    if (row.status === 'LOCKED') return NextResponse.json({ error: 'Locked consensus forecasts cannot be changed' }, { status: 409 })
+    const step = CONSENSUS_STEPS.find((item) => item.status === row.status)
+    if (!step || actorRole !== step.role) return NextResponse.json({ error: `Current action belongs to ${step?.role || 'no role'}` }, { status: 403 })
+    const appendAudit = (auditAction, oldValue, newValue, auditReason) => row.auditTrail.push({ auditId: `AUD-${uuidv4().slice(0, 8).toUpperCase()}`, action: auditAction, actorRole, actor: `${actorRole.toLowerCase().replaceAll(/[^a-z]+/g, '.').replace(/^\.|\.$/g, '')}@boat.com`, oldValue, newValue, reason: auditReason, at: new Date().toISOString() })
+
+    if (action === 'override') {
+      const nextValue = Number(body.proposedConsensusFcst)
+      if (!Number.isFinite(nextValue) || nextValue < 0) return NextResponse.json({ error: 'proposedConsensusFcst must be a non-negative number' }, { status: 400 })
+      if (!reason?.trim()) return NextResponse.json({ error: 'A reason is required for every override' }, { status: 400 })
+      const oldValue = row.proposedConsensusFcst
+      row.proposedConsensusFcst = Math.round(nextValue)
+      appendAudit('OVERRIDE', oldValue, row.proposedConsensusFcst, reason.trim())
+    } else if (action === 'approve') {
+      const oldStatus = row.status
+      row.status = step.next
+      row.currentStepOwner = CONSENSUS_STEPS.find((item) => item.status === row.status)?.role || null
+      if (row.status === 'LOCKED') row.finalConsensusFcst = row.proposedConsensusFcst
+      appendAudit(row.status === 'LOCKED' ? 'LOCKED' : 'APPROVED', oldStatus, row.status, reason || 'Approved')
+    } else if (action === 'reject') {
+      if (!reason?.trim()) return NextResponse.json({ error: 'A rejection reason is required' }, { status: 400 })
+      const oldStatus = row.status
+      row.status = 'CATEGORY_REVIEW'
+      row.currentStepOwner = 'Category Manager'
+      appendAudit('REJECTED_REWORK', oldStatus, row.status, reason.trim())
+    } else {
+      return NextResponse.json({ error: 'action must be override, approve or reject' }, { status: 400 })
+    }
+    row.updatedAt = new Date().toISOString()
+    await replacePersisted('demand_consensus_workflows', { workflowId }, row)
+    return NextResponse.json({ ok: true, row })
+  }
 
   if (path === 'orders/update') {
     try {
@@ -983,6 +2031,7 @@ export async function PATCH(request, { params }) {
             lastUpdatedAt: new Date().toISOString(),
           },
         })
+        await syncDispatchRecords(orderId, existing.distributorId, p.requestedLines)
         const u = await col.findOne({ orderId }, { projection: { _id: 0 } })
         return NextResponse.json({ ok: true, action: 'approved', order: { ...u, lockState } })
       }
@@ -1006,6 +2055,8 @@ export async function PATCH(request, { params }) {
             lastUpdatedAt: new Date().toISOString(),
           },
         })
+        const db = await getDb()
+        await db.collection('dispatch_records').deleteMany({ orderId })
         const u = await col.findOne({ orderId }, { projection: { _id: 0 } })
         return NextResponse.json({ ok: true, action: 'rejected', order: { ...u, lockState } })
       }
@@ -1018,7 +2069,9 @@ export async function PATCH(request, { params }) {
             lockState,
           }, { status: 400 })
         }
-        const built = enrichLines(existing.distributorId, lines)
+        const storedSuggestions = await readPersistedCollection('order_suggestions')
+        const storedSuggestion = storedSuggestions.find((row) => row.distributor?.id === existing.distributorId || row.distributorId === existing.distributorId)
+        const built = enrichLines(existing.distributorId, lines, storedSuggestion)
         if (!built.lines.length) {
           return NextResponse.json({ error: 'At least one non-zero line is required for approval request' }, { status: 400 })
         }
@@ -1063,7 +2116,9 @@ export async function PATCH(request, { params }) {
         }
       }
 
-      const built = enrichLines(existing.distributorId, lines)
+      const storedSuggestions = await readPersistedCollection('order_suggestions')
+      const storedSuggestion = storedSuggestions.find((row) => row.distributor?.id === existing.distributorId || row.distributorId === existing.distributorId)
+      const built = enrichLines(existing.distributorId, lines, storedSuggestion)
       if (!built.lines.length) {
         return NextResponse.json({ error: 'At least one non-zero line is required' }, { status: 400 })
       }
@@ -1078,6 +2133,7 @@ export async function PATCH(request, { params }) {
           lastUpdatedAt: new Date().toISOString(),
         },
       })
+      await syncDispatchRecords(orderId, existing.distributorId, built.lines)
       const u = await col.findOne({ orderId }, { projection: { _id: 0 } })
       return NextResponse.json({ ok: true, action: 'edited', order: { ...u, lockState } })
     } catch (e) {

@@ -1,0 +1,29 @@
+[
+  {
+    "ruleId": "ORDER-FREEZE-01",
+    "window": "Day 1-24",
+    "startDay": 1,
+    "endDay": 24,
+    "state": "editable",
+    "label": "Fully editable",
+    "maxDeltaPct": null
+  },
+  {
+    "ruleId": "ORDER-FREEZE-02",
+    "window": "Day 25-28",
+    "startDay": 25,
+    "endDay": 28,
+    "state": "restricted",
+    "label": "Max +/-10% per-line change",
+    "maxDeltaPct": 10
+  },
+  {
+    "ruleId": "ORDER-FREEZE-03",
+    "window": "Day 29+",
+    "startDay": 29,
+    "endDay": null,
+    "state": "locked",
+    "label": "Locked - approval required",
+    "maxDeltaPct": 0
+  }
+]

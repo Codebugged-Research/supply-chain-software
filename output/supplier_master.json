@@ -12,7 +12,12 @@
     "status": "APPROVED",
     "profile": "Dixon Technologies India Ltd is a premier contract electronics manufacturing partner located in Noida, maintaining an operational quality rating of 4.8/5.",
     "createdAt": "2026-07-29T11:36:22.372608Z",
-    "updatedAt": "2026-07-29T11:36:22.372608Z"
+    "updatedAt": "2026-07-29T11:36:22.372608Z",
+    "vendorType": "EMS",
+    "tierClassification": "TIER_1",
+    "contractedCapacityUnitsPerWeek": 360000,
+    "spotCapacityUnitsPerWeek": 90000,
+    "npiRampCapacityUnitsPerWeek": 36000
   },
   {
     "supplierCode": "SUP-FOXCONN-TN",
@@ -27,7 +32,12 @@
     "status": "APPROVED",
     "profile": "Bharat FIH (Foxconn India) is a premier contract electronics manufacturing partner located in Sriperumbudur, maintaining an operational quality rating of 4.9/5.",
     "createdAt": "2026-07-29T11:36:22.372608Z",
-    "updatedAt": "2026-07-29T11:36:22.372608Z"
+    "updatedAt": "2026-07-29T11:36:22.372608Z",
+    "vendorType": "ODM",
+    "tierClassification": "TIER_1",
+    "contractedCapacityUnitsPerWeek": 360000,
+    "spotCapacityUnitsPerWeek": 90000,
+    "npiRampCapacityUnitsPerWeek": 36000
   },
   {
     "supplierCode": "SUP-SYRMA-HR",
@@ -37,12 +47,17 @@
     "contactPerson": "Vikas Gupta",
     "rating": 4.6,
     "qualityScore": 98.4,
-    "onTimeDelivery": 94.0,
+    "onTimeDelivery": 94,
     "defaultLeadTimeDays": 14,
     "status": "APPROVED",
     "profile": "Syrma SGS Technology Ltd is a premier contract electronics manufacturing partner located in Manesar, maintaining an operational quality rating of 4.6/5.",
     "createdAt": "2026-07-29T11:36:22.372608Z",
-    "updatedAt": "2026-07-29T11:36:22.372608Z"
+    "updatedAt": "2026-07-29T11:36:22.372608Z",
+    "vendorType": "EMS",
+    "tierClassification": "TIER_2",
+    "contractedCapacityUnitsPerWeek": 360000,
+    "spotCapacityUnitsPerWeek": 90000,
+    "npiRampCapacityUnitsPerWeek": 36000
   },
   {
     "supplierCode": "SUP-AAC-SHENZHEN",
@@ -52,11 +67,16 @@
     "contactPerson": "Li Wei",
     "rating": 4.5,
     "qualityScore": 98.8,
-    "onTimeDelivery": 91.0,
+    "onTimeDelivery": 91,
     "defaultLeadTimeDays": 30,
     "status": "APPROVED",
     "profile": "AAC Technologies Global Import is a premier contract electronics manufacturing partner located in Shenzhen, maintaining an operational quality rating of 4.5/5.",
     "createdAt": "2026-07-29T11:36:22.372608Z",
-    "updatedAt": "2026-07-29T11:36:22.372608Z"
+    "updatedAt": "2026-07-29T11:36:22.372608Z",
+    "vendorType": "ODM",
+    "tierClassification": "TIER_2",
+    "contractedCapacityUnitsPerWeek": 360000,
+    "spotCapacityUnitsPerWeek": 90000,
+    "npiRampCapacityUnitsPerWeek": 36000
   }
 ]

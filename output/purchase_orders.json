@@ -8,7 +8,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1001",
@@ -19,7 +21,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1002",
@@ -30,7 +34,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1003",
@@ -41,7 +47,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1004",
@@ -52,7 +60,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1005",
@@ -63,7 +73,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1006",
@@ -74,7 +86,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1007",
@@ -85,7 +99,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1008",
@@ -96,7 +112,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1009",
@@ -107,7 +125,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1010",
@@ -118,7 +138,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1011",
@@ -129,7 +151,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1012",
@@ -140,7 +164,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1013",
@@ -151,7 +177,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1014",
@@ -162,7 +190,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1015",
@@ -173,7 +203,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1016",
@@ -184,7 +216,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1017",
@@ -195,7 +229,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1018",
@@ -206,7 +242,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1019",
@@ -217,7 +255,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1020",
@@ -228,7 +268,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1021",
@@ -239,7 +281,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1022",
@@ -250,7 +294,9 @@
     "expectedDeliveryDate": "2026-08-14T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-14T00:00:00Z",
+    "actualDeliveryDate": "2026-08-14T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1023",
@@ -261,7 +307,9 @@
     "expectedDeliveryDate": "2026-08-21T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-21T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1024",
@@ -272,7 +320,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1025",
@@ -283,7 +333,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1026",
@@ -294,7 +346,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1027",
@@ -305,7 +359,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1028",
@@ -316,7 +372,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1029",
@@ -327,7 +385,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1030",
@@ -338,7 +398,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1031",
@@ -349,7 +411,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1032",
@@ -360,7 +424,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1033",
@@ -371,7 +437,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1034",
@@ -382,7 +450,9 @@
     "expectedDeliveryDate": "2026-08-18T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-18T00:00:00Z",
+    "actualDeliveryDate": "2026-08-18T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1035",
@@ -393,7 +463,9 @@
     "expectedDeliveryDate": "2026-08-25T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-08-25T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1036",
@@ -404,7 +476,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1037",
@@ -415,7 +489,9 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1038",
@@ -426,7 +502,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1039",
@@ -437,7 +515,9 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1040",
@@ -448,7 +528,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1041",
@@ -459,7 +541,9 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1042",
@@ -470,7 +554,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1043",
@@ -481,7 +567,9 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1044",
@@ -492,7 +580,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1045",
@@ -503,7 +593,9 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   },
   {
     "poNumber": "PUR-202607-1046",
@@ -514,7 +606,9 @@
     "expectedDeliveryDate": "2026-09-03T00:00:00Z",
     "status": "CLOSED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-03T00:00:00Z",
+    "actualDeliveryDate": "2026-09-03T00:00:00Z"
   },
   {
     "poNumber": "PUR-202607-1047",
@@ -525,6 +619,8 @@
     "expectedDeliveryDate": "2026-09-10T00:00:00Z",
     "status": "CONFIRMED",
     "createdAt": "2026-07-28T00:00:00Z",
-    "updatedAt": "2026-07-28T00:00:00Z"
+    "updatedAt": "2026-07-28T00:00:00Z",
+    "handoverDate": "2026-09-10T00:00:00Z",
+    "actualDeliveryDate": null
   }
 ]

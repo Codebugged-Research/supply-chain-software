@@ -1,0 +1,33 @@
+[
+  {
+    "_id": "6a7abde7204e8027eff76a5e",
+    "issueId": "RCA-CAPACITY-1",
+    "domain": "CAPACITY",
+    "issueTitle": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
+    "immediateCause": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
+    "underlyingCause": "Persisted capacity constraint from WH-NORTH-DELHI / 2026-W41",
+    "affectedResources": [
+      "SKU-BOAT-AD141",
+      "WH-NORTH-DELHI"
+    ],
+    "businessImpact": {
+      "revenueAtRiskInr": 1558800,
+      "backlogUnits": 1200,
+      "description": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI"
+    },
+    "correctiveActions": [
+      "Immediate Action Required: Shift volume from bottleneck WH-NORTH-DELHI to qualified secondary assembly line or expedite raw material intake."
+    ],
+    "actionCodes": [
+      "REVIEW_STORED_CONSTRAINT"
+    ],
+    "causalChainNodes": [
+      {
+        "step": 1,
+        "node": "CAPACITY",
+        "detail": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI"
+      }
+    ],
+    "status": "ACTIVE"
+  }
+]

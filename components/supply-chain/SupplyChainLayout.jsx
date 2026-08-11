@@ -15,31 +15,39 @@ import {
   RefreshCw,
   Sun,
   Moon,
-  Database
+  Database,
+  UserRound
 } from 'lucide-react'
+import { PLANNING_ROLES, ROLE_PROFILES, ROLE_STORAGE_KEY, SUPPLY_NAV_ITEMS, hasPermission, permissionForSupplyPath } from '@/lib/roleAccess'
 
-const navItems = [
-  { name: 'Input & Data Sources', href: '/supply-planning/data-sources', icon: Database },
-  { name: 'Overview Cockpit', href: '/supply-planning', icon: LayoutDashboard },
-  { name: 'Supply Workspace', href: '/supply-planning/workspace', icon: Grid },
-  { name: 'Materials & BOM', href: '/supply-planning/materials', icon: Boxes },
-  { name: 'Capacity Planning', href: '/supply-planning/capacity', icon: Factory },
-  { name: 'Procurement POs', href: '/supply-planning/procurement', icon: ShoppingCart },
-  { name: 'Network & Transfers', href: '/supply-planning/distribution', icon: Truck },
-  { name: 'Constraints & Risks', href: '/supply-planning/constraints', icon: AlertTriangle },
-  { name: 'Scenario Studio', href: '/supply-planning/scenarios', icon: Layers }
-]
+const navIcons = { '/supply-planning/data-sources': Database, '/supply-planning': LayoutDashboard, '/supply-planning/workspace': Grid, '/supply-planning/materials': Boxes, '/supply-planning/capacity': Factory, '/supply-planning/procurement': ShoppingCart, '/supply-planning/distribution': Truck, '/supply-planning/constraints': AlertTriangle, '/supply-planning/scenarios': Layers }
+const navItems = SUPPLY_NAV_ITEMS.map((item) => ({ ...item, icon: navIcons[item.href] }))
 
 export default function SupplyChainLayout({ children, activeTitle = "Supply Planning Workspace" }) {
   const pathname = usePathname()
   const [isDark, setIsDark] = useState(true)
+  const [activeRole, setActiveRole] = useState('S&OP')
 
   useEffect(() => {
     const saved = localStorage.getItem('supply_chain_theme')
     if (saved) {
       setIsDark(saved === 'dark')
     }
+    const savedRole = localStorage.getItem(ROLE_STORAGE_KEY)
+    if (savedRole && ROLE_PROFILES[savedRole]) setActiveRole(savedRole)
+    const syncRole = (event) => { if (ROLE_PROFILES[event.detail]) setActiveRole(event.detail) }
+    window.addEventListener('sop-role-change', syncRole)
+    return () => window.removeEventListener('sop-role-change', syncRole)
   }, [])
+
+  const changeRole = (role) => {
+    setActiveRole(role)
+    localStorage.setItem(ROLE_STORAGE_KEY, role)
+    window.dispatchEvent(new CustomEvent('sop-role-change', { detail: role }))
+  }
+
+  const pagePermission = permissionForSupplyPath(pathname)
+  const pageAllowed = hasPermission(activeRole, pagePermission)
 
   const toggleTheme = () => {
     const next = !isDark
@@ -88,6 +96,22 @@ export default function SupplyChainLayout({ children, activeTitle = "Supply Plan
           </div>
 
           <div className="flex items-center space-x-3">
+            <div className="hidden md:flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2.5 py-1.5">
+              <UserRound className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <div className="leading-tight">
+                <select
+                  value={activeRole}
+                  onChange={(e) => {
+                    changeRole(e.target.value)
+                  }}
+                  aria-label="Active planning role"
+                  className="block bg-transparent text-[11px] font-semibold text-slate-800 dark:text-slate-100 outline-none cursor-pointer"
+                >
+                  {PLANNING_ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
+                </select>
+                <span className="block max-w-[230px] truncate text-[9px] text-slate-500 dark:text-slate-400">{ROLE_PROFILES[activeRole]?.description}</span>
+              </div>
+            </div>
             <button
               onClick={() => window.location.reload()}
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
@@ -113,7 +137,7 @@ export default function SupplyChainLayout({ children, activeTitle = "Supply Plan
         {/* Main Navigation Sub-Bar */}
         <div className="bg-white/80 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800/80 px-6 overflow-x-auto scrollbar-none transition-colors duration-200">
           <nav className="flex space-x-1">
-            {navItems.map((item) => {
+            {navItems.filter((item) => hasPermission(activeRole, item.permission)).map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/supply-planning' && pathname.startsWith(item.href))
               return (
@@ -135,7 +159,7 @@ export default function SupplyChainLayout({ children, activeTitle = "Supply Plan
 
         {/* Content Body Container */}
         <main className="flex-1 p-6 max-w-[1700px] w-full mx-auto space-y-6">
-          {children}
+          {pageAllowed ? children : <div className="mx-auto mt-16 max-w-xl rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-900/60 dark:bg-amber-950/20"><AlertTriangle className="mx-auto h-8 w-8 text-amber-600" /><h2 className="mt-3 text-lg font-semibold text-slate-900 dark:text-white">Role-restricted workspace</h2><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">The {activeRole} role does not have <code>{pagePermission}</code> permission. Choose an authorized role or use one of the visible planning tabs.</p></div>}
         </main>
 
         {/* Footer System Telemetry */}

@@ -1,0 +1,28 @@
+[
+  {
+    "dispatchId": "DSP-ORD-BOAT-DST001-2026W33-SKU-BOAT-AD161P",
+    "orderId": "ORD-BOAT-DST001-2026W33",
+    "distributorId": "DST-001",
+    "skuId": "SKU-BOAT-AD161P",
+    "skuName": "boAt Airdopes 161 Pro",
+    "orderedQty": 1516,
+    "dispatchedQty": 0,
+    "gap": 1516,
+    "status": "Pending",
+    "fillRatePct": 0,
+    "updatedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "dispatchId": "DSP-ORD-BOAT-DST001-2026W33-SKU-BOAT-RZ330",
+    "orderId": "ORD-BOAT-DST001-2026W33",
+    "distributorId": "DST-001",
+    "skuId": "SKU-BOAT-RZ330",
+    "skuName": "boAt Rockerz 330 Pro",
+    "orderedQty": 221,
+    "dispatchedQty": 0,
+    "gap": 221,
+    "status": "Pending",
+    "fillRatePct": 0,
+    "updatedAt": "2026-08-11T00:00:00.000Z"
+  }
+]

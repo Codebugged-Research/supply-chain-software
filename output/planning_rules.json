@@ -1,0 +1,26 @@
+[
+  {
+    "ruleId": "RULE-MRP-01",
+    "ruleName": "Time-Phased Inventory Netting Formula",
+    "formula": "Projected Stock = Available Inventory + Planned Production + Planned Purchase - Gross Demand",
+    "description": "Calculates time-phased closing inventory balance for each persisted supply-plan week."
+  },
+  {
+    "ruleId": "RULE-HORIZON-01",
+    "ruleName": "3-Tier Planning Horizon Structure",
+    "formula": "Firm / Tactical / Strategic horizons are derived from persisted forecast weeks",
+    "description": "Uses persisted forecast and capacity weeks for the rolling planning horizon."
+  },
+  {
+    "ruleId": "RULE-SLA-01",
+    "ruleName": "Service Level Calculation",
+    "formula": "SLA % = (1 - Deficit Units / Gross Forecast) * 100",
+    "description": "Calculates fulfillment against persisted consensus forecast and supply deficit."
+  },
+  {
+    "ruleId": "RULE-MOQ-01",
+    "ruleName": "MOQ & Order Multiple Rounding Rule",
+    "formula": "Planned Purchase = ceil(max(Net Requirement, MOQ) / Order Multiple) * Order Multiple",
+    "description": "Uses persisted supplier-product MOQ and order-multiple values."
+  }
+]
