@@ -1,0 +1,187 @@
+[
+  {
+    "traceId": "TRACE-SEED-001",
+    "sessionId": "CHAT-SEED-001",
+    "assistantMessageId": "MSG-A-1",
+    "userMessageId": "MSG-U-1",
+    "intentCode": "FORECAST",
+    "requestedAt": "2026-08-04T23:59:58.800Z",
+    "answeredAt": "2026-08-05T00:00:00.000Z",
+    "model": "seeded-demo-model",
+    "modelVersion": "v1",
+    "promptTemplateVersion": "SOP-PROMPT-V1",
+    "dataVersion": "DM-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceEntityRefs": [
+      {
+        "entityType": "KPI_OBSERVATION",
+        "entityId": "FILL_RATE|2026-W33"
+      }
+    ],
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "insightIds": [],
+    "toolCalls": [
+      "persisted_collection_lookup"
+    ],
+    "inputTokenCount": 80,
+    "outputTokenCount": 10,
+    "latencyMs": 1784,
+    "status": "SUCCESS",
+    "errorCode": null,
+    "errorDetail": null,
+    "responseHashFNV1a": "6f2e48e8",
+    "retentionUntil": "2027-02-06T00:00:00.000Z",
+    "source": "SEED",
+    "generationSeed": 20250701
+  },
+  {
+    "traceId": "TRACE-SEED-002",
+    "sessionId": "CHAT-SEED-002",
+    "assistantMessageId": "MSG-A-2",
+    "userMessageId": "MSG-U-2",
+    "intentCode": "INVENTORY",
+    "requestedAt": "2026-08-05T23:59:58.800Z",
+    "answeredAt": "2026-08-06T00:00:00.000Z",
+    "model": "seeded-demo-model",
+    "modelVersion": "v1",
+    "promptTemplateVersion": "SOP-PROMPT-V1",
+    "dataVersion": "DM-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceEntityRefs": [
+      {
+        "entityType": "KPI_OBSERVATION",
+        "entityId": "FORECAST_WAPE|2026-W33"
+      }
+    ],
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "insightIds": [],
+    "toolCalls": [
+      "persisted_collection_lookup"
+    ],
+    "inputTokenCount": 85,
+    "outputTokenCount": 10,
+    "latencyMs": 1260,
+    "status": "SUCCESS",
+    "errorCode": null,
+    "errorDetail": null,
+    "responseHashFNV1a": "6f837b49",
+    "retentionUntil": "2027-02-06T00:00:00.000Z",
+    "source": "SEED",
+    "generationSeed": 20250701
+  },
+  {
+    "traceId": "TRACE-SEED-003",
+    "sessionId": "CHAT-SEED-003",
+    "assistantMessageId": "MSG-A-3",
+    "userMessageId": "MSG-U-3",
+    "intentCode": "SUPPLY",
+    "requestedAt": "2026-08-06T23:59:58.800Z",
+    "answeredAt": "2026-08-07T00:00:00.000Z",
+    "model": "seeded-demo-model",
+    "modelVersion": "v1",
+    "promptTemplateVersion": "SOP-PROMPT-V1",
+    "dataVersion": "DM-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceEntityRefs": [
+      {
+        "entityType": "KPI_OBSERVATION",
+        "entityId": "FORECAST_BIAS|2026-W33"
+      }
+    ],
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "insightIds": [],
+    "toolCalls": [
+      "persisted_collection_lookup"
+    ],
+    "inputTokenCount": 90,
+    "outputTokenCount": 10,
+    "latencyMs": 737,
+    "status": "SUCCESS",
+    "errorCode": null,
+    "errorDetail": null,
+    "responseHashFNV1a": "666cf41e",
+    "retentionUntil": "2027-02-06T00:00:00.000Z",
+    "source": "SEED",
+    "generationSeed": 20250701
+  },
+  {
+    "traceId": "TRACE-SEED-004",
+    "sessionId": "CHAT-SEED-004",
+    "assistantMessageId": "MSG-A-4",
+    "userMessageId": "MSG-U-4",
+    "intentCode": "FINANCE",
+    "requestedAt": "2026-08-07T23:59:58.800Z",
+    "answeredAt": "2026-08-08T00:00:00.000Z",
+    "model": "seeded-demo-model",
+    "modelVersion": "v1",
+    "promptTemplateVersion": "SOP-PROMPT-V1",
+    "dataVersion": "DM-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceEntityRefs": [
+      {
+        "entityType": "KPI_OBSERVATION",
+        "entityId": "INVENTORY_DOS|2026-W33"
+      }
+    ],
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "insightIds": [],
+    "toolCalls": [
+      "persisted_collection_lookup"
+    ],
+    "inputTokenCount": 95,
+    "outputTokenCount": 10,
+    "latencyMs": 2413,
+    "status": "SUCCESS",
+    "errorCode": null,
+    "errorDetail": null,
+    "responseHashFNV1a": "9404ea49",
+    "retentionUntil": "2027-02-06T00:00:00.000Z",
+    "source": "SEED",
+    "generationSeed": 20250701
+  },
+  {
+    "traceId": "TRACE-SEED-005",
+    "sessionId": "CHAT-SEED-005",
+    "assistantMessageId": "MSG-A-5",
+    "userMessageId": "MSG-U-5",
+    "intentCode": "KPI",
+    "requestedAt": "2026-08-08T23:59:58.800Z",
+    "answeredAt": "2026-08-09T00:00:00.000Z",
+    "model": "seeded-demo-model",
+    "modelVersion": "v1",
+    "promptTemplateVersion": "SOP-PROMPT-V1",
+    "dataVersion": "DM-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceEntityRefs": [
+      {
+        "entityType": "KPI_OBSERVATION",
+        "entityId": "STOCKOUT_RATE|2026-W33"
+      }
+    ],
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "insightIds": [],
+    "toolCalls": [
+      "persisted_collection_lookup"
+    ],
+    "inputTokenCount": 100,
+    "outputTokenCount": 10,
+    "latencyMs": 1889,
+    "status": "SUCCESS",
+    "errorCode": null,
+    "errorDetail": null,
+    "responseHashFNV1a": "ed07c84a",
+    "retentionUntil": "2027-02-06T00:00:00.000Z",
+    "source": "SEED",
+    "generationSeed": 20250701
+  }
+]

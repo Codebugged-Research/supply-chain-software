@@ -1,0 +1,18 @@
+[
+  {
+    "planVersionId": "CPV-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "sourceScenarioVersionId": "SCV-BASELINE-V1",
+    "demandForecastVersionId": "FCST-2026-W33-V1",
+    "workflowId": "PFW-CPP-2026-W33",
+    "name": "Official S&OP Consensus Plan W33",
+    "status": "APPROVED",
+    "ownerUserId": "sop.lead@boat.com",
+    "approvedAt": "2026-08-09T00:00:00.000Z",
+    "lockedThroughWeek": "2026-W37",
+    "publishedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

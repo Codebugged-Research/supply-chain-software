@@ -2,7 +2,7 @@
 
 > **Scope:** This file is the single source of truth for the Supply Planning module.
 > It consolidates three documents: Architecture Inventory, Gap Analysis, and Shared Data Model.
-> **Last consolidated:** 2026-08-10
+> **Last consolidated:** 2026-08-13
 > **References:** docs/modules/demand-planning.md (Demand Planning extension)
 
 ---
@@ -20,13 +20,43 @@
 |---|----------|-------|------------------------|-------------------|-----------------------------|--------------------|
 | 1 | **Input & Data Sources** | `/supply-planning/data-sources` | Documents the origin, lineage, and business rules for every input feeding the supply planning engine. | `categories[]` (categoryId, categoryName, collectionsUsed, schemaFields, lastSyncTime, healthStatus, recordCount, impactedPlanningOutputs), `planningRulesDetail[]` (ruleId, ruleName, formula) | Ingestion metadata summary list, Planning Input/Output Mapping Matrix table, collapsible Schema Contract `<details>` per category, Planning Rules & Formulas table | None (read-only) |
 | 2 | **Overview Cockpit** | `/supply-planning` | Provides an executive-level health dashboard of supply vs. demand balance with early warnings and quick-launch links. | `overview{}` (serviceLevel, totalDeficitUnits, activeConstraintsCount, totalStockUnits, demandVsSupplyTrend[]), `earlyWarnings[]` (category, probability, triggerDescription, horizonWeek) | 4x `KpiCard` widgets, Predictive Early Warning banner, Recharts `AreaChart` (demand vs. supply trend), 3x Quick-Launch workbench link cards | None (read-only) |
-| 3 | **Supply Workspace** | `/supply-planning/workspace` | Renders the 52-week time-phased MRP netting grid for a selected SKU and warehouse location. | `grid[]` (week, forecastQty, availableInventory, plannedProduction, plannedPurchase, projectedInventory, supplyGap, serviceLevel, planningStatus) filtered by `skuCode`, `location`, `startWeek` | SKU / Location / Horizon `<select>` dropdowns, planning horizon zone legend bar, 52-week MRP netting table with `StatusBadge` per row, "Recalculate MRP" button, "SKU 360 Detail" deep-link | `alert()` stub on "Recalculate MRP" |
+| 3 | **Supply Workspace** | `/supply-planning/workspace` | Renders the 52-week time-phased MRP netting grid and recalculates a constrained supply plan for a selected SKU and warehouse location. | Canonical event-adjusted `grid[]` demand plus `product_master`, `bom_master`, `inventory`, open `purchase_orders`, `manufacturing_partner_lines`, and `line_capacity_plans`; calculated rows add openingInventoryQty, openPoReceiptQty, netRequirementQty, remainingCapacityQty, rmBuildableQty, componentRequirements, netMaterialRequirementQty, plannedProduction, projectedInventory, supplyGap, serviceLevel, and constraintReasons | SKU / Location / Horizon `<select>` dropdowns, planning horizon zone legend bar, recalculated MRP netting table with RM/capacity constraints and `StatusBadge`, "Recalculate MRP" button, "SKU 360 Detail" deep-link | `POST action=recalculate_mrp` persists an active `mrp_calculation_runs` header and its `mrp_calculation_lines`; subsequent grid reads reload that run without modifying canonical input facts |
 | 4 | **Materials & BOM** | `/supply-planning/materials` | Explodes the Bill of Materials for a selected parent SKU to expose component quantities, on-hand stock, and gating shortages. | `bom[]` (componentSku, componentName, quantity, unitOfMeasure, scrapPercent, onHandQty, isGating) filtered by `parentSku` | Parent SKU `<select>`, 3x `KpiCard` (component count, gating items, avg scrap %), Multi-Level Component Netting table with SHORTAGE/FEASIBLE `StatusBadge`, "Inspect SKU" deep-link per row | None (read-only) |
 | 5 | **Capacity Planning** | `/supply-planning/capacity` | Tracks factory rough-cut capacity utilization, OEE performance, and a horizon-segmented (Short/Medium/Long) 52-week capacity gap across all manufacturing plants; derives an RM- and capacity-constrained Rough-Cut Production Plan; and runs the Consensus Production Planning signoff workflow. | `plantData[]` (plantCode, plantName, city, workingShifts, dailyCapacity, weeklyCapacity, utilizationPercent, status), `ratedVsActual[]` (ratedWeeklyCapacity, plannedProductionLoad, actualRealizedOutput, capacityVarianceUnits, downtimeHours, downtimeReason, overallEquipmentEffectivenessPct), `capacityGap[]` (week, **horizonTier** [SHORT/MEDIUM/LONG], ratedWeeklyCapacity, plannedWorkload, capacityGapUnits, capacityGapHours, utilizationPct, **plannedCapacityChangeUnits** [CapEx/new-line event], status) â€” now a full 52-week rolling array instead of a fixed 8-week window, `horizonLegend{}` (shortTerm/mediumTerm/longTerm {label, range, description}), `roughCutPlan{}` (parentSku, gatingComponent, rmMaxBuildableQty, asOf, rows[] {week, horizonTier, demandQty, rmMaxBuildableQty, capacityConstraintUnits, constrainedProductionQty, shortfallUnits, constraintBinding, feasible}), `consensusPlanStatus{}` (planId, planningCycle, status [DRAFT/IN_REVIEW/APPROVED/LOCKED], submittedBy/At, reviewedBy/At, approvedBy/At, lockedBy/At, history[]), `recommendations[]` (recommendationId, plantCode, issue, proposedAction, unitCapacityGain, feasibility) | 3x `KpiCard`, 4-tab sub-navigation (Heatmap / OEE / Gap Analysis / Rough-Cut & Consensus Signoff), Plant Heatmap table with "Plant 360" deep-link, Rated vs. Actual OEE table, 52-Week Gap table with horizon-tier legend + tier badges + CapEx event column, Rough-Cut Production Plan table (RM-buildable vs. capacity-constrained vs. demand, binding-constraint flag), Consensus Signoff panel (status badge, stamped history log, action buttons gated by state), Recommendations 2-column card grid with "Execute Action" buttons | `alert()` stubs on "Rebalance Line Load" and "Execute Action"; **real write path** â€” signoff buttons call `POST action=submit_consensus_plan_for_review` / `review_consensus_plan` / `lock_consensus_plan`, persisted in-memory (`consensusProductionPlanState` in `supplyChainService.js`) as a DRAFT â†’ IN_REVIEW â†’ APPROVED â†’ LOCKED state machine with a full transition history log |
 | 6 | **Procurement POs** | `/supply-planning/procurement` | Manages the purchase order release queue, cross-references supplier delivery dates against factory production need dates, tracks PO adherence against contractual Handover Dates (HOD), and hosts the ODM/EMS vendor master with a supplier reliability scorecard. | `pos[]` (poNumber, supplierName, skuCode, orderedQty, receivedQty, expectedDeliveryDate, status, supplierCode), `needDates[]` (poNumber, supplierName, skuCode, expectedDeliveryDate, productionOrderNo, productionNeedDate, dateGapDays, alignmentStatus), `hodAdherence[]` (poNumber, supplierName, skuCode, handoverDate, expectedDeliveryDate, actualDeliveryDate, hodVarianceDays, adherenceStatus, exclusion{exclusionCode, reason, flaggedBy, flaggedAt}, revisionHistory[]), `adherenceSummary{}` (rollingWindow, totalTrackedPOs, excludedFromDenominator, onTimeHandoverPct, atRiskOrLateCount, targetAdherencePct, trend[]), `odmEmsMaster[]` (supplierCode, supplierName, vendorType, tierClassification, contractedLeadTimeDays, totalProductionCapacityUnitsPerWeek, contractedCapacityUnitsPerWeek, spotCapacityUnitsPerWeek, npiRampCapacityUnitsPerWeek, lines[] {lineId, skuCode, lineCapacityUnitsPerWeek, leadTimeDays, moq, orderMultiple, preferredSupplier}), `reliabilityScorecard[]` (supplierCode, onTimeDelivery4/13/52Week, quotedLeadTimeDays, actualAvgLeadTimeDays, leadTimeVarianceDays/Pct, qualityScore, rejectionRatePct, reliabilityScore, reliabilityGrade) | 3x `KpiCard`, 4-tab sub-navigation (PO Queue / Need Dates / HOD Adherence / ODM-EMS Master), PO Release Queue table with "Supplier 360" deep-link, Delivery vs. Need Date Alignment table, HOD Adherence table with exclusion-flag `<select>` write control and revision-count tooltip, ODM/EMS Vendor Master table (line capacity, contracted/spot split, NPI reserve), ranked Reliability Scorecard table, "Batch Approve POs" button | `alert()` stub on "Batch Approve POs"; **real write paths** â€” exclusion flag `<select>` calls `POST action=set_po_exclusion`, persisted in-memory (`poExclusionStore`/`poRevisionStore` in `supplyChainService.js`) with revision history logged per change |
 | 7 | **Network & Transfers** | `/supply-planning/distribution` | Displays stock coverage and inter-DC transfer status across all regional distribution centers. | `networkData[]` (warehouseCode, warehouseName, city, state, warehouseType, capacityUnits, currentStock, daysOfSupply, status) | 3x `KpiCard`, DC Stock Coverage & Flow table with `StatusBadge`, "Create Transfer Order" button | `alert()` stub on "Create Transfer Order" |
-| 8 | **Constraints & Risks** | `/supply-planning/constraints` | Surfaces active supply chain exception alerts with AI-generated root-cause trees and executive trade-off recommendations. | `constraints[]` (constraintType, skuCode, constraintSource, severity, description, recommendedAction), `execRecommendations[]` (optionId, title, description, costVarianceInr, serviceLevelImpact, revenueRecoveredInr, recommendationScore, status), `rootCauseTree{}` (causalTreeNodes[], recommendedMitigation) fetched on-demand per selected constraint | 3x `KpiCard`, Executive Recommendation Engine 2-column card grid, Constraint Exception Matrix table, slide-in side drawer with causal tree + AI mitigation narrative, "Mark Resolution Executed" button | `alert()` stubs on "Approve Executive Trade-Off" and "Mark Resolution Executed" |
-| 9 | **Scenario Studio** | `/supply-planning/scenarios` | Enables side-by-side S&OP what-if scenario comparison (Baseline vs. Festive Surge vs. Supplier Disruption) before publishing the official plan. | `scenarios[]` (scenario metadata only); the 6-metric comparison matrix is currently hard-coded in JSX | 3x `KpiCard`, Side-by-Side Executive Trade-Off Comparison table (6 metrics x 3 scenario columns), "Build New Scenario" button, "Publish Official S&OP Plan" button | `alert()` stubs on publish and new scenario |
+| 8 | **Constraints & Risks** | `/supply-planning/constraints` | Surfaces active supply chain exception alerts with AI-generated root-cause trees and auditable resolution. | Active `constraints[]` from `supply_constraints`, canonical `demand_events`, `channel_inventory_norms`, and 13-week `supplier_reliability_history`; `execRecommendations[]`; `rootCauseTree{}` fetched on demand. Every row has a stable `constraintId` and source collection. | 3x `KpiCard`, Executive Recommendation Engine cards, active Constraint Exception Matrix, diagnostic drawer, mandatory resolution-reason input, "Mark Resolution Executed" action | `POST action=resolve_supply_risk` writes a resolved subject overlay and reuses `workflow_instances`, `workflow_steps`, and `entity_audit_events`; resolved IDs are omitted from subsequent active-list reads. "Approve Executive Trade-Off" also has its existing API mutation. |
+| 9 | **Scenario Studio** | `/supply-planning/scenarios` | Enables side-by-side S&OP what-if scenario comparison before publishing the official plan. | Canonical `scenario_versions`, `scenario_assumption_sets`, and `scenario_output_lines`, including active-selection state and stored output aggregates | 3x `KpiCard`, persisted comparison table, "Build New Scenario" button, and per-version Publish action | Publish writes the selected scenario and downstream consensus version/lines through the canonical scenario service; only Build New Scenario remains a UI stub |
+
+> **Consensus persistence note:** `consensusPlanStatus.history[]` in the table above is a compatibility response projection. The persisted Production subject references `workflow_instances`; ordered approvals live in `workflow_steps`, and all transitions live in the shared `entity_audit_events` collection also used by Demand consensus. The prior in-memory embedded-history description is superseded by this shared contract.
+
+### Recalculate MRP contract
+
+The Supply Workspace calls `POST /api/v1/supply-planning` with `action=recalculate_mrp`, `skuCode`, `location`, and `startWeek`. The calculation reads canonical facts without replacing them:
+
+| Planning input | Canonical collection | MRP use |
+|---|---|---|
+| SKU identity and RM/FG classification | `product_master` | Validates the selected finished good and resolves its material identities |
+| Effective component quantities and scrap | `bom_master` | Converts finished-good production need into component gross requirements |
+| Current unrestricted stock | `inventory.availableQty` | Seeds FG and component opening balances at the selected location |
+| Scheduled receipts | Open `purchase_orders` and their lines | Adds only remaining quantities in the promised-delivery ISO week; closed/cancelled/rejected POs are excluded |
+| Qualified production resources | `manufacturing_partner_lines` | Selects active lines qualified for the finished good |
+| Weekly capacity | `line_capacity_plans.remainingCapacityQty` | Caps new production by week using the latest capacity-plan version |
+| Demand | Supply `grid` demand after canonical `demand_events` application | Uses the same shape/stacking/scope-adjusted quantity delivered by FIX-C |
+
+For each week, `net FG requirement = max(0, demand - opening FG - open FG PO receipts)`. Component requirement includes BOM scrap. `RM buildable` is the minimum build quantity across required components, and `planned production = min(net FG requirement, remaining line capacity, RM buildable)`. Component and FG closing balances roll into the following week. The action supersedes the prior active run for the same SKU/location/horizon, persists the traceable header in `mrp_calculation_runs` and its calculated rows in `mrp_calculation_lines`, and refreshes the grid. Later grid reads prefer that active persisted run.
+
+### Risk resolution and audit contract
+
+The active risk query composes stored constraints with canonical event, channel-norm, and supplier-reliability risks. Generated risks receive stable IDs (`EVENT-<eventId>`, `NORM-<normId>`, and `SUPPLIER-<observationId>`); stored rows without an ID receive a deterministic ID from their type, SKU, and source.
+
+`POST /api/v1/supply-planning` with `action=resolve_supply_risk` requires `constraintId`, `reason`, and an optional actor. It does not rewrite the canonical demand event or supplier-reliability observation. Instead it persists a `RESOLVED` subject overlay in `supply_constraints` and uses the same `persistWorkflowSnapshot` path as consensus signoff:
+
+- `workflow_instances`: one `SUPPLY_RISK_RESOLUTION` instance referencing the risk;
+- `workflow_steps`: its completed `RISK_RESOLUTION` step;
+- `entity_audit_events`: an append-only `ACTIVE` → `RESOLVED` transition containing actor, timestamp, reason code, and the required reason.
+
+The active query treats the resolved overlay as authoritative for that risk ID, so the source observation remains available for provenance while the risk immediately disappears from the active matrix after the client refreshes it.
 
 ---
 
@@ -57,12 +87,12 @@ flowchart TD
     subgraph Tabs
         T1["(1) Input & Data Sources\naction=data_sources"]
         T2["(2) Overview Cockpit\naction=overview\naction=early_warning_system"]
-        T3["(3) Supply Workspace\naction=grid"]
+        T3["(3) Supply Workspace\naction=grid\nPOST action=recalculate_mrp"]
         T4["(4) Materials & BOM\naction=bom"]
         T5["(5) Capacity Planning\naction=capacity\naction=rated_vs_actual_capacity\naction=capacity_gap_analysis\naction=capacity_recommendations\naction=capacity_horizon_legend\naction=rough_cut_production_plan\naction=consensus_production_plan_status\nPOST action=submit_consensus_plan_for_review|review_consensus_plan|lock_consensus_plan"]
         T6["(6) Procurement POs\naction=procurement\naction=supplier_production_need_dates\naction=po_hod_adherence\naction=po_adherence_summary\naction=odm_ems_master\naction=supplier_reliability_scorecard\nPOST action=set_po_exclusion"]
         T7["(7) Network & Transfers\naction=distribution"]
-        T8["(8) Constraints & Risks\naction=constraints\naction=executive_recommendation_engine\naction=root_cause_analysis"]
+        T8["(8) Constraints & Risks\naction=constraints\naction=executive_recommendation_engine\naction=root_cause_analysis\nPOST action=resolve_supply_risk"]
         T9["(9) Scenario Studio\naction=scenarios"]
     end
 
@@ -127,8 +157,8 @@ flowchart TD
 | 2 | **ODM & EMS Master management â€” Production capacity, Line Capacity, Lead Times** | âš ï¸ Partial | Capacity Planning | Plant Heatmap covers dailyCapacity, weeklyCapacity, workingShifts, utilizationPercent per plant; Rated vs. Actual OEE table; Capacity Gap 52-week analysis; "Plant 360Â°" deep-link exists but route is unscaffolded | **Missing:** (a) No ODM/EMS vendor master record (vendor name, type = ODM/EMS, tier classification); (b) Line-level granularity â€” current data is plant-roll-up only, no individual assembly line rows; (c) Lead time per ODM/EMS/line stored and editable; (d) Contracted vs. rated capacity split; (e) NPI / ramp-up capacity reservation fields; (f) No CRUD â€” data is read-only, no way to update line parameters | **T1** |
 | 3 | **Role Based Interface â€” Production / Sourcing / S&OP / NPI** | âŒ Not Covered | â€” | `SupplyChainLayout` renders an identical nav bar for all users; no auth context, no role-aware rendering, no tab/section visibility gating | **Missing entirely:** (a) User authentication & session (role token); (b) Role definitions (Production Planner, Sourcing, S&OP Lead, NPI Manager); (c) Role-gated tab visibility (e.g., NPI only sees NPI pipeline + BOM tabs); (d) Field-level write permissions per role (e.g., only Sourcing can approve POs); (e) Audit trail â€” who changed what and when | **T1** |
 | 4 | **RM & FG Import Planning & Tracking** | âŒ Not Covered | â€” | Network & Transfers tab covers domestic inter-DC stock movements (warehouseCode, currentStock, daysOfSupply). Procurement POs tab covers purchase orders but has no import-specific fields | **Missing entirely:** (a) Import PO tracking â€” Bill of Lading, vessel/flight details, port of origin, ETA, customs clearance status; (b) RM (Raw Material) vs. FG (Finished Goods) import type classification; (c) In-transit inventory visibility for imported shipments; (d) Customs hold / demurrage exception tracking; (e) Duty & freight cost per import PO; (f) Import lead-time buffer management vs. standard domestic lead times | **T1** |
-| 5 | **Rough Cut Production Planning basis real-time RM availability & Capacity constraints** | âš ï¸ Partial | Supply Workspace + Capacity Planning + Materials & BOM | Supply Workspace MRP grid has plannedProduction driven by forecastQty vs. availableInventory; Capacity Planning has rough-cut utilization heatmap; Materials & BOM flags gating RM shortages (isGating) | **Missing:** (a) RM availability is not fed in real-time â€” grid uses a static availableInventory snapshot, no live ERP / WMS feed; (b) No combined single view that simultaneously shows RM shortfall + capacity headroom and derives a feasible production qty; (c) Planning horizon zones are display-only â€” the "Recalculate MRP" button is an alert() stub with no engine; (d) No constrained plan output (current plan does not cap production at min(capacity, RM-available)) | **T1** |
-| 6 | **Consensus Production Planning Signoff and Alignment** | âš ï¸ Partial | Scenario Studio | Side-by-side scenario comparison matrix exists; "Publish Official S&OP Plan" button is present | **Missing:** (a) Button is an alert() stub â€” no actual write to a published plan record; (b) No structured signoff workflow (draft â†’ review â†’ approved states with named approvers); (c) No role-gated approvals â€” any user sees the Publish button; (d) No timestamp / owner stamp on the published plan; (e) No email / notification trigger on publish; (f) No lock mechanism preventing edits to a published week's plan | **T1** |
+| 5 | **Rough Cut Production Planning basis real-time RM availability & Capacity constraints** | âš ï¸ Partial | Supply Workspace + Capacity Planning + Materials & BOM | "Recalculate MRP" now reads canonical inventory, open POs, effective BOM, qualified lines, weekly remaining capacity, and canonical event-adjusted demand. It rolls inventory and component balances by week and derives `plannedProduction = min(net FG requirement, remaining capacity, RM-buildable quantity)` in the combined workspace grid. | **Remaining:** source facts are current canonical application snapshots, not a direct live ERP/WMS stream; the calculated result is refreshed in the view but is not yet published as an approved production-plan version or work order. | **T1** |
+| 6 | **Consensus Production Planning Signoff and Alignment** | Configured POC | Scenario Studio + Capacity Planning | Scenario publish now selects one canonical `scenario_versions` record, materializes its immutable outputs into an approved `consensus_plan_versions` record plus `consensus_plan_lines`, stamps publisher/time, archives the prior active version, and appends an audit event. Capacity Planning retains the shared consensus signoff workflow. | **Remaining:** Finance approval and production notification remain deferred; API authorization still requires production hardening. | **T1** |
 | 7 | **Continuous Demand vs. Supply View â€” Short / Medium Term** | âš ï¸ Partial | Overview Cockpit + Supply Workspace | Overview Cockpit has an AreaChart of weekly demand vs. supply trend; Supply Workspace has a 52-week MRP netting grid per SKU | **Missing:** (a) No aggregated cross-SKU demand vs. supply view (current chart is aggregate from API, not drillable by product family or channel); (b) Short-term horizon (0â€“4 weeks) not distinguished from medium-term (5â€“26 weeks) with different data refresh cadences; (c) No "frozen zone" edit-lock on the chart â€” locked weeks and open weeks look identical visually; (d) No demand signal source toggle (statistical forecast vs. customer order vs. consensus); (e) No channel/region split in the demand vs. supply view | **T2** |
 | 8 | **KPI tracking & Dashboards** | âš ï¸ Partial | Overview Cockpit + all tabs (KpiCard) | Overview Cockpit has 4 KpiCards (Order Fulfillment Rate, Stock Shortage, Factory Bottlenecks, Warehouse Stock); individual tabs have contextual KpiCards; early warning banner shows top-1 risk | **Missing:** (a) No unified KPI registry â€” each KpiCard is hard-coded per page with a static fallback value; (b) No KPI trend history chart (only single current value shown, no sparkline or week-over-week); (c) No configurable KPI thresholds / alert rules per user/role; (d) No exportable KPI report (PDF/Excel); (e) No SLA breach notification; (f) Metrics for PO adherence, ODM on-time delivery, import in-transit count, NPI readiness are entirely absent from the cockpit | **T2** |
 | 9 | **Medium & Long Term Capacity Planning** | âš ï¸ Partial | Capacity Planning | 52-week capacity gap heatmap exists (capacityGap[] with week, ratedWeeklyCapacity, plannedWorkload, capacityGapUnits, utilizationPct); recommendations panel present | **Missing:** (a) Medium term = 13â€“26 weeks; Long term = 27â€“52+ weeks â€” current UI renders both in the same table with no horizon segmentation or different planning logic applied; (b) No capacity investment / CapEx planning view (planned line additions, new plant commissioning dates); (c) No seasonal capacity reservation (festival surge blocks, shutdown periods); (d) No contracted capacity vs. spot capacity split across ODM/EMS; (e) No what-if on capacity expansion (Scenario Studio does not link to capacity levers) | **T2** |
@@ -245,17 +275,19 @@ erDiagram
 
     FORECAST ||--o{ CONSENSUS_PLAN : "feeds into"
     DEMAND_CONSENSUS_WORKFLOW ||--o{ FORECAST : "locks into"
-    DEMAND_CONSENSUS_WORKFLOW ||--o{ DEMAND_CONSENSUS_STEP : "has steps"
+    DEMAND_CONSENSUS_WORKFLOW ||--|| WORKFLOW_INSTANCE : "references"
     DEMAND_EVENT ||--o{ FORECAST : "uplifts"
     PLM_STAGE }o--o{ SKU_MASTER : "cannibilises"
 
     PO ||--o{ IMPORT_SHIPMENT : "may be imported via"
     PO ||--o{ PO_REVISION : "has revision history"
-    CONSENSUS_PLAN ||--o{ SIGNOFF_WORKFLOW : "goes through"
+    CONSENSUS_PLAN ||--|| WORKFLOW_INSTANCE : "references"
+    WORKFLOW_INSTANCE ||--o{ WORKFLOW_STEP : "has ordered steps"
+    WORKFLOW_INSTANCE ||--o{ ENTITY_AUDIT_EVENT : "records actions"
 
     USER_ROLE ||--o{ CONSENSUS_PLAN : "approves"
-    USER_ROLE ||--o{ SIGNOFF_WORKFLOW : "participates in"
-    USER_ROLE ||--o{ DEMAND_CONSENSUS_STEP : "acts on"
+    USER_ROLE ||--o{ WORKFLOW_STEP : "is assigned to"
+    USER_ROLE ||--o{ ENTITY_AUDIT_EVENT : "acts in"
 ```
 
 ---
@@ -607,7 +639,7 @@ erDiagram
 
 ### 2.8 Consensus Plan
 
-**Purpose:** The official, approved supply plan for a given SKU Ã— Week, produced after the S&OP signoff workflow. This is the entity that "publishes" the outcome of Scenario Studio and locks it for downstream execution. Currently this entity does not exist â€” the "Publish" button in Scenario Studio fires an `alert()` stub.
+**Purpose:** The official, approved supply plan for a given SKU Ã— Week, produced after scenario publication or the S&OP signoff workflow. Scenario Studio now writes `consensus_plan_versions` and `consensus_plan_lines`, linked back through `sourceScenarioVersionId`; Demand Planning and Dashboard resolve the same active published scenario.
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -627,19 +659,27 @@ erDiagram
 | `createdByUserId` | FK â†’ USER | |
 | `createdAt` | datetime | |
 
-#### 2.8a SIGNOFF_WORKFLOW (child of Consensus Plan)
+#### 2.8a Production Sign-off (shared workflow reference)
+
+The Production-owned `consensus_production_plans` record carries `workflowId`; it does **not** persist a separate `history[]` or Production-only audit schema. It references the same canonical model used by Demand consensus in [DATA_MODEL_MASTER.md](../data/DATA_MODEL_MASTER.md#factor-proposals-consensus-and-official-plan):
+
+- `workflow_instances` uses `workflowType = PRODUCTION_SIGNOFF`, `subjectType = CONSENSUS_PRODUCTION_PLAN`, and `subjectId = planId`.
+- `workflow_steps` holds the ordered Supply Planner, Procurement, Plant, and S&OP assignments under the shared `workflowId × stepSequence` grain.
+- `entity_audit_events` is the sole append-only sign-off history. Submit, approve, reject, publish, and lock events use the same fields and persistence path as Demand consensus.
+
+The capacity API may return a compatibility `history[]` projection for the sign-off panel. It is derived from `entity_audit_events` and is never stored on the Production plan. The table below is a Production-specific view of `workflow_steps`, not a separate `SIGNOFF_WORKFLOW` collection.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `workflowId` | string (PK) | UUID |
-| `planId` | FK â†’ CONSENSUS_PLAN | |
-| `stepOrder` | number | 1, 2, 3â€¦ |
-| `stepName` | string | e.g. "Demand Review", "Supply Review", "Finance Gate", "S&OP Lead Approval" |
-| `requiredRole` | enum | `PRODUCTION_PLANNER` Â· `SOURCING` Â· `SOP_LEAD` Â· `FINANCE` Â· `NPI_MANAGER` |
-| `assignedUserId` | FK â†’ USER | |
-| `status` | enum | `PENDING` Â· `APPROVED` Â· `REJECTED` Â· `ESCALATED` |
-| `approvedAt` | datetime | |
-| `comments` | string | Free text comments from approver |
+| `workflowId` | FK → `workflow_instances` | Same identifier stored on the Production plan |
+| `stepSequence` | number | 1 = Supply Planner, 2 = Procurement, 3 = Plant, 4 = S&OP |
+| `stepCode` | enum | `SUPPLY_PLAN_SUBMIT` · `PROCUREMENT_REVIEW` · `PLANT_REVIEW` · `SOP_APPROVAL` |
+| `assignedRole` | string | Role responsible for this step |
+| `assignedUserId` | FK → USER | |
+| `status` | enum | `PENDING` · `IN_PROGRESS` · `COMPLETED` |
+| `decision` | enum/null | `APPROVED` · `REJECTED` · null |
+| `comment` | string | Step decision comment |
+| `actedAt` | datetime | |
 
 **Read/Write by tab:**
 

@@ -1,19 +1,22 @@
 [
   {
-    "_id": "6a7aba42204e8027eff76a3e",
     "planId": "CPP-2026-W33",
+    "workflowId": "PFW-CPP-2026-W33",
     "planningCycle": "2026-W33 Rough-Cut Consensus Production Plan",
-    "status": "DRAFT",
-    "createdAt": "2026-08-11T05:55:00.707Z",
-    "submittedBy": null,
-    "submittedAt": null,
-    "reviewedBy": null,
-    "reviewedAt": null,
-    "reviewNotes": null,
-    "approvedBy": null,
-    "approvedAt": null,
+    "status": "APPROVED",
+    "createdAt": "2026-08-02T00:00:00.000Z",
+    "submittedBy": "supply.planner@boat.com",
+    "submittedAt": "2026-08-02T18:00:00.000Z",
+    "reviewedBy": "plant.manager@boat.com",
+    "reviewedAt": "2026-08-04T06:00:00.000Z",
+    "reviewNotes": "Procurement and plant feasibility reviewed",
+    "approvedBy": "plant.manager@boat.com",
+    "approvedAt": "2026-08-04T06:00:00.000Z",
     "lockedBy": null,
     "lockedAt": null,
-    "history": []
+    "updatedAt": "2026-08-04T06:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
   }
 ]

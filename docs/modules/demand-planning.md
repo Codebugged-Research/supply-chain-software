@@ -341,7 +341,15 @@ These entities do not exist in either the current S&OP Suite codebase or the exi
 
 ---
 
-### 3.5 DEMAND_CONSENSUS_WORKFLOW
+### 3.5 Demand Consensus Subject (shared workflow reference)
+
+The Demand-owned `demand_consensus_workflows` record stores the forecast values being governed and carries `workflowId` as a foreign key. It does **not** own steps or an embedded audit log. Both Demand consensus and Production sign-off use the canonical shared schema in [DATA_MODEL_MASTER.md](../data/DATA_MODEL_MASTER.md#factor-proposals-consensus-and-official-plan):
+
+- `workflow_instances` stores state, current step, due date, and lock metadata. Demand uses `workflowType = DEMAND_CONSENSUS`, `subjectType = DEMAND_FORECAST`, and `subjectId = skuId`.
+- `workflow_steps` stores the ordered Category Manager, Sales Head, S&OP Lead, and Finance assignments at grain `workflowId × stepSequence`.
+- `entity_audit_events` is the only append-only action history. Overrides, approvals, rejections, and locks write the same collection and fields used by Production sign-off.
+
+The API may project `auditTrail[]` and `workflowSteps[]` for the existing screen. Those are response views assembled from the shared collections, not separately persisted Demand schemas. The step table below is a Demand-specific view of `workflow_steps`, not a `DEMAND_CONSENSUS_STEP` collection.
 
 **Purpose:** Structured 4-step demand signoff chain that formalizes the Consensus tab from the existing module into a proper state machine with named approvers, comments, lock, and escalation. The existing module's Consensus column becomes the *input* to this workflow; the workflow output is a locked `forecastType = CONSENSUS` row in the Forecast entity.
 
@@ -365,20 +373,19 @@ These entities do not exist in either the current S&OP Suite codebase or the exi
 | `lockedAt` | datetime | When status moved to LOCKED |
 | `lockedByUserId` | FK â†’ USER | |
 
-#### 3.5a DEMAND_CONSENSUS_STEP (child â€” one row per signoff step)
+#### 3.5a Demand projection of shared workflow rows
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `stepId` | string (PK) | UUID |
-| `workflowId` | FK â†’ DEMAND_CONSENSUS_WORKFLOW | |
-| `stepOrder` | number | 1 = Category, 2 = Sales, 3 = S&OP, 4 = Finance |
-| `stepName` | string | "Category Manager Review" Â· "Sales Head Review" Â· "S&OP Lead Review" Â· "Finance Gate" |
-| `requiredRole` | enum | `CATEGORY_MANAGER` Â· `SALES_HEAD` Â· `SOP_LEAD` Â· `FINANCE` |
-| `assignedUserId` | FK â†’ USER | |
-| `action` | enum | `PENDING` Â· `APPROVED` Â· `REJECTED_REWORK` Â· `ESCALATED` |
-| `adjustedFcst` | number | If approver adjusts the number at their step |
-| `comments` | string | |
-| `actionAt` | datetime | |
+| `workflowId` | FK → `workflow_instances` | Same identifier stored on the Demand subject |
+| `stepSequence` | number | 1 = Category, 2 = Sales, 3 = S&OP, 4 = Finance |
+| `stepCode` | enum | `CATEGORY_REVIEW` · `SALES_REVIEW` · `SOP_REVIEW` · `FINANCE_REVIEW` |
+| `assignedRole` | string | Role responsible for this step |
+| `assignedUserId` | FK → USER | |
+| `status` | enum | `PENDING` · `IN_PROGRESS` · `COMPLETED` |
+| `decision` | enum/null | `APPROVED` · `REJECTED` · null |
+| `comment` | string | Step decision comment |
+| `actedAt` | datetime | |
 
 **Read/Write by tab:**
 
@@ -387,6 +394,8 @@ These entities do not exist in either the current S&OP Suite codebase or the exi
 | Demand Planning | R, W | Primary home â€” create, advance, approve, reject workflow |
 | Overview Cockpit | R | Consensus Compliance % KPI (% of weeks with LOCKED status on time) |
 | Scenario Studio | R | Reads LOCKED consensus as the baseline for S&OP scenario comparison |
+
+When a built scenario is published, Forecast Overview also reads the single active `scenario_versions.status=PUBLISHED` reference and its canonical `scenario_output_lines`. It resolves `scenarioDemandQty` at SKU × channel × week ahead of the baseline display and labels the selected scenario. Locked consensus remains the immutable `baselinePlanVersionId`; publication does not overwrite forecast vintages or consensus workflow history.
 | Supply Workspace | R | finalConsensusFcst â†’ grossDemand once workflow is LOCKED |
 
 ---
@@ -422,7 +431,7 @@ Demand Planning Tab
 ### Sub-tab 2: Consensus Workflow
 
 **Primary user:** Category Manager, Sales Head, S&OP Lead, Finance (each sees their step)
-**Data written:** DEMAND_CONSENSUS_WORKFLOW + DEMAND_CONSENSUS_STEP
+**Data written:** Demand subject + shared `workflow_instances`, `workflow_steps`, and `entity_audit_events`
 
 **UI components:**
 - Workflow queue: list of SKU Ã— week rows awaiting the current user's action

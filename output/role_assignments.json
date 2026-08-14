@@ -1,0 +1,178 @@
+[
+  {
+    "assignmentId": "ROLE-001",
+    "userId": "demand.planner@boat.com",
+    "roleCode": "DEMAND_PLANNER",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-002",
+    "userId": "supply.planner@boat.com",
+    "roleCode": "SUPPLY_PLANNER",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-003",
+    "userId": "category.manager@boat.com",
+    "roleCode": "CATEGORY_MANAGER",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-004",
+    "userId": "sales.manager@boat.com",
+    "roleCode": "SALES_HEAD",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-005",
+    "userId": "finance.controller@boat.com",
+    "roleCode": "FINANCE",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-006",
+    "userId": "sop.lead@boat.com",
+    "roleCode": "SOP_LEAD",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-007",
+    "userId": "npi.manager@boat.com",
+    "roleCode": "NPI_MANAGER",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-008",
+    "userId": "procurement.manager@boat.com",
+    "roleCode": "PROCUREMENT",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-009",
+    "userId": "plant.manager@boat.com",
+    "roleCode": "PLANT",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-010",
+    "userId": "inventory.planner@boat.com",
+    "roleCode": "INVENTORY_PLANNER",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assignmentId": "ROLE-011",
+    "userId": "system.seed@boat.com",
+    "roleCode": "SYSTEM",
+    "scopeType": "ENTERPRISE",
+    "scopeIds": [
+      "BOAT-INDIA"
+    ],
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": null,
+    "grantedBy": "system.seed@boat.com",
+    "status": "ACTIVE",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

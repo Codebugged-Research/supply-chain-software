@@ -1,0 +1,262 @@
+[
+  {
+    "asnId": "ASN-PUR-2026-01000",
+    "orderId": "PUR-2026-01000",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-1",
+    "vehicleRef": "MH04AB1200",
+    "sourceDocument": "EWAY-PUR-2026-01000",
+    "dispatchTimestamp": "2025-09-04T08:00:00.000Z",
+    "expectedArrival": "2025-09-06T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-1",
+    "lines": [
+      {
+        "asnLineId": "ASNL-1-1",
+        "orderLineId": "PUR-2026-01000-L1",
+        "skuId": "SKU-BOAT-AD141",
+        "shippedQty": 4000,
+        "batchIds": [
+          "BATCH-PUR-2026-01000-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01001",
+    "orderId": "PUR-2026-01001",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-2",
+    "vehicleRef": "MH04AB1201",
+    "sourceDocument": "EWAY-PUR-2026-01001",
+    "dispatchTimestamp": "2026-02-24T08:00:00.000Z",
+    "expectedArrival": "2026-02-27T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-2",
+    "lines": [
+      {
+        "asnLineId": "ASNL-2-1",
+        "orderLineId": "PUR-2026-01001-L1",
+        "skuId": "SKU-BOAT-RZ245",
+        "shippedQty": 4500,
+        "batchIds": [
+          "BATCH-PUR-2026-01001-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01002",
+    "orderId": "PUR-2026-01002",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-3",
+    "vehicleRef": "MH04AB1202",
+    "sourceDocument": "EWAY-PUR-2026-01002",
+    "dispatchTimestamp": "2026-05-23T08:00:00.000Z",
+    "expectedArrival": "2026-05-26T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-3",
+    "lines": [
+      {
+        "asnLineId": "ASNL-3-1",
+        "orderLineId": "PUR-2026-01002-L1",
+        "skuId": "SKU-BOAT-AD161P",
+        "shippedQty": 3400,
+        "batchIds": [
+          "BATCH-PUR-2026-01002-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01003",
+    "orderId": "PUR-2026-01003",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-1",
+    "vehicleRef": "MH04AB1203",
+    "sourceDocument": "EWAY-PUR-2026-01003",
+    "dispatchTimestamp": "2026-06-28T08:00:00.000Z",
+    "expectedArrival": "2026-07-02T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-4",
+    "lines": [
+      {
+        "asnLineId": "ASNL-4-1",
+        "orderLineId": "PUR-2026-01003-L1",
+        "skuId": "SKU-BOAT-RZ255",
+        "shippedQty": 2700,
+        "batchIds": [
+          "BATCH-PUR-2026-01003-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01004",
+    "orderId": "PUR-2026-01004",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-2",
+    "vehicleRef": "MH04AB1204",
+    "sourceDocument": "EWAY-PUR-2026-01004",
+    "dispatchTimestamp": "2026-07-24T08:00:00.000Z",
+    "expectedArrival": "2026-07-26T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-5",
+    "lines": [
+      {
+        "asnLineId": "ASNL-5-1",
+        "orderLineId": "PUR-2026-01004-L1",
+        "skuId": "SKU-BOAT-NI100",
+        "shippedQty": 1800,
+        "batchIds": [
+          "BATCH-PUR-2026-01004-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01008",
+    "orderId": "PUR-2026-01008",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-3",
+    "vehicleRef": "MH04AB1205",
+    "sourceDocument": "EWAY-PUR-2026-01008",
+    "dispatchTimestamp": "2025-09-10T08:00:00.000Z",
+    "expectedArrival": "2025-09-12T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-6",
+    "lines": [
+      {
+        "asnLineId": "ASNL-6-1",
+        "orderLineId": "PUR-2026-01008-L1",
+        "skuId": "SKU-BOAT-WC100",
+        "shippedQty": 2300,
+        "batchIds": [
+          "BATCH-PUR-2026-01008-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01009",
+    "orderId": "PUR-2026-01009",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-1",
+    "vehicleRef": "MH04AB1206",
+    "sourceDocument": "EWAY-PUR-2026-01009",
+    "dispatchTimestamp": "2026-02-26T08:00:00.000Z",
+    "expectedArrival": "2026-03-01T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-7",
+    "lines": [
+      {
+        "asnLineId": "ASNL-7-1",
+        "orderLineId": "PUR-2026-01009-L1",
+        "skuId": "SKU-BOAT-AD131",
+        "shippedQty": 5000,
+        "batchIds": [
+          "BATCH-PUR-2026-01009-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01010",
+    "orderId": "PUR-2026-01010",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-2",
+    "vehicleRef": "MH04AB1207",
+    "sourceDocument": "EWAY-PUR-2026-01010",
+    "dispatchTimestamp": "2026-05-28T08:00:00.000Z",
+    "expectedArrival": "2026-05-31T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-8",
+    "lines": [
+      {
+        "asnLineId": "ASNL-8-1",
+        "orderLineId": "PUR-2026-01010-L1",
+        "skuId": "SKU-BOAT-XT200",
+        "shippedQty": 700,
+        "batchIds": [
+          "BATCH-PUR-2026-01010-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01011",
+    "orderId": "PUR-2026-01011",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-3",
+    "vehicleRef": "MH04AB1208",
+    "sourceDocument": "EWAY-PUR-2026-01011",
+    "dispatchTimestamp": "2026-06-29T08:00:00.000Z",
+    "expectedArrival": "2026-07-01T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-9",
+    "lines": [
+      {
+        "asnLineId": "ASNL-9-1",
+        "orderLineId": "PUR-2026-01011-L1",
+        "skuId": "SKU-BOAT-LE100",
+        "shippedQty": 800,
+        "batchIds": [
+          "BATCH-PUR-2026-01011-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "asnId": "ASN-PUR-2026-01012",
+    "orderId": "PUR-2026-01012",
+    "warehouseId": "WH-DEL-NORTH",
+    "carrierId": "CARRIER-1",
+    "vehicleRef": "MH04AB1209",
+    "sourceDocument": "EWAY-PUR-2026-01012",
+    "dispatchTimestamp": "2026-07-30T08:00:00.000Z",
+    "expectedArrival": "2026-08-03T18:00:00.000Z",
+    "status": "DELIVERED",
+    "sourceRunId": "RUN-ASN-10",
+    "lines": [
+      {
+        "asnLineId": "ASNL-10-1",
+        "orderLineId": "PUR-2026-01012-L1",
+        "skuId": "SKU-BOAT-NI100",
+        "shippedQty": 2000,
+        "batchIds": [
+          "BATCH-PUR-2026-01012-1"
+        ]
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

@@ -1,22 +1,32 @@
 [
   {
-    "window": "W-3",
-    "adherencePct": 100,
-    "measuredAt": "2026-07-21T00:00:00.000Z"
+    "window": "4W",
+    "windowWeeks": 4,
+    "eligiblePoCount": 4,
+    "onTimePoCount": 2,
+    "adherencePct": 50,
+    "measuredAt": "2026-08-10T00:00:00.000Z",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
   },
   {
-    "window": "W-2",
-    "adherencePct": 100,
-    "measuredAt": "2026-07-28T00:00:00.000Z"
+    "window": "13W",
+    "windowWeeks": 13,
+    "eligiblePoCount": 10,
+    "onTimePoCount": 7,
+    "adherencePct": 70,
+    "measuredAt": "2026-08-10T00:00:00.000Z",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
   },
   {
-    "window": "W-1",
-    "adherencePct": 100,
-    "measuredAt": "2026-08-04T00:00:00.000Z"
-  },
-  {
-    "window": "Current",
-    "adherencePct": 100,
-    "measuredAt": "2026-08-11T00:00:00.000Z"
+    "window": "52W",
+    "windowWeeks": 52,
+    "eligiblePoCount": 18,
+    "onTimePoCount": 10,
+    "adherencePct": 55.6,
+    "measuredAt": "2026-08-10T00:00:00.000Z",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
   }
 ]

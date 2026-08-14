@@ -1,0 +1,65 @@
+[
+  {
+    "jobId": "RPT-PLAN-001",
+    "reportType": "CONSENSUS_PLAN",
+    "requestedBy": "sop.lead@boat.com",
+    "requestedAt": "2026-08-07T00:00:00.000Z",
+    "parameters": {
+      "calendarVersionId": "CAL-2026-W33-V1"
+    },
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "format": "CSV",
+    "status": "COMPLETED",
+    "startedAt": "2026-08-07T00:00:00.000Z",
+    "completedAt": "2026-08-07T00:01:00.000Z",
+    "rowCount": 546,
+    "errorCode": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "jobId": "RPT-KPI-001",
+    "reportType": "KPI_SCORECARD",
+    "requestedBy": "finance.controller@boat.com",
+    "requestedAt": "2026-08-08T00:00:00.000Z",
+    "parameters": {
+      "calendarVersionId": "CAL-2026-W33-V1"
+    },
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "format": "XLSX",
+    "status": "COMPLETED",
+    "startedAt": "2026-08-08T00:00:00.000Z",
+    "completedAt": "2026-08-08T00:01:00.000Z",
+    "rowCount": 338,
+    "errorCode": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "jobId": "RPT-FORECAST-001",
+    "reportType": "FORECAST_ACCURACY",
+    "requestedBy": "sop.lead@boat.com",
+    "requestedAt": "2026-08-09T00:00:00.000Z",
+    "parameters": {
+      "calendarVersionId": "CAL-2026-W33-V1"
+    },
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "format": "CSV",
+    "status": "COMPLETED",
+    "startedAt": "2026-08-09T00:00:00.000Z",
+    "completedAt": "2026-08-09T00:01:00.000Z",
+    "rowCount": 52416,
+    "errorCode": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

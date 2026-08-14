@@ -1,0 +1,6424 @@
+[
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8979,
+    "numerator": 0.8979,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.9408,
+    "numerator": 0.9408,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8645,
+    "numerator": 0.8645,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.8216,
+    "numerator": 0.8216,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.9588,
+    "numerator": 0.9588,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.9159,
+    "numerator": 0.9159,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.8559,
+    "numerator": 0.8559,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.8131,
+    "numerator": 0.8131,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.9502,
+    "numerator": 0.9502,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.9074,
+    "numerator": 0.9074,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.8474,
+    "numerator": 0.8474,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.9845,
+    "numerator": 0.9845,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8618,
+    "numerator": 0.8618,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.9047,
+    "numerator": 0.9047,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.9561,
+    "numerator": 0.9561,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.819,
+    "numerator": 0.819,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.8533,
+    "numerator": 0.8533,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8961,
+    "numerator": 0.8961,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9475,
+    "numerator": 0.9475,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.8104,
+    "numerator": 0.8104,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.879,
+    "numerator": 0.879,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.9218,
+    "numerator": 0.9218,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.8113,
+    "numerator": 0.8113,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9484,
+    "numerator": 0.9484,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.897,
+    "numerator": 0.897,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FILL_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.8541,
+    "numerator": 0.8541,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8967,
+    "numerator": 0.8967,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.8538,
+    "numerator": 0.8538,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.9301,
+    "numerator": 0.9301,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.9729,
+    "numerator": 0.9729,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.8444,
+    "numerator": 0.8444,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.8872,
+    "numerator": 0.8872,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.9215,
+    "numerator": 0.9215,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.9644,
+    "numerator": 0.9644,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.8358,
+    "numerator": 0.8358,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.8787,
+    "numerator": 0.8787,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.9472,
+    "numerator": 0.9472,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.8101,
+    "numerator": 0.8101,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8841,
+    "numerator": 0.8841,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8412,
+    "numerator": 0.8412,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.9784,
+    "numerator": 0.9784,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9355,
+    "numerator": 0.9355,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.8755,
+    "numerator": 0.8755,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8327,
+    "numerator": 0.8327,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9698,
+    "numerator": 0.9698,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.9269,
+    "numerator": 0.9269,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.867,
+    "numerator": 0.867,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.8241,
+    "numerator": 0.8241,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.9347,
+    "numerator": 0.9347,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9775,
+    "numerator": 0.9775,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8404,
+    "numerator": 0.8404,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_WAPE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.8832,
+    "numerator": 0.8832,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8274,
+    "numerator": 0.8274,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.9645,
+    "numerator": 0.9645,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8608,
+    "numerator": 0.8608,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.9036,
+    "numerator": 0.9036,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.9465,
+    "numerator": 0.9465,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.9894,
+    "numerator": 0.9894,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.8522,
+    "numerator": 0.8522,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.8951,
+    "numerator": 0.8951,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.9379,
+    "numerator": 0.9379,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.9808,
+    "numerator": 0.9808,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.8779,
+    "numerator": 0.8779,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.9208,
+    "numerator": 0.9208,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.9113,
+    "numerator": 0.9113,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8685,
+    "numerator": 0.8685,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.8171,
+    "numerator": 0.8171,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9542,
+    "numerator": 0.9542,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.9199,
+    "numerator": 0.9199,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8771,
+    "numerator": 0.8771,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.8256,
+    "numerator": 0.8256,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.9628,
+    "numerator": 0.9628,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.8942,
+    "numerator": 0.8942,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.8513,
+    "numerator": 0.8513,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.9619,
+    "numerator": 0.9619,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.8248,
+    "numerator": 0.8248,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8762,
+    "numerator": 0.8762,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "FORECAST_BIAS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.919,
+    "numerator": 0.919,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 17.7847,
+    "numerator": 17.7847,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 16.9276,
+    "numerator": 16.9276,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 17.7678,
+    "numerator": 17.7678,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 18.625,
+    "numerator": 18.625,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 19.6535,
+    "numerator": 19.6535,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 16.9106,
+    "numerator": 16.9106,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 17.9392,
+    "numerator": 17.9392,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 18.7963,
+    "numerator": 18.7963,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 16.2248,
+    "numerator": 16.2248,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 17.082,
+    "numerator": 17.082,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 18.1105,
+    "numerator": 18.1105,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 18.9677,
+    "numerator": 18.9677,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 16.848,
+    "numerator": 16.848,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 19.5908,
+    "numerator": 19.5908,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 18.7337,
+    "numerator": 18.7337,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 17.8765,
+    "numerator": 17.8765,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 17.0194,
+    "numerator": 17.0194,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 19.7622,
+    "numerator": 19.7622,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 18.905,
+    "numerator": 18.905,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 18.0479,
+    "numerator": 18.0479,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 16.5053,
+    "numerator": 16.5053,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 19.2481,
+    "numerator": 19.2481,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 17.1162,
+    "numerator": 17.1162,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 17.9734,
+    "numerator": 17.9734,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 18.8305,
+    "numerator": 18.8305,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "INVENTORY_DOS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 19.6877,
+    "numerator": 19.6877,
+    "denominator": 1,
+    "target": 21,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.02,
+    "numerator": 0.02,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.0191,
+    "numerator": 0.0191,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.02,
+    "numerator": 0.02,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.021,
+    "numerator": 0.021,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.0181,
+    "numerator": 0.0181,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.0191,
+    "numerator": 0.0191,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.0202,
+    "numerator": 0.0202,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.0211,
+    "numerator": 0.0211,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.0183,
+    "numerator": 0.0183,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.0192,
+    "numerator": 0.0192,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.0204,
+    "numerator": 0.0204,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.0213,
+    "numerator": 0.0213,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.0201,
+    "numerator": 0.0201,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.0191,
+    "numerator": 0.0191,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.0182,
+    "numerator": 0.0182,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.0212,
+    "numerator": 0.0212,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.0203,
+    "numerator": 0.0203,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.0193,
+    "numerator": 0.0193,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.0183,
+    "numerator": 0.0183,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.0214,
+    "numerator": 0.0214,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.0197,
+    "numerator": 0.0197,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.0187,
+    "numerator": 0.0187,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.0193,
+    "numerator": 0.0193,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.0202,
+    "numerator": 0.0202,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.0212,
+    "numerator": 0.0212,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "STOCKOUT_RATE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.0181,
+    "numerator": 0.0181,
+    "denominator": 1,
+    "target": 0.03,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8848,
+    "numerator": 0.8848,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.842,
+    "numerator": 0.842,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8324,
+    "numerator": 0.8324,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.8753,
+    "numerator": 0.8753,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.9267,
+    "numerator": 0.9267,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.9696,
+    "numerator": 0.9696,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.8239,
+    "numerator": 0.8239,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.8667,
+    "numerator": 0.8667,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.9182,
+    "numerator": 0.9182,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.961,
+    "numerator": 0.961,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.8496,
+    "numerator": 0.8496,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.8924,
+    "numerator": 0.8924,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8351,
+    "numerator": 0.8351,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.9723,
+    "numerator": 0.9723,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.9294,
+    "numerator": 0.9294,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.8866,
+    "numerator": 0.8866,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.8266,
+    "numerator": 0.8266,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.9637,
+    "numerator": 0.9637,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9208,
+    "numerator": 0.9208,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.878,
+    "numerator": 0.878,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.818,
+    "numerator": 0.818,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.9551,
+    "numerator": 0.9551,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.8857,
+    "numerator": 0.8857,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9285,
+    "numerator": 0.9285,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.9714,
+    "numerator": 0.9714,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CAPACITY_UTILIZATION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.8343,
+    "numerator": 0.8343,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8608,
+    "numerator": 0.8608,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.9036,
+    "numerator": 0.9036,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8274,
+    "numerator": 0.8274,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.9645,
+    "numerator": 0.9645,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.9216,
+    "numerator": 0.9216,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.8788,
+    "numerator": 0.8788,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.8188,
+    "numerator": 0.8188,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.9559,
+    "numerator": 0.9559,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.9131,
+    "numerator": 0.9131,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.8702,
+    "numerator": 0.8702,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.8102,
+    "numerator": 0.8102,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.9474,
+    "numerator": 0.9474,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8247,
+    "numerator": 0.8247,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8675,
+    "numerator": 0.8675,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.919,
+    "numerator": 0.919,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9618,
+    "numerator": 0.9618,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.8161,
+    "numerator": 0.8161,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.859,
+    "numerator": 0.859,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9104,
+    "numerator": 0.9104,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.9532,
+    "numerator": 0.9532,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.8418,
+    "numerator": 0.8418,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.8847,
+    "numerator": 0.8847,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.9541,
+    "numerator": 0.9541,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9113,
+    "numerator": 0.9113,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8598,
+    "numerator": 0.8598,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "SUPPLIER_OTD",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.817,
+    "numerator": 0.817,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.986,
+    "numerator": 0.986,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.9431,
+    "numerator": 0.9431,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8993,
+    "numerator": 0.8993,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.9422,
+    "numerator": 0.9422,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.8136,
+    "numerator": 0.8136,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.8565,
+    "numerator": 0.8565,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.9079,
+    "numerator": 0.9079,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.9508,
+    "numerator": 0.9508,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.8222,
+    "numerator": 0.8222,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.865,
+    "numerator": 0.865,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.9165,
+    "numerator": 0.9165,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.9593,
+    "numerator": 0.9593,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.902,
+    "numerator": 0.902,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8592,
+    "numerator": 0.8592,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.8163,
+    "numerator": 0.8163,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9534,
+    "numerator": 0.9534,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.9106,
+    "numerator": 0.9106,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8677,
+    "numerator": 0.8677,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.8249,
+    "numerator": 0.8249,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.962,
+    "numerator": 0.962,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.8849,
+    "numerator": 0.8849,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.842,
+    "numerator": 0.842,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.9526,
+    "numerator": 0.9526,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.8154,
+    "numerator": 0.8154,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8583,
+    "numerator": 0.8583,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "PO_HANDOVER_ADHERENCE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.9012,
+    "numerator": 0.9012,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.9657,
+    "numerator": 0.9657,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.9228,
+    "numerator": 0.9228,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.8191,
+    "numerator": 0.8191,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.8619,
+    "numerator": 0.8619,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.9048,
+    "numerator": 0.9048,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.9477,
+    "numerator": 0.9477,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.8277,
+    "numerator": 0.8277,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.8705,
+    "numerator": 0.8705,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.9134,
+    "numerator": 0.9134,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.9562,
+    "numerator": 0.9562,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.8362,
+    "numerator": 0.8362,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.8791,
+    "numerator": 0.8791,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8697,
+    "numerator": 0.8697,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8268,
+    "numerator": 0.8268,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.9554,
+    "numerator": 0.9554,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9125,
+    "numerator": 0.9125,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.8611,
+    "numerator": 0.8611,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8182,
+    "numerator": 0.8182,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9468,
+    "numerator": 0.9468,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.9039,
+    "numerator": 0.9039,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.9355,
+    "numerator": 0.9355,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.8926,
+    "numerator": 0.8926,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.9202,
+    "numerator": 0.9202,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9631,
+    "numerator": 0.9631,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8832,
+    "numerator": 0.8832,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "OEE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.926,
+    "numerator": 0.926,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 931013500,
+    "numerator": 931013500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 736729000,
+    "numerator": 736729000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 835108000,
+    "numerator": 835108000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 774392500,
+    "numerator": 774392500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 968677000,
+    "numerator": 968677000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 907961500,
+    "numerator": 907961500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 847246000,
+    "numerator": 847246000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 786530500,
+    "numerator": 786530500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 725815000,
+    "numerator": 725815000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 920099500,
+    "numerator": 920099500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 859384000,
+    "numerator": 859384000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 798668500,
+    "numerator": 798668500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 794996500,
+    "numerator": 794996500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 855712000,
+    "numerator": 855712000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 928565500,
+    "numerator": 928565500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 734281000,
+    "numerator": 734281000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 807134500,
+    "numerator": 807134500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 867850000,
+    "numerator": 867850000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 940703500,
+    "numerator": 940703500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 746419000,
+    "numerator": 746419000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 770720500,
+    "numerator": 770720500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 831436000,
+    "numerator": 831436000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 723367000,
+    "numerator": 723367000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 917651500,
+    "numerator": 917651500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 844798000,
+    "numerator": 844798000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "REVENUE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 784082500,
+    "numerator": 784082500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 750703000,
+    "numerator": 750703000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 944987500,
+    "numerator": 944987500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 749504500,
+    "numerator": 749504500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 810220000,
+    "numerator": 810220000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 883073500,
+    "numerator": 883073500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 943789000,
+    "numerator": 943789000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 761642500,
+    "numerator": 761642500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 822358000,
+    "numerator": 822358000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 895211500,
+    "numerator": 895211500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 955927000,
+    "numerator": 955927000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 773780500,
+    "numerator": 773780500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 834496000,
+    "numerator": 834496000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 939352000,
+    "numerator": 939352000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 878636500,
+    "numerator": 878636500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 886873000,
+    "numerator": 886873000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 826157500,
+    "numerator": 826157500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 765442000,
+    "numerator": 765442000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 959726500,
+    "numerator": 959726500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 899011000,
+    "numerator": 899011000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 838295500,
+    "numerator": 838295500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 915076000,
+    "numerator": 915076000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 854360500,
+    "numerator": 854360500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 958349500,
+    "numerator": 958349500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 764065000,
+    "numerator": 764065000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 824780500,
+    "numerator": 824780500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "GROSS_MARGIN",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 885496000,
+    "numerator": 885496000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 932645500,
+    "numerator": 932645500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 738361000,
+    "numerator": 738361000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 836740000,
+    "numerator": 836740000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 776024500,
+    "numerator": 776024500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 970309000,
+    "numerator": 970309000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 909593500,
+    "numerator": 909593500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 848878000,
+    "numerator": 848878000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 788162500,
+    "numerator": 788162500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 727447000,
+    "numerator": 727447000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 921731500,
+    "numerator": 921731500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 861016000,
+    "numerator": 861016000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 800300500,
+    "numerator": 800300500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 930044500,
+    "numerator": 930044500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 735760000,
+    "numerator": 735760000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 808613500,
+    "numerator": 808613500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 869329000,
+    "numerator": 869329000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 942182500,
+    "numerator": 942182500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 747898000,
+    "numerator": 747898000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 820751500,
+    "numerator": 820751500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 881467000,
+    "numerator": 881467000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 905768500,
+    "numerator": 905768500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 966484000,
+    "numerator": 966484000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 858415000,
+    "numerator": 858415000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 797699500,
+    "numerator": 797699500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 724846000,
+    "numerator": 724846000,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "CASH_COLLECTION",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 919130500,
+    "numerator": 919130500,
+    "denominator": null,
+    "target": 900000000,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W08",
+    "value": 0.8441,
+    "numerator": 0.8441,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-02-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W09",
+    "value": 0.887,
+    "numerator": 0.887,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-02T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W10",
+    "value": 0.9564,
+    "numerator": 0.9564,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-09T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W11",
+    "value": 0.9136,
+    "numerator": 0.9136,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-16T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W12",
+    "value": 0.8621,
+    "numerator": 0.8621,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-23T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W13",
+    "value": 0.8193,
+    "numerator": 0.8193,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-03-30T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W14",
+    "value": 0.965,
+    "numerator": 0.965,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W15",
+    "value": 0.9221,
+    "numerator": 0.9221,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W16",
+    "value": 0.8707,
+    "numerator": 0.8707,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W17",
+    "value": 0.8278,
+    "numerator": 0.8278,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-04-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W18",
+    "value": 0.9735,
+    "numerator": 0.9735,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-04T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W19",
+    "value": 0.9307,
+    "numerator": 0.9307,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-11T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W20",
+    "value": 0.8315,
+    "numerator": 0.8315,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-18T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W21",
+    "value": 0.8744,
+    "numerator": 0.8744,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-05-25T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W22",
+    "value": 0.9173,
+    "numerator": 0.9173,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-01T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W23",
+    "value": 0.9601,
+    "numerator": 0.9601,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-08T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W24",
+    "value": 0.823,
+    "numerator": 0.823,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-15T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W25",
+    "value": 0.8658,
+    "numerator": 0.8658,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-22T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W26",
+    "value": 0.9087,
+    "numerator": 0.9087,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-06-29T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W27",
+    "value": 0.9516,
+    "numerator": 0.9516,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-06T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W28",
+    "value": 0.8144,
+    "numerator": 0.8144,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-13T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W29",
+    "value": 0.8573,
+    "numerator": 0.8573,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-20T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W30",
+    "value": 0.961,
+    "numerator": 0.961,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-07-27T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W31",
+    "value": 0.9181,
+    "numerator": 0.9181,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "GREEN",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-03T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W32",
+    "value": 0.8753,
+    "numerator": 0.8753,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-10T00:00:00.000Z",
+    "isFinal": true,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "kpiCode": "NPI_READINESS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "weekId": "2026-W33",
+    "value": 0.8324,
+    "numerator": 0.8324,
+    "denominator": 1,
+    "target": 0.9,
+    "status": "AMBER",
+    "sourceVersionIds": [
+      "DM-2026-W33-V1"
+    ],
+    "computedAt": "2026-08-17T00:00:00.000Z",
+    "isFinal": false,
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

@@ -20,6 +20,16 @@ export default function MasterSupplyWorkbenchPage() {
   const [selectedSku, setSelectedSku] = useState('SKU-BOAT-AD141')
   const [selectedLocation, setSelectedLocation] = useState('WH-NORTH-DELHI')
   const [selectedStartWeek, setSelectedStartWeek] = useState('2026-W32')
+  const [npiProducts, setNpiProducts] = useState([])
+  const [recalculating, setRecalculating] = useState(false)
+  const [mrpRun, setMrpRun] = useState(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch('/api/v1/supply-planning?action=npi_readiness').then((res) => res.json()).then((json) => {
+      if (json.success) setNpiProducts(json.data || [])
+    }).catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function fetchGrid() {
@@ -38,6 +48,26 @@ export default function MasterSupplyWorkbenchPage() {
     }
     fetchGrid()
   }, [selectedSku, selectedLocation, selectedStartWeek])
+
+  async function handleRecalculateMrp() {
+    setRecalculating(true)
+    setError('')
+    try {
+      const res = await fetch('/api/v1/supply-planning', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'recalculate_mrp', skuCode: selectedSku, location: selectedLocation, startWeek: selectedStartWeek }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.error || 'MRP recalculation failed')
+      setGridData(json.data.rows || [])
+      setMrpRun(json.data)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setRecalculating(false)
+    }
+  }
 
   const parsedStartWeekNum = parseInt((selectedStartWeek.match(/\d+/) || [32])[0], 10) || 32
   const firmEnd = Math.min(parsedStartWeekNum + 3, 52)
@@ -60,6 +90,7 @@ export default function MasterSupplyWorkbenchPage() {
             <option value="SKU-BOAT-AD141">boAt Airdopes 141 (TWS)</option>
             <option value="SKU-BOAT-LD100">boAt Lunar Discovery (Smartwatch)</option>
             <option value="SKU-BOAT-ST350">boAt Stone 350 (Speaker)</option>
+            {npiProducts.map((npi) => <option key={npi.npiId} value={npi.skuId}>{npi.productName} (NPI · {npi.readinessPct}% ready)</option>)}
           </select>
 
           <div className="flex items-center space-x-2">
@@ -102,11 +133,12 @@ export default function MasterSupplyWorkbenchPage() {
             <ExternalLink className="w-3.5 h-3.5" />
           </Link>
           <button
-            onClick={() => alert("MRP recalculation executed deterministically!")}
-            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium flex items-center space-x-1.5 transition-colors"
+            onClick={handleRecalculateMrp}
+            disabled={loading || recalculating}
+            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium flex items-center space-x-1.5 transition-colors"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Recalculate MRP</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${recalculating ? 'animate-spin' : ''}`} />
+            <span>{recalculating ? 'Recalculating…' : 'Recalculate MRP'}</span>
           </button>
         </div>
       </div>
@@ -120,8 +152,10 @@ export default function MasterSupplyWorkbenchPage() {
               <span>Time-Phased MRP Netting Grid (52-Week Rolling Horizon)</span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Formula: Projected Stock = Available + Planned Production + Planned Purchase - Gross Demand
+              Netting: demand − opening inventory − open PO receipts; production is capped by RM availability and remaining line capacity.
             </p>
+            {mrpRun && <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1">Calculated {new Date(mrpRun.calculatedAt).toLocaleString()} · {mrpRun.sourceIds?.qualifiedLineIds?.length || 0} qualified line(s) · {mrpRun.sourceIds?.openPoNumbers?.length || 0} open PO(s)</p>}
+            {error && <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-1">{error}</p>}
           </div>
           <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
             <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
@@ -166,9 +200,15 @@ export default function MasterSupplyWorkbenchPage() {
                 <tr>
                   <th className="px-4 py-3 min-w-[120px]">Week</th>
                   <th className="px-4 py-3 min-w-[120px]">Gross Demand</th>
+                  <th className="px-4 py-3 min-w-[150px]">Event Adjustment</th>
+                  <th className="px-4 py-3 min-w-[170px]">NPI Reservation</th>
                   <th className="px-4 py-3 min-w-[140px]">Available Stock</th>
+                  <th className="px-4 py-3 min-w-[140px]">Open PO Receipts</th>
+                  <th className="px-4 py-3 min-w-[130px]">Net FG Requirement</th>
+                  <th className="px-4 py-3 min-w-[130px]">Capacity Headroom</th>
+                  <th className="px-4 py-3 min-w-[120px]">RM Buildable</th>
+                  <th className="px-4 py-3 min-w-[130px]">Net RM Shortage</th>
                   <th className="px-4 py-3 min-w-[140px]">Planned Production</th>
-                  <th className="px-4 py-3 min-w-[140px]">Planned Purchase</th>
                   <th className="px-4 py-3 min-w-[140px]">Projected Stock</th>
                   <th className="px-4 py-3 min-w-[120px]">Supply Gap</th>
                   <th className="px-4 py-3 min-w-[120px]">Service Level</th>
@@ -180,9 +220,19 @@ export default function MasterSupplyWorkbenchPage() {
                   <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="px-4 py-3 font-semibold text-indigo-600 dark:text-indigo-400">{row.week}</td>
                     <td className="px-4 py-3 text-slate-800 dark:text-slate-200">{row.forecastQty?.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{row.availableInventory?.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-fuchsia-700 dark:text-fuchsia-400">
+                      {row.eventUpliftQty ? `+${row.eventUpliftQty.toLocaleString()} (${row.appliedEventIds?.join(', ')})` : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-violet-700 dark:text-violet-400">
+                      {row.npiReservationRequired ? `${row.npiReadinessPct}% ready · ${row.npiId}` : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{(row.openingInventoryQty ?? row.availableInventory)?.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-cyan-600 dark:text-cyan-400">{(row.openPoReceiptQty ?? row.plannedPurchase)?.toLocaleString() || '—'}</td>
+                    <td className="px-4 py-3 text-slate-800 dark:text-slate-200">{row.netRequirementQty?.toLocaleString() ?? '—'}</td>
+                    <td className="px-4 py-3 text-blue-600 dark:text-blue-400">{row.remainingCapacityQty?.toLocaleString() ?? '—'}</td>
+                    <td className="px-4 py-3 text-amber-600 dark:text-amber-400">{row.rmBuildableQty?.toLocaleString() ?? '—'}</td>
+                    <td className="px-4 py-3 font-semibold text-rose-600 dark:text-rose-400" title={row.componentRequirements?.filter((item) => item.shortageQty > 0).map((item) => `${item.componentSku}: ${item.shortageQty}`).join(', ')}>{row.netMaterialRequirementQty?.toLocaleString() ?? '—'}</td>
                     <td className="px-4 py-3 text-emerald-600 dark:text-emerald-400">{row.plannedProduction?.toLocaleString() || '-'}</td>
-                    <td className="px-4 py-3 text-cyan-600 dark:text-cyan-400">{row.plannedPurchase?.toLocaleString() || '-'}</td>
                     <td className={`px-4 py-3 font-semibold ${row.projectedInventory < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-slate-100'}`}>
                       {row.projectedInventory?.toLocaleString()}
                     </td>

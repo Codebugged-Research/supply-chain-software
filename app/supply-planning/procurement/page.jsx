@@ -19,9 +19,12 @@ import {
 
 const EXCLUSION_OPTIONS = [
   { code: 'CLEAR', label: 'Clear Exclusion' },
-  { code: 'FORCE_CLOSE', label: 'Force-Close' },
+  { code: 'SUPPLIER_FORCE_MAJEURE', label: 'Supplier Force Majeure' },
+  { code: 'BUYER_HOLD', label: 'Buyer Hold' },
+  { code: 'QUALITY_REJECTION', label: 'Quality Rejection' },
   { code: 'PARTIAL_ACCEPT', label: 'Partial Delivery Accepted' },
-  { code: 'HOLD', label: 'Hold' }
+  { code: 'CANCELLED_BEFORE_RELEASE', label: 'Cancelled Before Release' },
+  { code: 'DATA_ERROR', label: 'Data Error' }
 ]
 
 export default function ProcurementPage() {
@@ -90,6 +93,8 @@ export default function ProcurementPage() {
     }
   }
 
+  const observedOtd4Week = reliabilityScorecard.map((row) => row.onTimeDelivery4Week).filter((value) => Number.isFinite(value))
+
   return (
     <SupplyChainLayout activeTitle="Procurement Execution & Supplier Alignment">
       {/* Overview KPIs */}
@@ -104,10 +109,10 @@ export default function ProcurementPage() {
         />
         <KpiCard
           title="Vendor On-Time Delivery %"
-          value={reliabilityScorecard.length ? `${(reliabilityScorecard.reduce((sum, row) => sum + Number(row.onTimeDelivery4Week || 0), 0) / reliabilityScorecard.length).toFixed(1)}%` : '—'}
-          subtitle="Tier-1 EMS & Component Vendors"
-          badgeText="High Reliability"
-          badgeType="success"
+          value={observedOtd4Week.length ? `${(observedOtd4Week.reduce((sum, value) => sum + value, 0) / observedOtd4Week.length).toFixed(1)}%` : '—'}
+          subtitle="Canonical 4-week supplier observations"
+          badgeText={observedOtd4Week.length ? 'Observed' : 'No Data'}
+          badgeType={observedOtd4Week.length ? 'success' : 'warning'}
           loading={loading}
         />
         <KpiCard
@@ -288,7 +293,7 @@ export default function ProcurementPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <KpiCard
               title="On-Time Handover Adherence %"
-              value={adherenceSummary ? `${adherenceSummary.onTimeHandoverPct}%` : '—'}
+              value={adherenceSummary?.onTimeHandoverPct == null ? '—' : `${adherenceSummary.onTimeHandoverPct}%`}
               subtitle={adherenceSummary ? `${adherenceSummary.rollingWindow} · Target ${adherenceSummary.targetAdherencePct}%` : ''}
               badgeText={adherenceSummary && adherenceSummary.onTimeHandoverPct >= adherenceSummary.targetAdherencePct ? 'On Target' : 'Below Target'}
               badgeType={adherenceSummary && adherenceSummary.onTimeHandoverPct >= adherenceSummary.targetAdherencePct ? 'success' : 'warning'}
@@ -337,7 +342,8 @@ export default function ProcurementPage() {
                       <th className="px-4 py-3">Supplier</th>
                       <th className="px-4 py-3">SKU</th>
                       <th className="px-4 py-3">Handover Date (HOD)</th>
-                      <th className="px-4 py-3">Expected Delivery</th>
+                      <th className="px-4 py-3">Actual HOD</th>
+                      <th className="px-4 py-3">Promised Delivery</th>
                       <th className="px-4 py-3">HOD Variance</th>
                       <th className="px-4 py-3">Adherence</th>
                       <th className="px-4 py-3">Exclusion Flag</th>
@@ -351,9 +357,10 @@ export default function ProcurementPage() {
                         <td className="px-4 py-3 text-slate-800 dark:text-slate-200 font-sans">{row.supplierName}</td>
                         <td className="px-4 py-3 text-indigo-600 dark:text-indigo-400">{row.skuCode}</td>
                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{row.handoverDate}</td>
-                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{row.expectedDeliveryDate}</td>
+                        <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{row.actualHandoverDate || '—'}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{row.expectedDeliveryDate || '—'}</td>
                         <td className={`px-4 py-3 font-bold ${row.hodVarianceDays > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                          {row.hodVarianceDays > 0 ? `+${row.hodVarianceDays}d Late` : `${Math.abs(row.hodVarianceDays)}d Early`}
+                          {row.hodVarianceDays == null ? '—' : row.hodVarianceDays > 0 ? `+${row.hodVarianceDays}d Late` : `${Math.abs(row.hodVarianceDays)}d Early`}
                         </td>
                         <td className="px-4 py-3">
                           <StatusBadge status={row.adherenceStatus === 'ON_TIME' ? 'HEALTHY' : row.adherenceStatus === 'LATE' || row.adherenceStatus === 'AT_RISK' ? 'CRITICAL' : row.adherenceStatus === 'MINOR_SLIP' ? 'WARNING' : row.adherenceStatus} />
@@ -497,16 +504,16 @@ export default function ProcurementPage() {
                         <td className="px-4 py-3 font-bold text-slate-500 dark:text-slate-400">#{idx + 1}</td>
                         <td className="px-4 py-3 font-semibold text-slate-900 dark:text-slate-100 font-sans">{r.supplierName}</td>
                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
-                          {r.onTimeDelivery4Week}% / {r.onTimeDelivery13Week}% / {r.onTimeDelivery52Week}%
+                          {[r.onTimeDelivery4Week, r.onTimeDelivery13Week, r.onTimeDelivery52Week].map((value) => value == null ? '—' : `${value}%`).join(' / ')}
                         </td>
                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
-                          {r.quotedLeadTimeDays}d vs {r.actualAvgLeadTimeDays}d
+                          {r.quotedLeadTimeDays == null ? '—' : `${r.quotedLeadTimeDays}d`} vs {r.actualAvgLeadTimeDays == null ? '—' : `${r.actualAvgLeadTimeDays}d`}
                           <span className={`ml-1 font-semibold ${r.leadTimeVarianceDays > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                            ({r.leadTimeVarianceDays > 0 ? '+' : ''}{r.leadTimeVarianceDays}d)
+                            ({r.leadTimeVarianceDays == null ? '—' : `${r.leadTimeVarianceDays > 0 ? '+' : ''}${r.leadTimeVarianceDays}d`})
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{r.qualityScore}% / {r.rejectionRatePct}%</td>
-                        <td className="px-4 py-3 font-bold text-cyan-600 dark:text-cyan-400">{r.reliabilityScore}</td>
+                        <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{r.qualityScore == null ? '—' : `${r.qualityScore}%`} / {r.rejectionRatePct == null ? '—' : `${r.rejectionRatePct}%`}</td>
+                        <td className="px-4 py-3 font-bold text-cyan-600 dark:text-cyan-400">{r.reliabilityScore ?? '—'}</td>
                         <td className="px-4 py-3">
                           <StatusBadge status={r.reliabilityGrade === 'EXCELLENT' || r.reliabilityGrade === 'RELIABLE' ? 'HEALTHY' : r.reliabilityGrade === 'WATCH' ? 'WARNING' : 'CRITICAL'} />
                         </td>

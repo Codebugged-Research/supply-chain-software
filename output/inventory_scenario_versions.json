@@ -1,0 +1,47 @@
+[
+  {
+    "inventoryScenarioVersionId": "ISV-BASELINE-V1",
+    "scenarioVersionId": "SCV-BASELINE-V1",
+    "baselineInventorySnapshotId": "INV-2026-W33-V1",
+    "baselineForecastVersionId": "FCST-2026-W33-V1",
+    "policyVersionId": "POLICY-2026-W33-V1",
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "ownerUserId": "inventory.planner@boat.com",
+    "status": "APPROVED",
+    "createdAt": "2026-07-31T00:00:00.000Z",
+    "publishedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "inventoryScenarioVersionId": "ISV-FESTIVE-V1",
+    "scenarioVersionId": "SCV-FESTIVE-V1",
+    "baselineInventorySnapshotId": "INV-2026-W33-V1",
+    "baselineForecastVersionId": "FCST-2026-W33-V1",
+    "policyVersionId": "POLICY-2026-W33-V1",
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "ownerUserId": "inventory.planner@boat.com",
+    "status": "REVIEW",
+    "createdAt": "2026-08-01T00:00:00.000Z",
+    "publishedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "inventoryScenarioVersionId": "ISV-SUPPLIER_DELAY-V1",
+    "scenarioVersionId": "SCV-SUPPLIER_DELAY-V1",
+    "baselineInventorySnapshotId": "INV-2026-W33-V1",
+    "baselineForecastVersionId": "FCST-2026-W33-V1",
+    "policyVersionId": "POLICY-2026-W33-V1",
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "ownerUserId": "inventory.planner@boat.com",
+    "status": "DRAFT",
+    "createdAt": "2026-08-02T00:00:00.000Z",
+    "publishedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

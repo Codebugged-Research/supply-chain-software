@@ -1,0 +1,132 @@
+[
+  {
+    "distributorId": "DST-001",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 430283526,
+    "unbilledDispatchPaise": 25289726,
+    "approvedOrderExposurePaise": 129158949,
+    "overduePaise": 0,
+    "availableCreditPaise": 4343117799,
+    "utilizationPct": 0.1187,
+    "sourceIds": [
+      "INV-0001",
+      "INV-0009"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-002",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 537746815,
+    "unbilledDispatchPaise": 162753486,
+    "approvedOrderExposurePaise": 174212231,
+    "overduePaise": 0,
+    "availableCreditPaise": 3695987468,
+    "utilizationPct": 0.1914,
+    "sourceIds": [
+      "INV-0002",
+      "INV-0010"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-003",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 0,
+    "unbilledDispatchPaise": 89419343,
+    "approvedOrderExposurePaise": 68563,
+    "overduePaise": 0,
+    "availableCreditPaise": 3338642094,
+    "utilizationPct": 0.0261,
+    "sourceIds": [
+      "INV-0003"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-004",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 0,
+    "unbilledDispatchPaise": 86337216,
+    "approvedOrderExposurePaise": 62172180,
+    "overduePaise": 0,
+    "availableCreditPaise": 5065090604,
+    "utilizationPct": 0.0285,
+    "sourceIds": [
+      "INV-0004"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-005",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 0,
+    "unbilledDispatchPaise": 10250995,
+    "approvedOrderExposurePaise": 34718761,
+    "overduePaise": 0,
+    "availableCreditPaise": 1411965244,
+    "utilizationPct": 0.0309,
+    "sourceIds": [
+      "INV-0005"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-006",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 0,
+    "unbilledDispatchPaise": 168777742,
+    "approvedOrderExposurePaise": 160782486,
+    "overduePaise": 0,
+    "availableCreditPaise": 4169739772,
+    "utilizationPct": 0.0732,
+    "sourceIds": [
+      "INV-0006"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-007",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 698812638,
+    "unbilledDispatchPaise": 94747497,
+    "approvedOrderExposurePaise": 161275216,
+    "overduePaise": 698812638,
+    "availableCreditPaise": 2430454649,
+    "utilizationPct": 0.2821,
+    "sourceIds": [
+      "INV-0007"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "distributorId": "DST-008",
+    "asOfDate": "2026-08-10",
+    "invoicedOpenPaise": 248463129,
+    "unbilledDispatchPaise": 56967348,
+    "approvedOrderExposurePaise": 29449379,
+    "overduePaise": 248463129,
+    "availableCreditPaise": 2750440144,
+    "utilizationPct": 0.1085,
+    "sourceIds": [
+      "INV-0008"
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

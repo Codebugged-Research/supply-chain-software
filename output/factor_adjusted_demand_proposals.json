@@ -1,0 +1,239 @@
+[
+  {
+    "proposalId": "FDP-2026-W33-1",
+    "sourceForecastVersionId": "FCST-2026-W33-V1",
+    "scenarioVersionId": null,
+    "status": "APPROVED",
+    "authorUserId": "demand.planner@boat.com",
+    "submittedAt": "2026-08-05T00:00:00.000Z",
+    "approvedAt": "2026-08-07T00:00:00.000Z",
+    "comment": "Stored factor proposal; baseline vintage remains immutable",
+    "lines": [
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W33-H4-V1",
+        "baseQty": 1803,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.01,
+          "PRICE": 0.0714,
+          "MARKET": 0.034
+        },
+        "netAdjustmentQty": 208,
+        "proposedQty": 2011
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W34-H4-V1",
+        "baseQty": 1517,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.0729,
+          "PRICE": 0.0328,
+          "MARKET": -0.0363
+        },
+        "netAdjustmentQty": 105,
+        "proposedQty": 1622
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W35-H4-V1",
+        "baseQty": 1736,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.0608,
+          "PRICE": 0.024,
+          "MARKET": 0.0087
+        },
+        "netAdjustmentQty": 162,
+        "proposedQty": 1898
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W36-H4-V1",
+        "baseQty": 1850,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.0976,
+          "PRICE": -0.0742,
+          "MARKET": 0.0122
+        },
+        "netAdjustmentQty": 66,
+        "proposedQty": 1916
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "proposalId": "FDP-2026-W33-2",
+    "sourceForecastVersionId": "FCST-2026-W33-V1",
+    "scenarioVersionId": null,
+    "status": "SUBMITTED",
+    "authorUserId": "demand.planner@boat.com",
+    "submittedAt": "2026-08-06T00:00:00.000Z",
+    "approvedAt": null,
+    "comment": "Stored factor proposal; baseline vintage remains immutable",
+    "lines": [
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W37-H4-V1",
+        "baseQty": 2068,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": -0.0306,
+          "PRICE": 0.004,
+          "MARKET": -0.0282
+        },
+        "netAdjustmentQty": -113,
+        "proposedQty": 1955
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W38-H4-V1",
+        "baseQty": 1681,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": -0.0383,
+          "PRICE": -0.0666,
+          "MARKET": 0.0477
+        },
+        "netAdjustmentQty": -96,
+        "proposedQty": 1585
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W39-H4-V1",
+        "baseQty": 1835,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": -0.0851,
+          "PRICE": 0.0239,
+          "MARKET": -0.0198
+        },
+        "netAdjustmentQty": -149,
+        "proposedQty": 1686
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W40-H4-V1",
+        "baseQty": 2171,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": -0.0149,
+          "PRICE": 0.012,
+          "MARKET": -0.0379
+        },
+        "netAdjustmentQty": -89,
+        "proposedQty": 2082
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "proposalId": "FDP-2026-W33-3",
+    "sourceForecastVersionId": "FCST-2026-W33-V1",
+    "scenarioVersionId": null,
+    "status": "DRAFT",
+    "authorUserId": "demand.planner@boat.com",
+    "submittedAt": "2026-08-07T00:00:00.000Z",
+    "approvedAt": null,
+    "comment": "Stored factor proposal; baseline vintage remains immutable",
+    "lines": [
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W41-H4-V1",
+        "baseQty": 1932,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.0073,
+          "PRICE": 0.0748,
+          "MARKET": 0.0384
+        },
+        "netAdjustmentQty": 233,
+        "proposedQty": 2165
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W42-H4-V1",
+        "baseQty": 1974,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": -0.0582,
+          "PRICE": -0.0528,
+          "MARKET": 0.0525
+        },
+        "netAdjustmentQty": -115,
+        "proposedQty": 1859
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W43-H4-V1",
+        "baseQty": 2347,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.1064,
+          "PRICE": -0.0361,
+          "MARKET": -0.011
+        },
+        "netAdjustmentQty": 139,
+        "proposedQty": 2486
+      },
+      {
+        "forecastId": "FC-SKU-BOAT-AD141-DST-001-2025-W44-H4-V1",
+        "baseQty": 2208,
+        "factorIds": [
+          "EVENT",
+          "PRICE",
+          "MARKET"
+        ],
+        "individualAdjustments": {
+          "EVENT": 0.0484,
+          "PRICE": 0.0491,
+          "MARKET": 0.0307
+        },
+        "netAdjustmentQty": 283,
+        "proposedQty": 2491
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

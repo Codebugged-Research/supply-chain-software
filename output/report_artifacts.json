@@ -1,0 +1,44 @@
+[
+  {
+    "artifactId": "ART-RPT-PLAN-001",
+    "jobId": "RPT-PLAN-001",
+    "fileName": "consensus_plan-2026-W33.csv",
+    "mimeType": "text/csv",
+    "storageKey": "reports/2026/W33/RPT-PLAN-001",
+    "byteSize": 36992,
+    "checksumFNV1a": "372b020c",
+    "expiresAt": "2026-09-09T00:00:00.000Z",
+    "createdAt": "2026-08-07T00:01:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "artifactId": "ART-RPT-KPI-001",
+    "jobId": "RPT-KPI-001",
+    "fileName": "kpi_scorecard-2026-W33.xlsx",
+    "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "storageKey": "reports/2026/W33/RPT-KPI-001",
+    "byteSize": 23680,
+    "checksumFNV1a": "2a8c154c",
+    "expiresAt": "2026-09-10T00:00:00.000Z",
+    "createdAt": "2026-08-08T00:01:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "artifactId": "ART-RPT-FORECAST-001",
+    "jobId": "RPT-FORECAST-001",
+    "fileName": "forecast_accuracy-2026-W33.csv",
+    "mimeType": "text/csv",
+    "storageKey": "reports/2026/W33/RPT-FORECAST-001",
+    "byteSize": 3356672,
+    "checksumFNV1a": "1779a6b4",
+    "expiresAt": "2026-09-11T00:00:00.000Z",
+    "createdAt": "2026-08-09T00:01:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

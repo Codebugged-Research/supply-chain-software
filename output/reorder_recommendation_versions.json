@@ -1,0 +1,2368 @@
+[
+  {
+    "recommendationVersionId": "RRV-2026-W33-V1",
+    "calculatedAt": "2026-08-10T00:00:00.000Z",
+    "inventorySnapshotVersionId": "INV-2026-W33-V1",
+    "forecastVersionId": "FCST-2026-W33-V1",
+    "policyVersionId": "POLICY-2026-W33-V1",
+    "calendarVersionId": "CAL-2026-W33-V1",
+    "status": "CALCULATED",
+    "lines": [
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "73055325"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "29e1b089"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "eced9167"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a3c9eecb"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 232,
+        "suggestedOrderQty": 232,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "66d5cfaa"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1db22d0e"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e0be0dec"
+      },
+      {
+        "skuId": "SKU-BOAT-AD141",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "979a6b50"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f2d77318"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "2fcb9239"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 574,
+        "suggestedOrderQty": 574,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "6cbfb15a"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c212d772"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "ff06f693"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3bfb15b5"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "78ef34d6"
+      },
+      {
+        "skuId": "SKU-BOAT-AD131",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "9d844d00"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e9b3d07b"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a0902ddf"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "639c0ebe"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "32d77318"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f5e353f6"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "acbfb15a"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6fcb9239"
+      },
+      {
+        "skuId": "SKU-BOAT-AD161P",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "843fe5c8"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c19652bc"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "fe8a71dd"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3b7e90ff"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7872b020"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "b566cf41"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f25aee62"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "2f4f0d84"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ255",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6c432ca5"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1a7ef9db"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "dd8adab9"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a096bb98"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "63a29c77"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "26ae7d56"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e9ba5e34"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "acc63f13"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ245",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3f141205"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3b4a2339"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "846dc5d5"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c161e4f6"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f226809c"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 623,
+        "suggestedOrderQty": 623,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "2f1a9fbe"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "783e425a"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "b532617b"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ330",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "16b50b0f"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "fe219651"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c12d7730"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "8439580f"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "2ee631f8"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 71,
+        "suggestedOrderQty": 71,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "f1f212d6"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "b4fdf3b5"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7809d494"
+      },
+      {
+        "skuId": "SKU-BOAT-WC100",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "22b6ae7d"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "70f9096b"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "27d566cf"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "eae147ad"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a1bda510"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "64c985f0"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1ba5e353"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "deb1c431"
+      },
+      {
+        "skuId": "SKU-BOAT-LD100",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "958e2195"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6f34d6a0"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "b858793d"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f54c985e"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3e703afb"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7b645a1c"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c487fcb8"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "017c1bda"
+      },
+      {
+        "skuId": "SKU-BOAT-XT200",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "19e1b089"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e8a0902c"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "abac710c"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6eb851eb"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "19652bd3"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 1,
+        "suggestedOrderQty": 1,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "dc710cb1"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "9f7ced90"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6288ce6f"
+      },
+      {
+        "skuId": "SKU-BOAT-ST350",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3df3b645"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6c9eecbf"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "74e3bcd2"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "37ef9db1"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "fafb7e90"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "be075f6f"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "8113404e"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "441f212d"
+      },
+      {
+        "skuId": "SKU-BOAT-ST1508",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "072b020c"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "ee978d4e"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "37bb2fec"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "74af4f0d"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "bdd2f1a9"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "fac710ca"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "43eab367"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "80ded288"
+      },
+      {
+        "skuId": "SKU-BOAT-PP20",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "99446737"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "662b6ae7"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "29374bc6"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "ec432ca4"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "96f0068d"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "59fbe76c"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1d07c84b"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e013a929"
+      },
+      {
+        "skuId": "SKU-BOAT-BH100",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "8ac08311"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "4e00d1b6"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "110cb295"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "d4189373"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7ec56d5c"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "41d14e3b"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "04dd2f1a"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c7e90ff8"
+      },
+      {
+        "skuId": "SKU-BOAT-BH225",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7295e9e1"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c5c28f5b"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7c9eecbf"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3faacd9e"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "f6872b01"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "b9930be0"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "706f6943"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "337b4a23"
+      },
+      {
+        "skuId": "SKU-BOAT-IM201",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 443,
+        "suggestedOrderQty": 443,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "ea57a785"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "73055325"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "29e1b089"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "eced9167"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a3c9eecb"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "66d5cfaa"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1db22d0e"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e0be0dec"
+      },
+      {
+        "skuId": "SKU-BOAT-ADALPHA",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "979a6b50"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "934d6a15"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "d0418936"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 19,
+        "suggestedOrderQty": 19,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "0d35a858"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "4a29c779"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "871de69a"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c41205bb"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 97,
+        "suggestedOrderQty": 97,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "010624dd"
+      },
+      {
+        "skuId": "SKU-BOAT-NI100",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3dfa43fe"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "0e69ad42"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "d1758e20"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "94816eff"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "578d4fde"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "1a9930bd"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "dda5119c"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "a0b0f27b"
+      },
+      {
+        "skuId": "SKU-BOAT-RZ450",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "63bcd35a"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "48c7e281"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "0bd3c361"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "cedfa43f"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "91eb851e"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": "2026-W35",
+        "netRequirementQty": 19,
+        "suggestedOrderQty": 19,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "BELOW_TARGET_STOCK"
+        ],
+        "lineHash": "54f765fd"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "180346dc"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "db0f27ba"
+      },
+      {
+        "skuId": "SKU-BOAT-N751",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6d5cfaac"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "9ed288cd"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "e7f62b69"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "24ea4a8b"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "55aee631"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "92a30552"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "dbc6a7ee"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "18bac710"
+      },
+      {
+        "skuId": "SKU-BOAT-LE100",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7a3d70a3"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-001",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "497f62b6"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-002",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "0c8b4395"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-003",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "cf972473"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-004",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "7a43fe5c"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-005",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "3d4fdf3b"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-006",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "005bc01a"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-007",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "c367a0f8"
+      },
+      {
+        "skuId": "SKU-BOAT-AV2400",
+        "locationId": "LOC-DST-008",
+        "projectedStockoutWeek": null,
+        "netRequirementQty": 0,
+        "suggestedOrderQty": 0,
+        "suggestedReleaseWeek": "2026-W33",
+        "suggestedReceiptWeek": "2026-W35",
+        "supplierId": "MFG-WAVECRAFT-NOIDA",
+        "reasonCodes": [
+          "NO_ACTION"
+        ],
+        "lineHash": "6e147ae0"
+      }
+    ],
+    "source": "DERIVED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

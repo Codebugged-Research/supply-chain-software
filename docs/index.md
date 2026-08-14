@@ -3,8 +3,8 @@
 > **Project:** Supply Chain Software (S&OP Suite)  
 > **Stack:** Next.js 14 · React · Recharts · Lucide · shadcn/ui  
 > **Application surfaces:** S&OP shell in `app/page.js`; Supply Planning Studio in `app/supply-planning/`  
-> **Last audited:** 2026-08-11  
-> **Audit scope:** Every file in `docs/modules/` was reviewed before this summary was updated.
+> **Last audited:** 2026-08-13
+> **Audit scope:** Every file in `docs/modules/` plus the seven canonical cross-consumer domains in `docs/data/RECONCILIATION.md`.
 
 ---
 
@@ -17,11 +17,40 @@
 | Demand Factors | `factors` | 🟡 Functional prototype | Local PLC/seasonality/promotion/location exploration; still uses three hardcoded demo SKUs and does not own managed events. | [demand-factors.md](./modules/demand-factors.md) |
 | Distributor Orders | `orders` | 🟢 Functional | Distributor replenishment order placement, freeze governance, approval path, and dealer activation opportunity. | [distributor-orders.md](./modules/distributor-orders.md) |
 | Order vs Dispatch | `dispatch` | 🟡 Functional POC | Downstream ordered-versus-dispatched execution; dispatched units remain simulated pending ASN/shipment integration. | [order-vs-dispatch.md](./modules/order-vs-dispatch.md) |
-| Supply Planning | `supply`, `/supply-planning/*` | 🟢 Functional configured POC | Nine operational studio tabs spanning sources, cockpit, MRP, BOM, capacity, procurement, network, constraints, and scenarios. Some action buttons remain stubs. | [supply-planning.md](./modules/supply-planning.md) |
+| Supply Planning | `supply`, `/supply-planning/*` | 🟢 Functional configured POC | Nine operational studio tabs spanning sources, cockpit, persisted MRP, BOM, capacity, procurement, network, auditable risk resolution, and canonical scenario publication. Remaining deferred actions are listed below. | [supply-planning.md](./modules/supply-planning.md) |
 | Inventory Planning | `inventory` | 🟢 Functional configured POC | ABC/XYZ, norms, safety stock, PO-netted reorder recommendations, 12-week scenarios, and health review. | [inventory-planning.md](./modules/inventory-planning.md) |
-| Scenario Planning | `scenario` | 🟡 Partial | Live demand/cost/capacity comparison; saved scenarios and persistence remain mocked. | [scenario-planning.md](./modules/scenario-planning.md) |
+| Scenario Planning | `scenario` | 🟢 Functional configured POC | Canonical saved scenarios and outputs, live comparison, and publication into the selected downstream consensus plan; New Scenario creation remains deferred. | [scenario-planning.md](./modules/scenario-planning.md) |
 | Financial Planning | `financial` | 🔵 Functional, out of original scope | Explicitly excluded from this implementation increment and left unchanged. | [financial-planning.md](./modules/financial-planning.md) |
 | Chatbot | `chatbot` | 🔵 Functional, out of original scope | Explicitly excluded from this implementation increment and left unchanged. | [chatbot.md](./modules/chatbot.md) |
+
+---
+
+### Deferred / stub actions
+
+The following UI actions remain deliberately deferred. Recalculate MRP, risk resolution, and scenario publish are no longer stub actions and are excluded from this list.
+
+- Export buttons across module workbenches
+- Create Transfer Order
+- Finance approval
+- New Scenario / Build New Scenario
+
+---
+
+### Canonical data status by consumer module
+
+“Verified” here is limited to the seven reconciliation domains; it does not certify unrelated integrations or production hardening.
+
+| Consumer module | Data status | Evidence / boundary |
+|---|---|---|
+| Dashboard / Supply Overview | **Verified** | Canonical NPI-readiness aggregate and 13-week PO-adherence observation reconcile with their underlying rows. |
+| Demand Planning | **Partial** | NPI, channel norms, lifecycle editor, and stored forecast accuracy verify. Live demand-event rows lack required shape/stack/cap/version fields. |
+| Demand Factors | **Partial** | Uses the shared event engine and publishes to consensus, but the live SKU read model omits effective lifecycle fields and live events omit shape/stack/cap. |
+| Inventory Planning | **Verified** | Canonical channel norms and effective lifecycle stage/method produce the same values as Demand Planning for the checked SKU. |
+| Supply Planning | **Partial** | NPI, norms, supplier reliability, HOD/adherence, event IDs, and risk consumers reconcile. Scenario EOL application and complete live event fields do not. |
+| Supplier 360 | **Verified** | 4/13/52-week reliability and PO-adherence observations match the canonical supplier records; fallback is used only for a missing observation. |
+| Scenario Planning | **Partial** | Canonical event, supplier, and SKU inputs are exposed by the service, but EOL lifecycle behavior is not applied to scenario outputs and event versions are absent. |
+
+See [the detailed reconciliation rerun](./data/RECONCILIATION.md#2026-08-13-reconciliation-rerun) for the same-entity values and blockers.
 
 ---
 
@@ -123,7 +152,7 @@ Financial Planning and Chatbot remain outside the original BOAT scope and were i
 | SP-1 | Role-based cross-functional workspace | 🟢 POC implemented | Shared role contract + both shells |
 | SP-2 | Configurable review cadence | 🟢 POC implemented | Dashboard review cycle |
 | SP-3 | Forecast vs Net Supply vs Operating Plan | 🟢 Live integrated view | Dashboard Continuous Demand vs Supply View |
-| SP-4 | What-if scenario comparison | 🟢 Functional comparison / 🟡 persistence | Scenario Planning + Dashboard reuse |
+| SP-4 | What-if scenario comparison and publish | 🟢 Functional configured POC | Scenario Planning publishes canonical outputs to the active consensus plan consumed by Demand Planning and Dashboard |
 | SP-5 | Review dashboards and category/channel/region cuts | 🟢 Functional | Dashboard |
 
 ### Inventory Planning
@@ -171,4 +200,3 @@ Financial Planning and Chatbot remain outside the original BOAT scope and were i
 ## 6. Technical Reference Documentation
 
 - [DUMMY_DATA_GENERATION.md](./DUMMY_DATA_GENERATION.md) — Comprehensive technical documentation of all synthetic data generation algorithms, seeded PRNG math, noise functions, stock netting formulas, ABC/XYZ segmentation, and client curve shape multipliers.
-

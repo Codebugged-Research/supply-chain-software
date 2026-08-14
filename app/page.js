@@ -35,6 +35,7 @@ import {
   ShieldCheck,
   FileEdit,
   Check,
+  CheckCheck,
   CalendarDays,
   Clock,
   Activity,
@@ -93,6 +94,7 @@ import {
 } from '@/components/ui/table'
 import { Progress } from '@/components/ui/progress'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Slider } from '@/components/ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
@@ -103,6 +105,7 @@ import {
   ORDER_CASHFLOW_METER_MAX_INR,
 } from '@/lib/utils'
 import { PLANNING_ROLES, ROLE_PROFILES, ROLE_STORAGE_KEY, canAccessDemandSection, canAccessRootTab } from '@/lib/roleAccess'
+import { applyDemandEvents, applyDemandFactorsAndEvents, eventUpliftPct } from '@/lib/demandEvents'
 
 // =============== NAVIGATION CONFIG ===============
 const NAV_ITEMS = [
@@ -114,7 +117,6 @@ const NAV_ITEMS = [
   { id: 'supply', label: 'Supply Planning', icon: Factory },
   { id: 'inventory', label: 'Inventory Planning', icon: Warehouse },
   { id: 'financial', label: 'Financial Planning', icon: IndianRupee },
-  { id: 'scenario', label: 'Scenario Planning', icon: GitBranch },
   { id: 'chatbot', label: 'Chatbot', icon: Bot },
 ]
 const BRAND_LOGO_URL = '/vanco-only-logo.png'
@@ -138,7 +140,9 @@ function useSopData() {
     weekly: [],
     dashboardAlerts: [],
     scenarios: [],
+    activeScenario: null,
     factorConfig: null,
+    demandEvents: [],
   })
 
   useEffect(() => {
@@ -146,7 +150,7 @@ function useSopData() {
     const load = async () => {
       try {
         const j = (url) => fetch(url).then((r) => r.json())
-        const [meta, skus, distributors, regions, weeks, kpis, byWeek, bySku, byDist, byReg, weekly, alertPayload, scenarioPayload, factorConfig] = await Promise.all([
+        const [meta, skus, distributors, regions, weeks, kpis, byWeek, bySku, byDist, byReg, weekly, alertPayload, scenarioPayload, factorConfig, demandEvents] = await Promise.all([
           j('/api/data/meta'),
           j('/api/data/skus'),
           j('/api/data/distributors'),
@@ -161,6 +165,7 @@ function useSopData() {
           j('/api/dashboard/alerts'),
           j('/api/scenarios'),
           j('/api/demand/factor-config'),
+          j('/api/demand/events'),
         ])
         if (cancelled) return
         setData({
@@ -173,7 +178,9 @@ function useSopData() {
           weekly: weekly.rows || [],
           dashboardAlerts: alertPayload.rows || [],
           scenarios: scenarioPayload.rows || [],
+          activeScenario: scenarioPayload.activeScenario || null,
           factorConfig,
+          demandEvents: demandEvents.rows || [],
         })
       } catch (e) {
         console.error('Data load failed', e)
@@ -332,7 +339,7 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
   }, [loadPlanBalance])
 
   useEffect(() => {
-    fetch('/api/dashboard/review-cycle').then((response) => response.json()).then(setReviewCycle).catch(() => {})
+    fetch('/api/dashboard/review-cycle').then((response) => response.json()).then(setReviewCycle).catch(() => { })
   }, [])
 
   const updateReviewCycle = useCallback(async (changes) => {
@@ -353,12 +360,12 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
   // Build chart data from the live aggregated weekly rows
   const revenueData = useMemo(() => {
     const byWeek = new Map()
-    ;(data.weekly || []).forEach((row) => {
-      const current = byWeek.get(row.weekId) || { actual: 0, plan: 0 }
-      current.actual += Number(row.tertiary || 0) * Number(row.price || 0)
-      current.plan += Number(row.secondary || 0) * Number(row.price || 0)
-      byWeek.set(row.weekId, current)
-    })
+      ; (data.weekly || []).forEach((row) => {
+        const current = byWeek.get(row.weekId) || { actual: 0, plan: 0 }
+        current.actual += Number(row.tertiary || 0) * Number(row.price || 0)
+        current.plan += Number(row.secondary || 0) * Number(row.price || 0)
+        byWeek.set(row.weekId, current)
+      })
     return Array.from(byWeek.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([week, values]) => ({
       m: week,
       actual: +(values.actual / 1_000_000).toFixed(2),
@@ -419,28 +426,27 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
 
   const cutRows = useMemo(() => {
     const groups = new Map()
-    ;(data.weekly || []).forEach((row) => {
-      const key = reviewCut === 'category' ? row.category : reviewCut === 'channel' ? row.distributor : row.region
-      if (!groups.has(key)) groups.set(key, { name: key, forecastUnits: 0, actualUnits: 0, primaryUnits: 0, revenue: 0 })
-      const group = groups.get(key)
-      group.forecastUnits += row.secondary || 0
-      group.actualUnits += row.tertiary || 0
-      group.primaryUnits += row.primary || 0
-      group.revenue += row.revenue || 0
-    })
+      ; (data.weekly || []).forEach((row) => {
+        const key = reviewCut === 'category' ? row.category : reviewCut === 'channel' ? row.distributor : row.region
+        if (!groups.has(key)) groups.set(key, { name: key, forecastUnits: 0, actualUnits: 0, primaryUnits: 0, revenue: 0 })
+        const group = groups.get(key)
+        group.forecastUnits += row.secondary || 0
+        group.actualUnits += row.tertiary || 0
+        group.primaryUnits += row.primary || 0
+        group.revenue += row.revenue || 0
+      })
     return Array.from(groups.values()).map((row) => ({ ...row, biasPct: row.actualUnits ? (row.forecastUnits - row.actualUnits) / row.actualUnits * 100 : 0, attainmentPct: row.forecastUnits ? row.actualUnits / row.forecastUnits * 100 : 0 })).sort((a, b) => b.revenue - a.revenue)
   }, [data.weekly, reviewCut])
 
   const scenarioComparison = useMemo(() => (data.scenarios || []).map((stored) => {
     const scenario = {
       name: stored.scenarioName,
-      demandPct: stored.assumptionType === 'DEMAND_SURGE' ? Number(stored.assumptionValue || 0) : 0,
-      costPct: stored.assumptionType === 'COST_SHIFT' ? Number(stored.assumptionValue || 0) : 0,
-      capacityPct: stored.assumptionType === 'CAPACITY_CHANGE' ? Number(stored.assumptionValue || 0) : 0,
+      demandPct: Number(stored.demandPct || 0),
+      costPct: Number(stored.costPct || 0),
+      capacityPct: Number(stored.capacityPct || 0),
     }
-    const quarters = buildWhatIfScenarioComparison(data.kpis, scenario)
-    return { ...scenario, revenue: quarters.reduce((sum, row) => sum + row.scenario, 0), gm: quarters.reduce((sum, row) => sum + row.gm, 0), constrainedRevenue: quarters.reduce((sum, row) => sum + row.constrainedRevenue, 0) }
-  }), [data.kpis, data.scenarios])
+    return { ...scenario, isActive: stored.isActive, revenue: Number(stored.revenueAtRiskRecovered || 0) / 1000000, gm: Number(stored.grossMarginInr || 0) / 1000000, constrainedRevenue: 0 }
+  }).sort((a, b) => Number(b.isActive) - Number(a.isActive)), [data.kpis, data.scenarios])
 
   return (
     <div>
@@ -472,7 +478,7 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
           {planBalanceError ? <div className="rounded-lg bg-rose-50 p-4 text-sm text-rose-700">{planBalanceError}</div> : !planBalance ? <div className="py-16 text-center text-sm text-slate-500">Loading integrated demand and supply plan…</div> : <>
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-3"><div className="rounded-lg bg-blue-50 p-3"><p className="text-xs text-blue-700">Net Supply Coverage</p><p className="text-xl font-semibold text-blue-900">{planBalance.summary.coveragePct}%</p></div><div className="rounded-lg bg-rose-50 p-3"><p className="text-xs text-rose-700">Unmet Demand</p><p className="text-xl font-semibold text-rose-900">{fmtNum(planBalance.summary.deficitUnits)}</p></div><div className="rounded-lg bg-cyan-50 p-3"><p className="text-xs text-cyan-700">Current Inventory</p><p className="text-xl font-semibold text-cyan-900">{fmtNum(planBalance.summary.currentInventoryUnits)}</p></div><div className="rounded-lg bg-orange-50 p-3"><p className="text-xs text-orange-700">Ending Inventory</p><p className="text-xl font-semibold text-orange-900">{fmtNum(planBalance.summary.projectedEndingInventoryUnits)}</p></div>{canView('supply') && <div className="rounded-lg bg-amber-50 p-3"><p className="text-xs text-amber-700">Capacity Risk Weeks</p><p className="text-xl font-semibold text-amber-900">{planBalance.summary.capacityRiskWeeks}</p></div>}{(canView('supply') || canView('finance')) && <div className="rounded-lg bg-violet-50 p-3"><p className="text-xs text-violet-700">Open PO Pipeline</p><p className="text-xl font-semibold text-violet-900">{fmtNum(planBalance.summary.openPoUnits)}</p></div>}</div>
             <ResponsiveContainer width="100%" height={340}><LineChart data={planBalance.rows}><CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} /><XAxis dataKey="bucket" tick={{ fill: '#64748b', fontSize: 10 }} interval={1} /><YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} /><Tooltip formatter={(value) => `${Number(value).toLocaleString()} units`} /><Legend /><Line type="monotone" dataKey="forecastUnits" name="Current Demand Plan" stroke="#2563eb" strokeWidth={2.5} dot={false} /><Line type="monotone" dataKey="netSupplyUnits" name="Net Supply" stroke="#10b981" strokeWidth={2.5} dot={false} /><Line type="monotone" dataKey="operatingPlanUnits" name="Operating Plan" stroke="#8b5cf6" strokeWidth={2.5} strokeDasharray="6 4" dot={false} /><Line type="monotone" dataKey="projectedInventoryUnits" name="Projected Inventory" stroke="#f97316" strokeWidth={2.5} dot={false} /></LineChart></ResponsiveContainer>
-            {canView('supply') && <DataTable columns={[{ key: 'bucket', label: 'Bucket / Horizon' }, { key: 'planningWeek', label: 'Supply Week' }, { key: 'forecastUnits', label: 'Demand Plan' }, { key: 'netSupplyUnits', label: 'Net Supply' }, { key: 'confirmedPoReceipts', label: 'Dated PO Receipts' }, { key: 'openingInventoryUnits', label: 'Opening Inventory' }, { key: 'projectedInventoryUnits', label: 'Projected Inventory' }, { key: 'unmetDemandUnits', label: 'Unmet Demand' }, { key: 'status', label: 'Status' }]} rows={planBalance.rows.filter((row) => row.status !== 'COVERED').slice(0, 10)} renderCell={(col, row) => { if (col.key === 'bucket') return <div><p>{row.bucket}</p><p className="text-[10px] text-slate-500">{row.horizon}</p></div>; if (['forecastUnits', 'netSupplyUnits', 'confirmedPoReceipts', 'openingInventoryUnits', 'projectedInventoryUnits', 'unmetDemandUnits'].includes(col.key)) return <span className={col.key === 'unmetDemandUnits' && row.unmetDemandUnits > 0 ? 'text-rose-600 font-medium' : ''}>{Number(row[col.key]).toLocaleString()}</span>; if (col.key === 'status') return <Badge className={['STOCKOUT','INVENTORY_RISK','DEFICIT'].includes(row.status) ? 'bg-rose-50 text-rose-700 hover:bg-rose-50' : 'bg-amber-50 text-amber-700 hover:bg-amber-50'}>{row.status.replaceAll('_', ' ')}</Badge>; return row[col.key] }} />}
+            {canView('supply') && <DataTable columns={[{ key: 'bucket', label: 'Bucket / Horizon' }, { key: 'planningWeek', label: 'Supply Week' }, { key: 'forecastUnits', label: 'Demand Plan' }, { key: 'netSupplyUnits', label: 'Net Supply' }, { key: 'confirmedPoReceipts', label: 'Dated PO Receipts' }, { key: 'openingInventoryUnits', label: 'Opening Inventory' }, { key: 'projectedInventoryUnits', label: 'Projected Inventory' }, { key: 'unmetDemandUnits', label: 'Unmet Demand' }, { key: 'status', label: 'Status' }]} rows={planBalance.rows.filter((row) => row.status !== 'COVERED').slice(0, 10)} renderCell={(col, row) => { if (col.key === 'bucket') return <div><p>{row.bucket}</p><p className="text-[10px] text-slate-500">{row.horizon}</p></div>; if (['forecastUnits', 'netSupplyUnits', 'confirmedPoReceipts', 'openingInventoryUnits', 'projectedInventoryUnits', 'unmetDemandUnits'].includes(col.key)) return <span className={col.key === 'unmetDemandUnits' && row.unmetDemandUnits > 0 ? 'text-rose-600 font-medium' : ''}>{Number(row[col.key]).toLocaleString()}</span>; if (col.key === 'status') return <Badge className={['STOCKOUT', 'INVENTORY_RISK', 'DEFICIT'].includes(row.status) ? 'bg-rose-50 text-rose-700 hover:bg-rose-50' : 'bg-amber-50 text-amber-700 hover:bg-amber-50'}>{row.status.replaceAll('_', ' ')}</Badge>; return row[col.key] }} />}
             <p className="text-xs text-slate-500">Forecast: {planBalance.sources.forecast} · Net supply: {planBalance.sources.netSupply} · Operating plan: {planBalance.sources.operatingPlan}</p>
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"><p><span className="font-medium text-slate-800">Demand:</span> {planBalance.sources.forecast}</p><p><span className="font-medium text-slate-800">Supply:</span> {planBalance.sources.netSupply}</p><p><span className="font-medium text-slate-800">Inventory:</span> {planBalance.sources.inventory}</p><p className="mt-1 text-slate-500">Calculated {new Date(planBalance.freshness.generatedAt).toLocaleString()} · auto-refresh every {planBalance.freshness.refreshSeconds}s</p></div>
           </>}
@@ -481,7 +487,7 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
         <Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div><CardTitle className="text-base">S&OP Review Cuts</CardTitle><CardDescription>Same plan summarized through the dimensions permitted for the {workspaceRole} workspace.</CardDescription></div><Select value={reviewCut} onValueChange={setReviewCut}><SelectTrigger className="w-[170px]"><SelectValue /></SelectTrigger><SelectContent>{allowedCuts.map((cut) => <SelectItem key={cut} value={cut}>By {cut}</SelectItem>)}</SelectContent></Select></div></CardHeader><CardContent><DataTable columns={[{ key: 'name', label: reviewCut === 'channel' ? 'Channel Partner' : reviewCut === 'region' ? 'Region' : 'Category' }, { key: 'forecastUnits', label: 'Forecast' }, { key: 'actualUnits', label: 'Actual' }, { key: 'biasPct', label: 'Bias' }, { key: 'attainmentPct', label: 'Attainment' }, ...(canView('commercial') ? [{ key: 'revenue', label: 'Revenue' }] : [])]} rows={cutRows} renderCell={(col, row) => { if (['forecastUnits', 'actualUnits'].includes(col.key)) return Number(row[col.key]).toLocaleString(); if (col.key === 'biasPct') return <span className={Math.abs(row.biasPct) > 10 ? 'text-rose-600 font-medium' : 'text-slate-700'}>{row.biasPct >= 0 ? '+' : ''}{row.biasPct.toFixed(1)}%</span>; if (col.key === 'attainmentPct') return `${row.attainmentPct.toFixed(1)}%`; if (col.key === 'revenue') return fmtMoney(row.revenue); return row[col.key] }} /></CardContent></Card>
-        <Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">What-If Scenario Comparison</CardTitle><CardDescription>Read-only comparison from the shared Scenario Planning engine; create and tune assumptions in Scenario Planning.</CardDescription></CardHeader><CardContent><ResponsiveContainer width="100%" height={250}><BarChart data={scenarioComparison}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} /><YAxis tick={{ fontSize: 10 }} tickFormatter={(value) => `₹${Math.round(value)}M`} /><Tooltip formatter={(value) => `₹${Number(value).toFixed(1)}M`} /><Legend /><Bar dataKey="revenue" name="Revenue" fill="#2563eb" radius={[4, 4, 0, 0]} /><Bar dataKey="gm" name="Gross Margin" fill="#10b981" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer><div className="grid grid-cols-2 gap-2 mt-3">{scenarioComparison.map((scenario) => <div key={scenario.name} className="rounded border border-slate-200 p-2 text-xs"><p className="font-medium text-slate-800">{scenario.name}</p><p className="text-slate-500">Demand {scenario.demandPct >= 0 ? '+' : ''}{scenario.demandPct}% · Cost {scenario.costPct >= 0 ? '+' : ''}{scenario.costPct}% · Capacity {scenario.capacityPct >= 0 ? '+' : ''}{scenario.capacityPct}%</p>{scenario.constrainedRevenue > 0 && <p className="text-rose-600 mt-1">₹{scenario.constrainedRevenue.toFixed(1)}M constrained</p>}</div>)}</div></CardContent></Card>
+        <Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">What-If Scenario Comparison</CardTitle><CardDescription>{data.activeScenario ? `Active: ${data.activeScenario.name} (${data.activeScenario.scenarioVersionId})` : 'Read-only comparison from the shared Scenario Planning engine; no scenario is published.'}</CardDescription></CardHeader><CardContent><ResponsiveContainer width="100%" height={250}><BarChart data={scenarioComparison}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} /><YAxis tick={{ fontSize: 10 }} tickFormatter={(value) => `₹${Math.round(value)}M`} /><Tooltip formatter={(value) => `₹${Number(value).toFixed(1)}M`} /><Legend /><Bar dataKey="revenue" name="Revenue" fill="#2563eb" radius={[4, 4, 0, 0]} /><Bar dataKey="gm" name="Gross Margin" fill="#10b981" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer><div className="grid grid-cols-2 gap-2 mt-3">{scenarioComparison.map((scenario) => <div key={scenario.name} className={`rounded border p-2 text-xs ${scenario.isActive ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200'}`}><p className="font-medium text-slate-800">{scenario.name}{scenario.isActive ? ' · Active' : ''}</p><p className="text-slate-500">Demand {scenario.demandPct >= 0 ? '+' : ''}{scenario.demandPct}% · Cost {scenario.costPct >= 0 ? '+' : ''}{scenario.costPct}% · Capacity {scenario.capacityPct >= 0 ? '+' : ''}{scenario.capacityPct}%</p>{scenario.constrainedRevenue > 0 && <p className="text-rose-600 mt-1">₹{scenario.constrainedRevenue.toFixed(1)}M constrained</p>}</div>)}</div></CardContent></Card>
       </div>
 
       {(canView('commercial') || canView('category')) && <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
@@ -850,43 +856,39 @@ function computeForecastMetrics(series, method) {
   return { mape, bias, accuracy: Math.max(0, 100 - mape) }
 }
 
-function ForecastIntelligencePanel({ weekly, distributors, skus, lifecycle }) {
+function ForecastIntelligencePanel({ forecastAccuracy, forecastVintages, distributors, skus, lifecycle }) {
   const [horizon, setHorizon] = useState('short')
   const [channel, setChannel] = useState('all')
   const [sku, setSku] = useState('all')
 
   const modelSeries = useMemo(() => {
-    const filtered = weekly.filter((row) => (channel === 'all' || row.distributorId === channel) && (sku === 'all' || row.skuId === sku))
+    const horizonWeeks = horizon === 'short' ? 4 : horizon === 'mid' ? 13 : 52
+    const filtered = forecastVintages.filter((row) => row.horizonWeeks === horizonWeeks && (channel === 'all' || row.channelId === channel) && (sku === 'all' || row.skuId === sku))
+    const actualByForecast = new Map(forecastAccuracy.map((row) => [row.forecastId, Number(row.actualQty || 0)]))
     const byWeek = new Map()
     filtered.forEach((row) => {
-      if (!byWeek.has(row.weekId)) byWeek.set(row.weekId, { weekId: row.weekId, week: row.weekLabel, actual: 0, statistical: 0 })
-      const bucket = byWeek.get(row.weekId)
-      bucket.actual += row.tertiary || 0
-      bucket.statistical += row.secondary || 0
+      if (!byWeek.has(row.targetWeek)) byWeek.set(row.targetWeek, { weekId: row.targetWeek, week: row.targetWeek, actual: 0, statistical: 0, applied: 0 })
+      const bucket = byWeek.get(row.targetWeek)
+      bucket.actual += actualByForecast.get(row.forecastId) || 0
+      bucket.statistical += row.forecastQty || 0
+      bucket.applied += row.forecastQty || 0
     })
-    return Array.from(byWeek.values()).sort((a, b) => a.weekId.localeCompare(b.weekId)).map((row, idx, rows) => {
-      const progress = rows.length > 1 ? idx / (rows.length - 1) : 0
-      return {
-        ...row,
-        mlrf: Math.round(row.actual * (0.985 + ((idx % 4) - 1.5) * 0.012)),
-        xgbf: Math.round(row.actual * (1.005 + ((idx % 5) - 2) * 0.009)),
-        npiCurve: Math.round(row.statistical * (0.62 + progress * 0.55)),
-        analogForecast: Math.round(row.statistical * 1.08),
-        rampDown: Math.round(row.statistical * (1 - progress * 0.22)),
-      }
-    })
-  }, [weekly, channel, sku])
+    return Array.from(byWeek.values()).sort((a, b) => a.weekId.localeCompare(b.weekId))
+  }, [forecastAccuracy, forecastVintages, horizon, channel, sku])
 
   const selectedLifecycle = lifecycle.find((row) => row.skuId === sku)
   const horizonMetrics = Object.entries(FORECAST_HORIZONS).map(([key, meta]) => {
-    const sample = modelSeries.slice(-meta.backtestWeeks)
+    const horizonWeeks = key === 'short' ? 4 : key === 'mid' ? 13 : 52
+    const sample = forecastAccuracy.filter((row) => row.horizonWeeks === horizonWeeks && (channel === 'all' || row.channelId === channel) && (sku === 'all' || row.skuId === sku))
     const method = selectedLifecycle?.forecastMethods?.[key] || meta.method
-    return { key, ...meta, method, ...computeForecastMetrics(sample, method) }
+    const mape = sample.length ? sample.reduce((sum, row) => sum + Number(row.absolutePctError || 0), 0) / sample.length * 100 : 0
+    const bias = sample.length ? sample.reduce((sum, row) => sum + Number(row.biasPct || 0), 0) / sample.length * 100 : 0
+    const accuracy = sample.length ? sample.reduce((sum, row) => sum + Number(row.accuracyPct || 0), 0) / sample.length * 100 : 0
+    return { key, ...meta, method, mape, bias, accuracy }
   })
   const selectedMeta = FORECAST_HORIZONS[horizon]
   const selectedMetrics = horizonMetrics.find((item) => item.key === horizon) || horizonMetrics[0]
-  const appliedSeriesKey = forecastSeriesKey(selectedMetrics.method)
-  const visibleSeries = modelSeries.slice(-selectedMeta.backtestWeeks).map((row) => ({ ...row, applied: row[appliedSeriesKey] }))
+  const visibleSeries = modelSeries.slice(-selectedMeta.backtestWeeks)
 
   return (
     <div className="space-y-6">
@@ -961,8 +963,9 @@ function NpiLifecyclePanel({ npiForecasts, lifecycle, skus, onNpiUpdate, onLifec
                 <div><label className="text-xs font-medium text-slate-600">Peak Weekly Units</label><Input className="mt-1" type="number" defaultValue={npi.peakWeeklyUnits} onBlur={(e) => onNpiUpdate(npi.npiId, { peakWeeklyUnits: Number(e.target.value) })} /></div>
                 <div><label className="text-xs font-medium text-slate-600">Analog Product</label><Select value={npi.analogSkuId} onValueChange={(value) => onNpiUpdate(npi.npiId, { analogSkuId: value })}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent>{skus.map((sku) => <SelectItem key={sku.id} value={sku.id}>{sku.name}</SelectItem>)}</SelectContent></Select></div>
                 <div><label className="text-xs font-medium text-slate-600">Cannibalization</label><Input className="mt-1" type="number" min="0" max="100" defaultValue={npi.cannibalizationRatePct} onBlur={(e) => onNpiUpdate(npi.npiId, { cannibalizationRatePct: Number(e.target.value) })} /></div>
-                <div><label className="text-xs font-medium text-slate-600">Readiness %</label><Input className="mt-1" type="number" min="0" max="100" defaultValue={npi.readinessPct} onBlur={(e) => onNpiUpdate(npi.npiId, { readinessPct: Number(e.target.value) })} /></div>
+                <div><label className="text-xs font-medium text-slate-600">Readiness %</label><div className="mt-1 h-10 rounded-md border border-slate-200 bg-slate-50 px-3 flex items-center text-sm font-medium">{npi.readinessPct}% from evidence</div></div>
               </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">{(npi.readinessItems || []).map((item) => <div key={`${item.gateCode}-${item.itemCode}`} className="rounded border border-slate-200 p-2"><div className="flex items-center justify-between"><span className="font-medium">{item.gateCode} · {item.description}</span><Badge variant="secondary">{item.status}</Badge></div><p className="mt-1 text-slate-500">{item.evidenceRef || item.blockedReason || 'Evidence pending'}</p></div>)}</div>
               <ResponsiveContainer width="100%" height={180}><AreaChart data={npi.projection}><defs><linearGradient id={`npi-${npi.npiId}`} x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.35} /><stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} /></linearGradient></defs><XAxis dataKey="week" tick={{ fontSize: 9, fill: '#64748b' }} interval={2} /><YAxis tick={{ fontSize: 10, fill: '#64748b' }} /><Tooltip /><Area type="monotone" dataKey="units" stroke="#8b5cf6" fill={`url(#npi-${npi.npiId})`} strokeWidth={2} /></AreaChart></ResponsiveContainer>
             </CardContent>
           </Card>
@@ -982,28 +985,31 @@ function NpiLifecyclePanel({ npiForecasts, lifecycle, skus, onNpiUpdate, onLifec
 }
 
 // =============== SUB-PAGE: EVENT / PROMOTION CALENDAR ===============
-function EventCalendarPanel({ events, weekly, weeks, skus, distributors, onCreate, onUpdate }) {
+function EventCalendarPanel({ events, templates, weekly, weeks, skus, distributors, onCreate, onUpdate }) {
   const [open, setOpen] = useState(false)
-  const emptyDraft = () => ({ eventName: '', eventType: 'PROMOTIONAL', startWeek: weeks[0]?.weekId || '', endWeek: weeks[0]?.weekId || '', upliftPercent: 20, status: 'PLANNED', skuId: 'all', channelId: 'all' })
+  const emptyDraft = () => ({ eventTemplateId: templates[0]?.eventTemplateId || '', eventName: templates[0]?.name || '', eventType: templates[0]?.eventType || 'PROMOTIONAL', startWeek: weeks[0]?.weekId || '', endWeek: weeks[0]?.weekId || '', upliftPercent: Math.round(Number(templates[0]?.defaultUpliftPct || 0.2) * 100), upliftShape: templates[0]?.upliftShape || 'FLAT', stackingGroup: templates[0]?.stackingGroup || null, maxStackedUpliftPct: templates[0]?.maxStackedUpliftPct || 1, status: 'PLANNED', skuId: 'all', channelId: 'all' })
   const [draft, setDraft] = useState(emptyDraft)
+
+  useEffect(() => {
+    if (!draft.eventTemplateId && templates.length) setDraft(emptyDraft())
+  }, [templates, draft.eventTemplateId])
 
   const overlay = useMemo(() => {
     const byWeek = new Map()
     weekly.forEach((row) => {
       if (!byWeek.has(row.weekId)) byWeek.set(row.weekId, { weekId: row.weekId, week: row.weekLabel, baseline: 0, upliftUnits: 0 })
       byWeek.get(row.weekId).baseline += row.secondary || 0
-    })
-    events.filter((event) => event.status !== 'CANCELLED').forEach((event) => {
-      weekly.forEach((row) => {
-        if (row.weekId < event.startWeek || row.weekId > event.endWeek) return
-        if (event.affectedSkus.length && !event.affectedSkus.includes(row.skuId)) return
-        if (event.affectedChannels.length && !event.affectedChannels.includes(row.distributorId)) return
-        const bucket = byWeek.get(row.weekId)
-        if (bucket) bucket.upliftUnits += Math.round((row.secondary || 0) * event.upliftPercent / 100)
+      const impact = applyDemandEvents(row.secondary, events, {
+        weekId: row.weekId,
+        skuId: row.skuId,
+        channelId: row.distributorId,
+        category: row.category,
+        regionIds: [row.regionId, row.region].filter(Boolean),
       })
+      byWeek.get(row.weekId).upliftUnits += impact.upliftQty
     })
     return Array.from(byWeek.values()).sort((a, b) => a.weekId.localeCompare(b.weekId)).map((row) => ({ ...row, adjusted: row.baseline + row.upliftUnits }))
-  }, [events, weekly])
+  }, [events, weekly, weeks])
 
   const createEvent = async () => {
     await onCreate({ ...draft, upliftPercent: Number(draft.upliftPercent), affectedSkus: draft.skuId === 'all' ? [] : [draft.skuId], affectedChannels: draft.channelId === 'all' ? [] : [draft.channelId] })
@@ -1017,7 +1023,7 @@ function EventCalendarPanel({ events, weekly, weeks, skus, distributors, onCreat
     <Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">Baseline Forecast + Event Uplift Overlay</CardTitle><CardDescription>Only matching SKU, channel and week ranges receive each event's uplift.</CardDescription></CardHeader><CardContent><ResponsiveContainer width="100%" height={300}><AreaChart data={overlay}><CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} /><XAxis dataKey="week" tick={{ fontSize: 10, fill: '#64748b' }} interval={2} /><YAxis tick={{ fontSize: 10, fill: '#64748b' }} tickFormatter={(v) => `${Math.round(v / 1000)}k`} /><Tooltip /><Legend /><Area type="monotone" dataKey="baseline" name="Baseline Forecast" stroke="#64748b" fill="#cbd5e1" fillOpacity={0.2} /><Area type="monotone" dataKey="adjusted" name="Event-Adjusted Forecast" stroke="#c026d3" fill="#e879f9" fillOpacity={0.2} /></AreaChart></ResponsiveContainer></CardContent></Card>
     <Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">Managed Event Calendar</CardTitle><CardDescription>Persisted promotion assumptions used by Demand Factors.</CardDescription></CardHeader><CardContent><DataTable columns={[{ key: 'eventName', label: 'Event' }, { key: 'eventType', label: 'Type' }, { key: 'window', label: 'Week Range' }, { key: 'scope', label: 'Scope' }, { key: 'upliftPercent', label: 'Uplift' }, { key: 'status', label: 'Status' }, { key: 'accuracy', label: 'Post-event Accuracy' }]} rows={events} renderCell={(col, row) => {
       if (col.key === 'window') return `${row.startWeek} → ${row.endWeek}`
-      if (col.key === 'scope') return <span className="text-xs">{row.affectedSkus.length ? `${row.affectedSkus.length} SKUs` : 'All SKUs'} · {row.affectedChannels.length ? `${row.affectedChannels.length} channels` : 'All channels'}</span>
+      if (col.key === 'scope') { const skuScope = row.skuIds || row.affectedSkus || []; const channelScope = row.channelIds || row.affectedChannels || []; return <span className="text-xs">{skuScope.length ? `${skuScope.length} SKUs` : 'All SKUs'} · {channelScope.length ? `${channelScope.length} channels` : 'All channels'}</span> }
       if (col.key === 'upliftPercent') return <Input className="h-8 w-20" type="number" defaultValue={row.upliftPercent} onBlur={(e) => onUpdate(row.eventId, { upliftPercent: Number(e.target.value) })} />
       if (col.key === 'status') return <Select value={row.status} onValueChange={(value) => onUpdate(row.eventId, { status: value })}><SelectTrigger className="h-8 w-[120px]"><SelectValue /></SelectTrigger><SelectContent>{['PLANNED', 'ACTIVE', 'COMPLETED', 'CANCELLED'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
       if (col.key === 'accuracy') return row.actualUpliftPercent == null ? '—' : `${Math.max(0, 100 - Math.abs(row.actualUpliftPercent - row.upliftPercent)).toFixed(0)}%`
@@ -1072,12 +1078,10 @@ function DemandConsensusPanel({ workflows, onAction }) {
 }
 
 // =============== SUB-PAGE: DEMAND PLANNING KPI DASHBOARD ===============
-function DemandPlanningKpiDashboard({ weekly, events, norms, workflows, npiForecasts, integrations }) {
-  const actual = weekly.reduce((sum, row) => sum + (row.tertiary || 0), 0)
-  const forecast = weekly.reduce((sum, row) => sum + (row.secondary || 0), 0)
-  const valid = weekly.filter((row) => row.tertiary)
-  const mape = valid.length ? valid.reduce((sum, row) => sum + Math.abs((row.secondary || 0) - row.tertiary) / row.tertiary, 0) / valid.length * 100 : 0
-  const bias = actual ? (forecast - actual) / actual * 100 : 0
+function DemandPlanningKpiDashboard({ forecastAccuracy, events, norms, workflows, npiForecasts, integrations }) {
+  const mape = forecastAccuracy.length ? forecastAccuracy.reduce((sum, row) => sum + Number(row.absolutePctError || 0), 0) / forecastAccuracy.length * 100 : 0
+  const bias = forecastAccuracy.length ? forecastAccuracy.reduce((sum, row) => sum + Number(row.biasPct || 0), 0) / forecastAccuracy.length * 100 : 0
+  const storedAccuracy = forecastAccuracy.length ? forecastAccuracy.reduce((sum, row) => sum + Number(row.accuracyPct || 0), 0) / forecastAccuracy.length * 100 : 0
   const pct = (part, total) => total ? Math.round(part / total * 100) : 0
   const consensusCompliance = pct(workflows.filter((row) => row.status === 'LOCKED').length, workflows.length)
   const normAdherence = pct(norms.filter((row) => row.normStatus === 'HEALTHY').length, norms.length)
@@ -1085,7 +1089,7 @@ function DemandPlanningKpiDashboard({ weekly, events, norms, workflows, npiForec
   const completedEvents = events.filter((row) => row.actualUpliftPercent != null)
   const eventAccuracy = completedEvents.length ? Math.round(completedEvents.reduce((sum, row) => sum + Math.max(0, 100 - Math.abs(row.actualUpliftPercent - row.upliftPercent)), 0) / completedEvents.length) : 0
   const channelFreshness = pct(integrations.filter((row) => row.healthStatus === 'HEALTHY').length, integrations.length)
-  const chartRows = [{ metric: 'Forecast accuracy', value: Math.max(0, 100 - mape) }, { metric: 'Consensus compliance', value: consensusCompliance }, { metric: 'Norm adherence', value: normAdherence }, { metric: 'NPI readiness', value: npiReadiness }, { metric: 'Event accuracy', value: eventAccuracy }, { metric: 'Channel freshness', value: channelFreshness }]
+  const chartRows = [{ metric: 'Forecast accuracy', value: storedAccuracy }, { metric: 'Consensus compliance', value: consensusCompliance }, { metric: 'Norm adherence', value: normAdherence }, { metric: 'NPI readiness', value: npiReadiness }, { metric: 'Event accuracy', value: eventAccuracy }, { metric: 'Channel freshness', value: channelFreshness }]
   return <div className="space-y-6"><div><h3 className="text-lg font-semibold text-slate-900">Demand Planning KPI Dashboard</h3><p className="text-sm text-slate-500">Executive close-out view across forecast quality, governance, inventory norms, events and channel data.</p></div><div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4"><KpiCard title="Forecast MAPE" value={`${mape.toFixed(1)}%`} subtitle={`Bias ${bias >= 0 ? '+' : ''}${bias.toFixed(1)}%`} icon={CircleGauge} accent={mape <= 10 ? 'green' : 'amber'} /><KpiCard title="Consensus Compliance" value={`${consensusCompliance}%`} subtitle="Locked demand workflows" icon={CheckCircle2} accent="blue" /><KpiCard title="Inventory Norm Adherence" value={`${normAdherence}%`} subtitle="Actual DOS within norm band" icon={Target} accent="green" /><KpiCard title="NPI Readiness" value={`${npiReadiness}%`} subtitle="Average launch readiness" icon={Rocket} accent="purple" /><KpiCard title="Event Uplift Accuracy" value={`${eventAccuracy}%`} subtitle={`${completedEvents.length} completed event(s)`} icon={CalendarDays} accent="amber" /><KpiCard title="Channel Data Freshness" value={`${channelFreshness}%`} subtitle="Feeds within cadence SLA" icon={Database} accent="blue" /></div><Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">Demand Planning Health Scorecard</CardTitle><CardDescription>Comparable percentage view of the principal planning KPIs.</CardDescription></CardHeader><CardContent><ResponsiveContainer width="100%" height={320}><BarChart data={chartRows} layout="vertical"><CartesianGrid strokeDasharray="3 3" horizontal={false} /><XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} /><YAxis type="category" dataKey="metric" width={145} tick={{ fontSize: 11 }} /><Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} /><Bar dataKey="value" fill="#2563eb" radius={[0, 5, 5, 0]} /></BarChart></ResponsiveContainer></CardContent></Card></div>
 }
 
@@ -1111,6 +1115,10 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
   const [eventRows, setEventRows] = useState([])
   const [inventoryNormRows, setInventoryNormRows] = useState([])
   const [consensusRows, setConsensusRows] = useState([])
+  const [eventTemplates, setEventTemplates] = useState([])
+  const [forecastAccuracy, setForecastAccuracy] = useState([])
+  const [forecastVintages, setForecastVintages] = useState([])
+  const [forecastAccuracySummary, setForecastAccuracySummary] = useState(null)
   const [mastersLoading, setMastersLoading] = useState(true)
   const [mastersError, setMastersError] = useState(null)
 
@@ -1119,7 +1127,7 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
     async function loadDemandMasters() {
       try {
         setMastersLoading(true)
-        const [integrationRes, listingsRes, lifecycleRes, npiRes, eventsRes, normsRes, consensusRes] = await Promise.all([
+        const [integrationRes, listingsRes, lifecycleRes, npiRes, eventsRes, normsRes, consensusRes, templatesRes, accuracyRes, vintagesRes] = await Promise.all([
           fetch('/api/demand/channel-integrations'),
           fetch('/api/demand/listings'),
           fetch('/api/demand/lifecycle'),
@@ -1127,8 +1135,11 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
           fetch('/api/demand/events'),
           fetch('/api/demand/inventory-norms'),
           fetch('/api/demand/consensus-workflows'),
+          fetch('/api/demand/event-templates'),
+          fetch('/api/demand/forecast-accuracy'),
+          fetch('/api/demand/forecast-vintages'),
         ])
-        const [integrationJson, listingsJson, lifecycleJson, npiJson, eventsJson, normsJson, consensusJson] = await Promise.all([integrationRes.json(), listingsRes.json(), lifecycleRes.json(), npiRes.json(), eventsRes.json(), normsRes.json(), consensusRes.json()])
+        const [integrationJson, listingsJson, lifecycleJson, npiJson, eventsJson, normsJson, consensusJson, templatesJson, accuracyJson, vintagesJson] = await Promise.all([integrationRes.json(), listingsRes.json(), lifecycleRes.json(), npiRes.json(), eventsRes.json(), normsRes.json(), consensusRes.json(), templatesRes.json(), accuracyRes.json(), vintagesRes.json()])
         if (!integrationRes.ok || !listingsRes.ok || !lifecycleRes.ok || !npiRes.ok || !eventsRes.ok || !normsRes.ok || !consensusRes.ok) throw new Error(integrationJson.error || listingsJson.error || lifecycleJson.error || npiJson.error || eventsJson.error || normsJson.error || consensusJson.error || 'Failed to load demand planning masters')
         if (!cancelled) {
           setIntegrationRows(integrationJson.rows || [])
@@ -1138,6 +1149,9 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
           setEventRows(eventsJson.rows || [])
           setInventoryNormRows(normsJson.rows || [])
           setConsensusRows(consensusJson.rows || [])
+          setEventTemplates(templatesJson.rows || [])
+          setForecastAccuracy(accuracyJson.rows || [])
+          setForecastVintages(vintagesJson.rows || [])
           setMastersError(null)
         }
       } catch (error) {
@@ -1149,6 +1163,19 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
     loadDemandMasters()
     return () => { cancelled = true }
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    const params = new URLSearchParams({ horizonWeeks: '4' })
+    if (skuFilter !== 'all') params.set('skuId', skuFilter)
+    if (region !== 'all') params.set('region', region)
+    fetch(`/api/demand/forecast-accuracy?${params}`).then((response) => response.json()).then((payload) => {
+      if (!cancelled) setForecastAccuracySummary(payload.summary || null)
+    }).catch(() => {
+      if (!cancelled) setForecastAccuracySummary(null)
+    })
+    return () => { cancelled = true }
+  }, [skuFilter, region])
 
   const handleListingChange = useCallback(async (listingId, changes) => {
     const response = await fetch('/api/demand/listings', {
@@ -1236,12 +1263,28 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
     })
   }, [data.weekly, region, skuFilter])
 
+  const activeScenarioLines = useMemo(() => {
+    const allowedChannels = new Set((data.distributors || []).filter((item) => region === 'all' || item.region === region).map((item) => item.id))
+    return (data.activeScenario?.outputLines || []).filter((line) => (skuFilter === 'all' || line.skuId === skuFilter) && (!allowedChannels.size || allowedChannels.has(line.channelId)))
+  }, [data.activeScenario, data.distributors, region, skuFilter])
+
   const weeklySeries = useMemo(() => {
     const byWeek = new Map()
+    if (activeScenarioLines.length) {
+      activeScenarioLines.forEach((line) => {
+        const value = byWeek.get(line.weekId) || { label: line.weekId, actual: 0, forecast: 0 }
+        value.forecast += Number(line.scenarioDemandQty || 0)
+        byWeek.set(line.weekId, value)
+      })
+      rows.forEach((row) => {
+        if (byWeek.has(row.weekId)) byWeek.get(row.weekId).actual += Number(row.tertiary || 0)
+      })
+    } else {
     for (const r of rows) {
       if (!byWeek.has(r.weekId)) byWeek.set(r.weekId, { label: r.weekLabel, actual: 0, forecast: 0 })
       byWeek.get(r.weekId).actual += Number(r.tertiary || 0)
       byWeek.get(r.weekId).forecast += Number(r.secondary || 0)
+    }
     }
     const arr = Array.from(byWeek.entries()).sort(([a], [b]) => (a > b ? 1 : -1))
     return arr.map(([, v]) => {
@@ -1254,10 +1297,24 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
         adjusted: Math.round(forecast * adjMult),
       }
     })
-  }, [rows, adjMult])
+  }, [rows, adjMult, activeScenarioLines])
 
   // SKU-level aggregations incl. growth, accuracy, weekly mini trend
   const skuDetail = useMemo(() => {
+    const scenarioBySku = new Map()
+    activeScenarioLines.forEach((line) => {
+      const value = scenarioBySku.get(line.skuId) || { total: 0, weeks: new Map() }
+      value.total += Number(line.scenarioDemandQty || 0)
+      value.weeks.set(line.weekId, (value.weeks.get(line.weekId) || 0) + Number(line.scenarioDemandQty || 0))
+      scenarioBySku.set(line.skuId, value)
+    })
+    const accuracyBySku = new Map()
+    forecastAccuracy.filter((row) => row.horizonWeeks === 4).forEach((row) => {
+      const value = accuracyBySku.get(row.skuId) || { storedAccuracyTotal: 0, rowCount: 0 }
+      value.storedAccuracyTotal += Number(row.accuracyPct || 0)
+      value.rowCount += 1
+      accuracyBySku.set(row.skuId, value)
+    })
     const byKey = new Map()
     for (const r of rows) {
       if (!byKey.has(r.skuId)) {
@@ -1287,39 +1344,42 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
       const recent = weekly.slice(half).reduce((s, w) => s + w.actual, 0)
       const growth = earlier ? ((recent - earlier) / earlier) * 100 : 0
 
-      // MAPE-style accuracy per week then averaged
-      const mape = weekly.reduce((s, w) => s + (w.actual ? Math.abs(w.forecast - w.actual) / w.actual : 0), 0)
-      const accuracy = Math.max(50, Math.min(99, Math.round(100 - (mape / weekly.length) * 100)))
+      const storedAccuracy = accuracyBySku.get(id)
+      const accuracy = storedAccuracy?.rowCount ? storedAccuracy.storedAccuracyTotal / storedAccuracy.rowCount * 100 : 0
 
-      const adjustedForecast = Math.round(e.forecast * adjMult)
+      const scenario = scenarioBySku.get(id)
+      const selectedForecast = scenario?.total ?? e.forecast
+      const selectedWeekly = scenario ? [...scenario.weeks.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([weekId, forecast]) => ({ weekLabel: weekId, actual: 0, forecast })) : weekly
+      const adjustedForecast = Math.round(selectedForecast * adjMult)
       return {
         sku: id,
         name: e.name,
         category: e.category,
         actual: e.actual,
-        forecast: e.forecast,
+        forecast: selectedForecast,
         adjusted: adjustedForecast,
         accuracy,
         growth,
         trend: growth > 2 ? '↗' : growth < -2 ? '↘' : '→',
-        sparkline: weekly.map((w) => ({ w: w.weekLabel, a: w.actual, f: w.forecast })),
+        sparkline: selectedWeekly.map((w) => ({ w: w.weekLabel, a: w.actual, f: w.forecast })),
       }
     }).sort((a, b) => b.actual - a.actual)
-  }, [rows, adjMult])
+  }, [rows, adjMult, forecastAccuracy, activeScenarioLines])
 
   // KPIs
   const totalActual = skuDetail.reduce((s, r) => s + r.actual, 0)
   const totalForecast = skuDetail.reduce((s, r) => s + r.forecast, 0)
   const totalAdjusted = skuDetail.reduce((s, r) => s + r.adjusted, 0)
-  const meanAcc = skuDetail.length ? Math.round(skuDetail.reduce((s, r) => s + r.accuracy, 0) / skuDetail.length) : 0
+  const displayedMape = Number(forecastAccuracySummary?.mapePct ?? 0)
+  const displayedAccuracy = Number(forecastAccuracySummary?.accuracyPct ?? 0)
   const avgGrowth = skuDetail.length ? skuDetail.reduce((s, r) => s + r.growth, 0) / skuDetail.length : 0
-  const bias = totalActual ? ((totalForecast - totalActual) / totalActual) * 100 : 0
+  const bias = Number(forecastAccuracySummary?.biasPct ?? 0)
 
   return (
     <div>
       <SectionHeader
         title="Demand Planning"
-        description={`Forecast planning for ${skuDetail.length} SKU${skuDetail.length !== 1 ? 's' : ''} · ${region === 'all' ? 'all regions' : region}`}
+        description={`Forecast planning for ${skuDetail.length} SKU${skuDetail.length !== 1 ? 's' : ''} · ${region === 'all' ? 'all regions' : region}${data.activeScenario ? ` · Active scenario: ${data.activeScenario.name}` : ''}`}
         actions={
           <>
             <Select value={region} onValueChange={setRegion}>
@@ -1380,13 +1440,13 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
               accent="green"
             />
             <KpiCard
-              title="Forecast Accuracy"
-              value={`${meanAcc}%`}
-              subtitle={`bias ${bias >= 0 ? '+' : ''}${bias.toFixed(1)}%`}
-              trend={meanAcc >= 85 ? 'up' : 'down'}
-              change={meanAcc >= 90 ? 'Healthy' : meanAcc >= 80 ? 'Acceptable' : 'Needs review'}
+              title="Forecast MAPE"
+              value={`${displayedMape.toFixed(1)}%`}
+              subtitle={`Stored bias ${bias >= 0 ? '+' : ''}${bias.toFixed(1)}% · H4`}
+              trend={displayedMape <= 15 ? 'up' : 'down'}
+              change={displayedAccuracy >= 90 ? 'Healthy' : displayedAccuracy >= 80 ? 'Acceptable' : 'Needs review'}
               icon={GitBranch}
-              accent={meanAcc >= 90 ? 'green' : meanAcc >= 80 ? 'amber' : 'rose'}
+              accent={displayedMape <= 10 ? 'green' : displayedMape <= 20 ? 'amber' : 'rose'}
             />
             <KpiCard
               title="Growth Trend"
@@ -1538,7 +1598,7 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
                         <div className="h-1.5 w-20 bg-slate-100 rounded-full overflow-hidden">
                           <div className={`h-full ${color}`} style={{ width: `${row.accuracy}%` }} />
                         </div>
-                        <span className="text-xs text-slate-600 font-medium w-8">{row.accuracy}%</span>
+                        <span className="text-xs text-slate-600 font-medium w-10">{row.accuracy.toFixed(1)}%</span>
                       </div>
                     )
                   }
@@ -1560,7 +1620,7 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
         </TabsContent>}
 
         {allowSection('intelligence') && <TabsContent value="ai-ml" className="mt-0">
-          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading forecast intelligence…</CardContent></Card> : <ForecastIntelligencePanel weekly={data.weekly || []} distributors={data.distributors || []} skus={data.skus || []} lifecycle={lifecycleRows} />}
+          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading forecast intelligence…</CardContent></Card> : <ForecastIntelligencePanel forecastAccuracy={forecastAccuracy} forecastVintages={forecastVintages} distributors={data.distributors || []} skus={data.skus || []} lifecycle={lifecycleRows} />}
         </TabsContent>}
 
         {allowSection('npi-lifecycle') && <TabsContent value="npi-lifecycle" className="mt-0">
@@ -1568,7 +1628,7 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
         </TabsContent>}
 
         {allowSection('events') && <TabsContent value="events" className="mt-0">
-          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading event calendar…</CardContent></Card> : <EventCalendarPanel events={eventRows} weekly={data.weekly || []} weeks={data.weeks || []} skus={data.skus || []} distributors={data.distributors || []} onCreate={handleEventCreate} onUpdate={handleEventUpdate} />}
+          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading event calendar…</CardContent></Card> : <EventCalendarPanel events={eventRows} templates={eventTemplates} weekly={data.weekly || []} weeks={data.weeks || []} skus={data.skus || []} distributors={data.distributors || []} onCreate={handleEventCreate} onUpdate={handleEventUpdate} />}
         </TabsContent>}
 
         {allowSection('norms') && <TabsContent value="inventory-norms" className="mt-0">
@@ -1593,7 +1653,7 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
         </TabsContent>}
 
         {allowSection('kpis') && <TabsContent value="kpi-dashboard" className="mt-0">
-          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading demand planning KPIs…</CardContent></Card> : <DemandPlanningKpiDashboard weekly={data.weekly || []} events={eventRows} norms={inventoryNormRows} workflows={consensusRows} npiForecasts={npiForecasts} integrations={integrationRows} />}
+          {mastersError ? <Card><CardContent className="p-8 text-sm text-rose-600">{mastersError}</CardContent></Card> : mastersLoading ? <Card><CardContent className="p-10 text-sm text-slate-500 text-center">Loading demand planning KPIs…</CardContent></Card> : <DemandPlanningKpiDashboard forecastAccuracy={forecastAccuracy} events={eventRows} norms={inventoryNormRows} workflows={consensusRows} npiForecasts={npiForecasts} integrations={integrationRows} />}
         </TabsContent>}
       </Tabs>
     </div>
@@ -2941,7 +3001,7 @@ function InventoryAdvancedPlanningTabs({ planning, planningLoading, cadence, set
         <div className="space-y-1.5"><label className="text-xs font-medium text-slate-600">Target DOS adjustment</label><Input type="number" min="-30" max="60" value={scenarioInputs.dosAdjustmentDays} onChange={(e) => setScenarioInputs((value) => ({ ...value, dosAdjustmentDays: e.target.value }))} /></div>
         <div className="space-y-1.5"><label className="text-xs font-medium text-slate-600">Inbound PO realization %</label><Input type="number" min="0" max="120" value={scenarioInputs.inboundRealizationPct} onChange={(e) => setScenarioInputs((value) => ({ ...value, inboundRealizationPct: e.target.value }))} /></div>
       </div></CardContent></Card>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4"><Card className="border-slate-200/70 shadow-sm xl:col-span-2"><CardHeader className="pb-2"><CardTitle className="text-base">Projected Closing Inventory</CardTitle><CardDescription>Portfolio units after forecast demand, realized inbound POs, and policy replenishment.</CardDescription></CardHeader><CardContent className="h-[320px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={scenarioChartData}><CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" /><XAxis dataKey="week" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} tickFormatter={(value) => fmtNum(value)} /><Tooltip formatter={(value) => fmtNum(value)} /><Legend />{[['Lean','#f59e0b'],['Baseline','#2563eb'],['Resilient','#10b981'],['Custom','#8b5cf6']].map(([name, color]) => <Line key={name} type="monotone" dataKey={name} stroke={color} strokeWidth={2} dot={false} />)}</LineChart></ResponsiveContainer></CardContent></Card><Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">Scenario Comparison</CardTitle><CardDescription>Inventory-service trade-off at week 12.</CardDescription></CardHeader><CardContent className="space-y-3">{(planning?.scenarios || []).map((scenario) => <div key={scenario.name} className="rounded-lg border border-slate-200 p-3"><div className="flex items-center justify-between"><p className="font-medium text-slate-900">{scenario.name}</p><Badge variant="secondary">{fmtNum(scenario.summary.endingInventoryUnits)} ending</Badge></div><div className="grid grid-cols-2 gap-2 mt-2 text-xs text-slate-500"><span>Avg inventory</span><span className="text-right text-slate-700">{fmtNum(scenario.summary.averageInventoryUnits)}</span><span>Lost demand</span><span className={`text-right ${scenario.summary.lostDemandUnits ? 'text-rose-600 font-medium' : 'text-emerald-600'}`}>{fmtNum(scenario.summary.lostDemandUnits)}</span></div></div>)}</CardContent></Card></div>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4"><Card className="border-slate-200/70 shadow-sm xl:col-span-2"><CardHeader className="pb-2"><CardTitle className="text-base">Projected Closing Inventory</CardTitle><CardDescription>Portfolio units after forecast demand, realized inbound POs, and policy replenishment.</CardDescription></CardHeader><CardContent className="h-[320px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={scenarioChartData}><CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" /><XAxis dataKey="week" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} tickFormatter={(value) => fmtNum(value)} /><Tooltip formatter={(value) => fmtNum(value)} /><Legend />{[['Lean', '#f59e0b'], ['Baseline', '#2563eb'], ['Resilient', '#10b981'], ['Custom', '#8b5cf6']].map(([name, color]) => <Line key={name} type="monotone" dataKey={name} stroke={color} strokeWidth={2} dot={false} />)}</LineChart></ResponsiveContainer></CardContent></Card><Card className="border-slate-200/70 shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-base">Scenario Comparison</CardTitle><CardDescription>Inventory-service trade-off at week 12.</CardDescription></CardHeader><CardContent className="space-y-3">{(planning?.scenarios || []).map((scenario) => <div key={scenario.name} className="rounded-lg border border-slate-200 p-3"><div className="flex items-center justify-between"><p className="font-medium text-slate-900">{scenario.name}</p><Badge variant="secondary">{fmtNum(scenario.summary.endingInventoryUnits)} ending</Badge></div><div className="grid grid-cols-2 gap-2 mt-2 text-xs text-slate-500"><span>Avg inventory</span><span className="text-right text-slate-700">{fmtNum(scenario.summary.averageInventoryUnits)}</span><span>Lost demand</span><span className={`text-right ${scenario.summary.lostDemandUnits ? 'text-rose-600 font-medium' : 'text-emerald-600'}`}>{fmtNum(scenario.summary.lostDemandUnits)}</span></div></div>)}</CardContent></Card></div>
     </TabsContent>
     <TabsContent value="health" className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
@@ -3101,15 +3161,16 @@ function InventoryPlanningPage() {
       </div>
 
       <Card className="border-slate-200/70 shadow-sm">
-        <CardHeader className="pb-3"><div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><CardTitle className="text-base">Inventory Norm Policy Workbench</CardTitle><CardDescription>System suggestions remain visible beside effective planner-controlled norms.</CardDescription></div><div className="flex gap-2"><Select value={category} onValueChange={setCategory}><SelectTrigger className="w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger><SelectContent><SelectItem value="all">All categories</SelectItem>{categories.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select><Select value={segment} onValueChange={setSegment}><SelectTrigger className="w-[135px]"><SelectValue placeholder="Segment" /></SelectTrigger><SelectContent><SelectItem value="all">All segments</SelectItem>{['AX','AY','AZ','BX','BY','BZ','CX','CY','CZ'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select></div></div></CardHeader>
+        <CardHeader className="pb-3"><div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><CardTitle className="text-base">Inventory Norm Policy Workbench</CardTitle><CardDescription>Canonical SKU lifecycle stage adjusts policy and exposes the matching forecast method beside planner-controlled norms.</CardDescription></div><div className="flex gap-2"><Select value={category} onValueChange={setCategory}><SelectTrigger className="w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger><SelectContent><SelectItem value="all">All categories</SelectItem>{categories.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select><Select value={segment} onValueChange={setSegment}><SelectTrigger className="w-[135px]"><SelectValue placeholder="Segment" /></SelectTrigger><SelectContent><SelectItem value="all">All segments</SelectItem>{['AX', 'AY', 'AZ', 'BX', 'BY', 'BZ', 'CX', 'CY', 'CZ'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select></div></div></CardHeader>
         <CardContent>
-          {loading ? <div className="py-12 text-center text-sm text-slate-500">Optimizing inventory policies…</div> : <DataTable columns={[{ key: 'skuName', label: 'Product' }, { key: 'segment', label: 'Segment' }, { key: 'demand', label: 'Demand / CV' }, { key: 'leadTimeDays', label: 'Lead Time' }, { key: 'dos', label: 'Suggested / Effective DOS' }, { key: 'safety', label: 'Suggested / Effective SS' }, { key: 'currentInventoryUnits', label: 'Inventory / ROP' }, { key: 'inventoryStatus', label: 'Status' }, { key: 'action', label: '' }]} rows={visibleRows} renderCell={(col, row) => {
+          {loading ? <div className="py-12 text-center text-sm text-slate-500">Optimizing inventory policies…</div> : <DataTable columns={[{ key: 'skuName', label: 'Product' }, { key: 'lifecycle', label: 'Lifecycle / Forecast' }, { key: 'segment', label: 'Segment' }, { key: 'demand', label: 'Demand / CV' }, { key: 'leadTimeDays', label: 'Lead Time' }, { key: 'dos', label: 'Suggested / Effective DOS' }, { key: 'safety', label: 'Suggested / Effective SS' }, { key: 'currentInventoryUnits', label: 'Inventory / ROP' }, { key: 'inventoryStatus', label: 'Status' }, { key: 'action', label: '' }]} rows={visibleRows} renderCell={(col, row) => {
             if (col.key === 'skuName') return <div><p className="font-medium text-slate-900">{row.skuName}</p><p className="text-xs text-slate-500">{row.category}</p></div>
+            if (col.key === 'lifecycle') return <div><Badge variant="secondary">{row.lifecycleStage}</Badge><p className="mt-1 font-mono text-[10px] text-violet-700">{row.forecastMethod}</p></div>
             if (col.key === 'segment') return <div><Badge className={segmentStyle(row.segment)}>{row.segment}</Badge><p className="text-[11px] text-slate-500 mt-1">{row.velocityClass} · {row.variabilityClass}</p></div>
             if (col.key === 'demand') return <div><p>{fmtNum(row.avgWeeklyDemand)} / week</p><p className="text-xs text-slate-500">CV {row.demandCv.toFixed(2)}</p></div>
             if (col.key === 'leadTimeDays') return <div><p>{row.leadTimeDays} days</p><p className="text-[11px] text-slate-500 max-w-[140px] truncate" title={row.leadTimeSource}>{row.leadTimeSource}</p></div>
             if (col.key === 'dos') return <div><p>{row.suggestedDos} / <span className="font-semibold text-blue-700">{row.effectiveDos}</span> days</p>{row.overrideDos !== null && <p className="text-[11px] text-blue-600">Planner override</p>}</div>
-            if (col.key === 'safety') return <div><p>{fmtNum(row.suggestedSafetyStockUnits)} / <span className="font-semibold text-blue-700">{fmtNum(row.effectiveSafetyStockUnits)}</span></p><p className="text-[11px] text-slate-500">{row.serviceLevelTargetPct}% service</p></div>
+            if (col.key === 'safety') return <div><p>{fmtNum(row.suggestedSafetyStockUnits)} / <span className="font-semibold text-blue-700">{fmtNum(row.effectiveSafetyStockUnits)}</span></p><p className="text-[11px] text-slate-500">{row.lifecycleSafetyStockMultiplier}× lifecycle · {row.serviceLevelTargetPct}% service</p></div>
             if (col.key === 'currentInventoryUnits') return <div><p>{fmtNum(row.currentInventoryUnits)} units</p><p className="text-[11px] text-slate-500">ROP {fmtNum(row.reorderPointUnits)}</p></div>
             if (col.key === 'inventoryStatus') return <Badge className={statusStyle(row.inventoryStatus)}>{row.inventoryStatus}</Badge>
             if (col.key === 'action') return <Button size="sm" variant="outline" onClick={() => openPolicy(row)}>Configure</Button>
@@ -3154,7 +3215,7 @@ function FinancialPage({ data }) {
       setPlanningConfig(config)
       if (Number.isFinite(Number(config.schemeCostPerUnit))) setSchemePerUnit([Number(config.schemeCostPerUnit)])
       if (Number.isFinite(Number(config.logisticsCostPerUnit))) setLogisticsPerUnit([Number(config.logisticsCostPerUnit)])
-    }).catch(() => {})
+    }).catch(() => { })
   }, [])
 
   const businessCategoryMap = planningConfig?.businessCategoryMap || {
@@ -3714,8 +3775,26 @@ function ScenarioPage({ data }) {
   const [demand, setDemand] = useState([5])
   const [cost, setCost] = useState([0])
   const [capacity, setCapacity] = useState([0])
+  const [publishedScenarioId, setPublishedScenarioId] = useState(data.activeScenario?.scenarioVersionId || null)
+  const [publishingScenarioId, setPublishingScenarioId] = useState(null)
+  const [publishError, setPublishError] = useState('')
+  useEffect(() => { setPublishedScenarioId(data.activeScenario?.scenarioVersionId || null) }, [data.activeScenario?.scenarioVersionId])
 
   const scenarios = buildWhatIfScenarioComparison(data.kpis, { demandPct: demand[0], costPct: cost[0], capacityPct: capacity[0] })
+  const publishScenario = async (scenarioVersionId) => {
+    setPublishingScenarioId(scenarioVersionId)
+    setPublishError('')
+    try {
+      const response = await fetch('/api/scenarios/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenarioVersionId, actor: 'sop.lead@boat.com' }) })
+      const payload = await response.json()
+      if (!response.ok) throw new Error(payload.error || 'Scenario publication failed')
+      setPublishedScenarioId(payload.activeScenarioVersionId)
+    } catch (error) {
+      setPublishError(error.message)
+    } finally {
+      setPublishingScenarioId(null)
+    }
+  }
 
   return (
     <div>
@@ -3803,6 +3882,8 @@ function ScenarioPage({ data }) {
       <Card className="border-slate-200/70 shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Saved Scenarios</CardTitle>
+          <CardDescription>{publishedScenarioId ? `Published selection: ${publishedScenarioId}` : 'Publish a built scenario to select it for Dashboard and Demand Planning.'}</CardDescription>
+          {publishError && <p className="text-xs text-rose-600">{publishError}</p>}
         </CardHeader>
         <CardContent>
           <DataTable
@@ -3813,6 +3894,7 @@ function ScenarioPage({ data }) {
               { key: 'gm', label: 'GM Δ' },
               { key: 'updated', label: 'Updated' },
               { key: 'status', label: 'Status' },
+              { key: 'publish', label: 'Publish' },
             ]}
             rows={(data.scenarios || []).map((scenario) => ({
               name: scenario.scenarioName,
@@ -3821,6 +3903,9 @@ function ScenarioPage({ data }) {
               gm: scenario.costVarianceInr == null ? 'Not calculated' : fmtMoney(-scenario.costVarianceInr),
               updated: scenario.updatedAt ? new Date(scenario.updatedAt).toLocaleDateString() : '',
               status: scenario.status || 'Stored',
+              scenarioVersionId: scenario.scenarioVersionId,
+              runAt: scenario.runAt,
+              publish: publishedScenarioId === scenario.scenarioVersionId ? 'Published' : 'Publish',
             }))}
             renderCell={(col, row) => {
               if (col.key === 'status') {
@@ -3831,6 +3916,7 @@ function ScenarioPage({ data }) {
                 const pos = !row[col.key].startsWith('-')
                 return <span className={pos ? 'text-emerald-600 font-medium' : 'text-rose-600 font-medium'}>{row[col.key]}</span>
               }
+              if (col.key === 'publish') return <Button size="sm" disabled={row.publish === 'Published' || !row.runAt || ['DRAFT', 'RUNNING'].includes(row.status) || publishingScenarioId === row.scenarioVersionId} onClick={() => publishScenario(row.scenarioVersionId)}>{row.publish === 'Published' ? 'Published' : publishingScenarioId === row.scenarioVersionId ? 'Publishing…' : 'Publish'}</Button>
               return row[col.key]
             }}
           />
@@ -3869,6 +3955,16 @@ function DemandFactorsPage({ data }) {
     promotions: true,
     location: false,
   })
+  const [canonicalEvents, setCanonicalEvents] = useState(data.demandEvents || [])
+  const [publishState, setPublishState] = useState({ loading: false, message: '' })
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/demand/events').then((response) => response.json()).then((payload) => {
+      if (!cancelled) setCanonicalEvents(payload.rows || [])
+    }).catch(() => { })
+    return () => { cancelled = true }
+  }, [])
 
   const fallbackSku = featuredSkus[0] || {
     id: 'SKU-BOAT-LD100',
@@ -3899,9 +3995,7 @@ function DemandFactorsPage({ data }) {
     'Portable Speakers': [0.90, 0.88, 0.92, 0.98, 1.02, 1.08, 1.12, 1.18, 1.24, 1.36, 1.42, 1.26],
   }
 
-  // Promotion schedule (weeks with active promotions)
-  const promotionWeeks = data.factorConfig?.promotionWeeks || [8, 9, 15, 16, 22, 23]
-  const promotionUplift = data.factorConfig?.promotionUplift || 1.4
+  const promotionEvents = canonicalEvents.filter((event) => event.status !== 'CANCELLED')
 
   // Regional multipliers
   const regionMultipliers = data.factorConfig?.regionMultipliers || {
@@ -3930,14 +4024,27 @@ function DemandFactorsPage({ data }) {
 
   const generateDemandData = () => {
     const byWeek = new Map()
-    ;(data.weekly || []).filter((row) => row.skuId === currentSku.id).forEach((row) => {
-      const current = byWeek.get(row.weekId) || { week: row.weekId, base: 0, adjusted: 0, plcOnly: 0, withSeasonal: 0, hasPromo: false }
-      current.base += Number(row.secondary || 0)
-      current.adjusted += Number(row.tertiary || 0)
-      current.plcOnly += Number(row.secondary || 0)
-      current.withSeasonal += Number(row.tertiary || 0)
-      byWeek.set(row.weekId, current)
-    })
+      ; (data.weekly || []).filter((row) => row.skuId === currentSku.id).forEach((row) => {
+        const impact = applyDemandFactorsAndEvents(row.secondary, promotionEvents, {
+          weekId: row.weekId,
+          weekStart: row.weekStart,
+          skuId: row.skuId,
+          channelId: row.distributorId,
+          category: row.category,
+          lifecycleStage: row.lifecycleStage || currentSku.lifecycleStage,
+          region: row.region,
+          regionIds: [row.regionId, row.region].filter(Boolean),
+        }, data.factorConfig || {}, factors)
+        const current = byWeek.get(row.weekId) || { week: row.weekId, base: 0, adjusted: 0, plcOnly: 0, withSeasonal: 0, hasPromo: false, promoRate: 0 }
+        current.base += Number(row.secondary || 0)
+        current.adjusted += factors.promotions ? impact.adjustedQty : Number(row.secondary || 0)
+        current.plcOnly += Number(row.secondary || 0)
+        current.withSeasonal += Number(row.tertiary || 0)
+        current.hasPromo ||= impact.appliedEventIds.length > 0
+        current.promoRate = Math.max(current.promoRate, impact.upliftPct)
+        current.appliedEventIds = [...new Set([...(current.appliedEventIds || []), ...impact.appliedEventIds])]
+        byWeek.set(row.weekId, current)
+      })
     return Array.from(byWeek.values()).sort((a, b) => a.week.localeCompare(b.week))
   }
 
@@ -3959,6 +4066,22 @@ function DemandFactorsPage({ data }) {
     setFactors(prev => ({ ...prev, [factor]: !prev[factor] }))
   }
 
+  const publishToConsensus = async () => {
+    setPublishState({ loading: true, message: '' })
+    try {
+      const response = await fetch('/api/demand/factor-adjusted-demand', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skuId: currentSku.id }),
+      })
+      const payload = await response.json()
+      if (!response.ok) throw new Error(payload.error || 'Could not publish adjusted demand')
+      setPublishState({ loading: false, message: `${payload.publishedWeeks} event-adjusted week(s) published to consensus.` })
+    } catch (error) {
+      setPublishState({ loading: false, message: error.message })
+    }
+  }
+
   const plcColors = {
     'New': 'bg-cyan-50 text-cyan-700 border-cyan-300',
     'Npi': 'bg-cyan-50 text-cyan-700 border-cyan-300',
@@ -3976,9 +4099,15 @@ function DemandFactorsPage({ data }) {
           <h2 className="text-2xl font-semibold text-slate-900">Demand Factors Analysis</h2>
           <p className="text-sm text-slate-500 mt-1">Visualize how PLC, seasonality, promotions, and location impact demand forecasting</p>
         </div>
-        <Badge className={`${plcColors[currentSku.plc] || plcColors['Mature']} text-xs font-semibold px-3 py-1.5`}>
-          {currentSku.plc} Stage · {((plcMultipliers[currentSku.plc] ?? 1.0) * 100).toFixed(0)}% multiplier
-        </Badge>
+        <div className="flex items-center gap-3">
+          {publishState.message && <span className="text-xs text-slate-600 max-w-[240px] text-right">{publishState.message}</span>}
+          <Button onClick={publishToConsensus} disabled={publishState.loading || !currentSku.id} className="gap-2">
+            <Send className="h-4 w-4" />{publishState.loading ? 'Publishing…' : 'Publish to Consensus'}
+          </Button>
+          <Badge className={`${plcColors[currentSku.plc] || plcColors['Mature']} text-xs font-semibold px-3 py-1.5`}>
+            {currentSku.plc} Stage · {((plcMultipliers[currentSku.plc] ?? 1.0) * 100).toFixed(0)}% multiplier
+          </Badge>
+        </div>
       </div>
 
       {/* SKU Selector & Factor Toggles */}
@@ -4077,7 +4206,7 @@ function DemandFactorsPage({ data }) {
                   <Megaphone className="h-4 w-4 text-rose-600" />
                   <div>
                     <div className="text-sm font-medium text-slate-900">Promotions</div>
-                    <div className="text-xs text-slate-500">+40% uplift during campaigns</div>
+                    <div className="text-xs text-slate-500">{Math.round(Math.max(0, ...promotionEvents.map(eventUpliftPct)) * 100)}% peak governed uplift</div>
                   </div>
                 </div>
                 <Button
@@ -4198,7 +4327,7 @@ function DemandFactorsPage({ data }) {
             <div className="mt-4 flex items-center gap-2 text-xs text-slate-600">
               <div className="flex items-center gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-rose-500" />
-                <span>Promotion Period (+40%)</span>
+                <span>Governed promotion period ({Math.round(Math.max(0, ...promotionEvents.map(eventUpliftPct)) * 100)}% peak)</span>
               </div>
             </div>
           )}
@@ -4241,7 +4370,7 @@ function DemandFactorsPage({ data }) {
                   <span className="text-sm font-medium">Promotions</span>
                 </div>
                 <span className={`text-sm font-semibold ${factors.promotions ? 'text-rose-600' : 'text-slate-400'}`}>
-                  {factors.promotions ? '+40%' : '—'}
+                  {factors.promotions ? `${Math.round(Math.max(0, ...promotionEvents.map(eventUpliftPct)) * 100)}% peak` : '—'}
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
@@ -4876,6 +5005,239 @@ function ChatbotPage({ data }) {
   )
 }
 
+// =============== NOTIFICATION CENTER ===============
+const INITIAL_NOTIFICATIONS = [
+  {
+    id: 'notif-1',
+    title: 'Capacity Deficit Warning (W36–W38)',
+    description: 'ODM Noida Plant-A line utilization projected at 108%. 14,200 units deficit on Airdopes 141.',
+    category: 'Supply Planning',
+    time: '10m ago',
+    unread: true,
+    severity: 'high',
+    type: 'alert',
+  },
+  {
+    id: 'notif-2',
+    title: 'Consensus Plan Pending Signoff',
+    description: 'Q3 Commercial Demand Plan (₹1,420M) submitted for executive review & lock.',
+    category: 'Demand Planning',
+    time: '45m ago',
+    unread: true,
+    severity: 'medium',
+    type: 'action',
+  },
+  {
+    id: 'notif-3',
+    title: 'Low DOS Threshold Breached',
+    description: 'Bassheads 100 in West Warehouse down to 11 DOS (Target Policy: 21 DOS).',
+    category: 'Inventory',
+    time: '2h ago',
+    unread: true,
+    severity: 'high',
+    type: 'warning',
+  },
+  {
+    id: 'notif-4',
+    title: 'Distributor Order Over Credit Limit',
+    description: 'Order #ORD-9842 from Reliance Retail (₹4.8M) requires commercial approval.',
+    category: 'Orders',
+    time: '4h ago',
+    unread: false,
+    severity: 'medium',
+    type: 'approval',
+  },
+  {
+    id: 'notif-5',
+    title: 'Festive Surge Scenario Simulated',
+    description: 'New What-If run "+15% Demand Uplift" completed. Projected Gross Margin Δ +₹18.4M.',
+    category: 'Scenario Studio',
+    time: '1d ago',
+    unread: false,
+    severity: 'low',
+    type: 'info',
+  },
+]
+
+function NotificationCenter() {
+  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS)
+  const [filter, setFilter] = useState('all')
+
+  const unreadCount = notifications.filter((n) => n.unread).length
+
+  const markAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
+  }
+
+  const toggleRead = (id) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, unread: !n.unread } : n))
+    )
+  }
+
+  const deleteNotification = (id, e) => {
+    e.stopPropagation()
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  const filteredNotifications = useMemo(() => {
+    if (filter === 'unread') return notifications.filter((n) => n.unread)
+    if (filter === 'alerts') return notifications.filter((n) => n.severity === 'high' || n.type === 'alert')
+    return notifications
+  }, [notifications, filter])
+
+  const iconMap = {
+    alert: AlertTriangle,
+    action: CheckCircle2,
+    warning: Warehouse,
+    approval: Package,
+    info: Sparkles,
+  }
+
+  const severityStyles = {
+    high: { iconBg: 'bg-rose-100 text-rose-600' },
+    medium: { iconBg: 'bg-amber-100 text-amber-600' },
+    low: { iconBg: 'bg-blue-100 text-blue-600' },
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" size="icon" className="relative hover:bg-slate-100">
+          <Bell className="h-5 w-5 text-slate-600" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white animate-pulse">
+              {unreadCount}
+            </span>
+          )}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent align="end" className="w-[380px] sm:w-[420px] p-0 shadow-xl border-slate-200 rounded-xl overflow-hidden z-50">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-sm text-slate-900">Notifications</h3>
+            {unreadCount > 0 && (
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-[11px] font-medium px-2 py-0.5">
+                {unreadCount} new
+              </Badge>
+            )}
+          </div>
+          {unreadCount > 0 && (
+            <button
+              onClick={markAllAsRead}
+              className="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
+            >
+              <CheckCheck className="h-3.5 w-3.5" />
+              Mark all read
+            </button>
+          )}
+        </div>
+
+        {/* Filter Pills */}
+        <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-slate-100">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+              filter === 'all' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            All ({notifications.length})
+          </button>
+          <button
+            onClick={() => setFilter('unread')}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+              filter === 'unread' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Unread ({notifications.filter((n) => n.unread).length})
+          </button>
+          <button
+            onClick={() => setFilter('alerts')}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+              filter === 'alerts' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Alerts ({notifications.filter((n) => n.severity === 'high' || n.type === 'alert').length})
+          </button>
+        </div>
+
+        {/* Notification List */}
+        <div className="max-h-[360px] overflow-y-auto divide-y divide-slate-100">
+          {filteredNotifications.length === 0 ? (
+            <div className="p-8 text-center text-slate-500 text-xs">
+              No notifications found in this view.
+            </div>
+          ) : (
+            filteredNotifications.map((item) => {
+              const IconComp = iconMap[item.type] || Bell
+              const style = severityStyles[item.severity] || severityStyles.low
+
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => toggleRead(item.id)}
+                  className={`group relative p-3.5 flex items-start gap-3 cursor-pointer transition-colors ${
+                    item.unread ? 'bg-blue-50/40 hover:bg-blue-50/80' : 'hover:bg-slate-50'
+                  }`}
+                >
+                  {/* Icon */}
+                  <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${style.iconBg}`}>
+                    <IconComp className="h-4 w-4" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0 pr-4">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="text-xs font-semibold text-slate-900 truncate">
+                        {item.title}
+                      </span>
+                      <span className="text-[10px] text-slate-400 shrink-0 font-mono">{item.time}</span>
+                    </div>
+
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                      {item.description}
+                    </p>
+
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">
+                        {item.category}
+                      </span>
+                      {item.unread && (
+                        <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" title="Unread" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Dismiss Button */}
+                  <button
+                    onClick={(e) => deleteNotification(item.id, e)}
+                    className="opacity-0 group-hover:opacity-100 absolute top-3 right-2 p-1 text-slate-400 hover:text-rose-500 rounded transition-opacity"
+                    title="Dismiss"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )
+            })
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-2.5 bg-slate-50 border-t border-slate-200 text-center">
+          <button
+            onClick={markAllAsRead}
+            className="text-xs text-slate-500 hover:text-slate-900 font-medium transition-colors"
+          >
+            Clear all unread flags
+          </button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 // =============== MAIN APP SHELL ===============
 function App() {
   const [active, setActive] = useState('dashboard')
@@ -4913,7 +5275,6 @@ function App() {
       case 'supply': return <SupplyPage data={data} />
       case 'inventory': return <InventoryPlanningPage />
       case 'financial': return <FinancialPage data={data} />
-      case 'scenario': return <ScenarioPage data={data} />
       case 'chatbot': return <ChatbotPage data={data} />
       default: return <DashboardPage data={data} workspaceRole={activeRole} />
     }
@@ -4927,7 +5288,7 @@ function App() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen sticky top-0">
         <div className="px-5 py-5 border-b border-slate-200">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center shadow-sm overflow-hidden">
+            <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center shadow-sm overflow-hidden">
               <Image src={BRAND_LOGO_URL} alt="boAt logo" width={36} height={36} className="h-full w-full object-contain" />
             </div>
             <div>
@@ -4996,10 +5357,7 @@ function App() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input placeholder="Search SKU, distributor, order..." className="pl-9 h-9 bg-slate-50 border-slate-200" />
             </div>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5 text-slate-600" />
-              <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-rose-500" />
-            </Button>
+            <NotificationCenter />
           </div>
         </header>
 

@@ -1,0 +1,32 @@
+[
+  {
+    "poNumber": "PUR-2026-01002",
+    "exclusionVersion": 1,
+    "exclusionCode": "PARTIAL_ACCEPT",
+    "reasonText": "Approved synthetic partial accept exclusion.",
+    "effectiveFrom": "2026-05-23T00:00:00.000Z",
+    "effectiveTo": null,
+    "flaggedBy": "sourcing.planner@boat.com",
+    "approvedBy": "sourcing.manager@boat.com",
+    "flaggedAt": "2026-05-23T08:00:00.000Z",
+    "clearedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01026",
+    "exclusionVersion": 1,
+    "exclusionCode": "QUALITY_REJECTION",
+    "reasonText": "Approved synthetic quality rejection exclusion.",
+    "effectiveFrom": "2026-05-31T00:00:00.000Z",
+    "effectiveTo": null,
+    "flaggedBy": "sourcing.planner@boat.com",
+    "approvedBy": "sourcing.manager@boat.com",
+    "flaggedAt": "2026-05-31T08:00:00.000Z",
+    "clearedAt": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

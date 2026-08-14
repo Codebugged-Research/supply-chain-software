@@ -13,7 +13,7 @@ The data is suitable for a small audio-and-wearables demo, but it is not yet a c
 | High | Portfolio breadth is too narrow | Important current boAt categories and the company's rapid SKU-launch cadence are absent. |
 | High | Distributor and channel model is not geographically or commercially representative | Five distributor-shaped records stand in for a pan-India, omnichannel network. |
 | High | Festive event timing contradicts the 2026 calendar | The stored “Diwali Audio Festival” runs in July, months before Diwali. |
-| High | XYZ segmentation has collapsed | All 15 SKUs are class `X`; the demo never exhibits intermittent or volatile demand. |
+| Resolved 2026-08-13 | XYZ segmentation previously collapsed | Regenerated Inventory Planning policies now contain 7 `X`, 5 `Y`, and 3 `Z` SKUs; all three policy paths are exercised. |
 | High | The 26-week window cannot demonstrate the planned festive and NPI stories | The weekly history ends before the configured launches and before almost every audio/wearables seasonal peak. |
 
 ## 1. Portfolio breadth is too narrow
@@ -57,22 +57,28 @@ This is more than a debatable seasonality shape: the event is attached to the wr
 
 **User-facing consequence:** users can see a July event labeled Diwali while the demand curve's actual festive peak lies outside the displayed history. Event uplift analysis and festive preparation decisions therefore tell conflicting stories.
 
-## 4. ABC/XYZ classification does not produce a believable mix
+## 4. ABC/XYZ classification — resolved and regenerated
 
-The stored 15-policy mix is:
+The former all-`X` result was traced to the demand generator, not to the CV formula or thresholds. Inventory Planning correctly calculates population standard deviation across the 26 aggregated SKU-week totals and divides it by mean weekly demand. Its conventional boundaries remain unchanged: `X <= 0.25`, `Y <= 0.50`, and `Z > 0.50`.
+
+The root cause was that every SKU used the same smooth cosine/trend structure plus independent distributor-level noise bounded to ±12%. Inventory Planning sums five distributors before computing CV, so that independent noise diversified away and left every aggregate series artificially stable.
+
+The generator now assigns deterministic SKU-week demand regimes that are shared across distributors: stable lines receive a small correlated movement, variable lines receive promotion/replenishment-sized swings, and low-volume or EOL lines receive intermittent no-sale and bulk-order weeks. Because the shock is correlated at SKU-week grain, it survives distributor aggregation. The classifier does not force a target class.
+
+After regeneration on **2026-08-13**, the stored 15-policy mix is:
 
 | Dimension | Current mix |
 |---|---|
-| ABC | 9 `A`, 4 `B`, 2 `C` |
-| XYZ | **15 `X`, 0 `Y`, 0 `Z`** |
-| Combined segments | 9 `AX`, 4 `BX`, 2 `CX`; every other segment is empty |
-| Demand CV | 0.054 to 0.208 |
+| ABC | 9 `A`, 3 `B`, 3 `C` |
+| Combined segments | 6 `AX`, 3 `AY`, 1 `BX`, 1 `BY`, 1 `BZ`, 1 `CY`, 2 `CZ` |
+| XYZ | **7 `X`, 5 `Y`, 3 `Z`** |
+| X CV range | 0.080 to 0.197 |
+| Y CV range | 0.385 to 0.458 |
+| Z CV range | 0.895 to 1.120 |
+| Y examples | Stone 350, Airdopes 161 Pro, Lunar Discovery, Rockerz 330 Pro, Wave Connect |
+| Z examples | Stone 1508, Xtend, Party Pal 20 |
 
-The ABC distribution is somewhat top-heavy but still defensible for a deliberately selected set of important SKUs, so it is not independently flagged. The XYZ result is not defensible for a demo that claims to demonstrate ABC/XYZ inventory optimization: every SKU is stable.
-
-The collapse follows from the generator design. Every product uses the same smooth cosine/trend structure, bounded weekly noise, and aggregation across five distributors. Aggregation further suppresses variability. Slow party speakers, an NPI smartwatch, mature products, and high-volume wired earphones therefore all land in `X`, despite having materially different planning behavior.
-
-**User-facing consequence:** the Inventory Planning module cannot demonstrate different safety-stock or service policies for stable, variable, and intermittent demand. XYZ controls appear functional but never exercise `Y` or `Z` in the actual dataset.
+The quality verifier now checks both per-SKU threshold correctness and portfolio spread; it fails unless X, Y, and Z are all populated. Inventory Planning's Variable and Erratic filters, segmentation cells, safety-stock calculations, and policy rows therefore execute against actual generated Y/Z records rather than dead branches.
 
 ## 5. The 26-week horizon is too short for the features it is meant to demonstrate
 
@@ -83,7 +89,7 @@ That horizon is adequate for a short-term rolling forecast demo, but not for the
 - The TWS, smartwatch, and speaker seasonal peaks are W43-W49, so the stored weekly series ends 10-16 weeks before the peaks. A 52-week cosine cannot be judged from only one half-cycle, and year-over-year festive comparison is impossible.
 - The two NPI records launch in W38 and W42 and project 12 post-launch weeks. Both launches occur after the base weekly facts end. There is no actual-versus-plan ramp, launch-week sell-through, cannibalization realization, or transition from NPI to growth in the weekly history.
 - `SKU-BOAT-LD100` is labeled `NPI` in the master yet is generated with normal demand across all 26 historical weeks (`lib/dummyData.js:57, 96-155`), without a launch gate or ramp curve. Its historical behavior therefore contradicts the lifecycle label.
-- A half-year without the main festive peak contributes directly to the all-`X` result and cannot support annual seasonality, festive baseline, or year-over-year forecast-accuracy claims.
+- A half-year without the main festive peak still limits annual seasonality, festive baseline, and year-over-year forecast-accuracy claims. The XYZ collapse itself has been resolved independently through SKU-appropriate correlated variability.
 
 The genuine requirement is not necessarily “more history” alone: a credible demo needs at least one complete annual cycle for seasonality plus a forward/post-launch window that overlaps the NPI launch dates. The current 26 weeks provide neither.
 
@@ -93,8 +99,8 @@ The genuine requirement is not necessarily “more history” alone: a credible 
 
 - **Price bands:** the generated ₹399-₹8,999 range and category bands are broadly consistent with boAt's value positioning. Current official examples include Airdopes 141 around ₹999-₹1,099, Lunar Discovery at ₹1,899, and Stone 350 at ₹1,399; the generated ₹1,299, ₹1,799, and ₹1,499 values are close enough for planning data and may reasonably represent channel ASPs rather than today's D2C offer. [Airdopes 141](https://www.boat-lifestyle.com/products/airdopes-141), [Lunar Discovery](https://www.boat-lifestyle.com/products/lunar-discovery-hd-display-smartwatch), [Stone 350](https://www.boat-lifestyle.com/products/stone-350)
 - **Festive peak direction:** W43-W49 peaks for TWS, watches, and speakers are directionally credible. The problem is that the active data window never reaches them and the separate Diwali event is dated incorrectly.
-- **ABC mix by itself:** 9/4/2 is not ideal Pareto separation, but it can occur in a curated 15-SKU portfolio whose values are relatively close. The genuine defect is the absence of any `Y` or `Z` item.
+- **ABC mix by itself:** the distribution remains somewhat top-heavy but can occur in a curated 15-SKU portfolio whose values are relatively close. The former absence of `Y` and `Z` has been corrected and verified.
 
 ## Bottom line
 
-The generated prices and broad audio-versus-wearables weighting are plausible. The material realism failures are assortment breadth, nationwide/omnichannel representation, the July “Diwali” record, zero XYZ diversity, and a horizon that stops before both NPI launches and the modeled festive demand peaks. Until those are corrected, portfolio-, region-, volatility-, NPI-, and festive-planning conclusions should be treated as illustrative rather than representative of a boAt-type operating business.
+The generated prices and broad audio-versus-wearables weighting are plausible, and XYZ diversity is now verified at 7/5/3. The remaining material realism failures are assortment breadth, nationwide/omnichannel representation, the July “Diwali” record, and a horizon that stops before both NPI launches and the modeled festive demand peaks. Until those are corrected, portfolio-, region-, NPI-, and festive-planning conclusions should be treated as illustrative rather than representative of a boAt-type operating business.

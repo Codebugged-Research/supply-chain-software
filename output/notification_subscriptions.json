@@ -1,0 +1,146 @@
+[
+  {
+    "subscriptionId": "NSUB-001",
+    "userId": "demand.planner@boat.com",
+    "roleCode": "DEMAND_PLANNER",
+    "eventType": "KPI_BREACH",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "IN_APP",
+    "minimumSeverity": "INFO",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "subscriptionId": "NSUB-002",
+    "userId": "supply.planner@boat.com",
+    "roleCode": "SUPPLY_PLANNER",
+    "eventType": "PO_DELAY",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "EMAIL",
+    "minimumSeverity": "WARNING",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "subscriptionId": "NSUB-003",
+    "userId": "category.manager@boat.com",
+    "roleCode": "CATEGORY_MANAGER",
+    "eventType": "WORKFLOW_DUE",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "IN_APP",
+    "minimumSeverity": "WARNING",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "subscriptionId": "NSUB-004",
+    "userId": "sales.manager@boat.com",
+    "roleCode": "SALES_HEAD",
+    "eventType": "WORKFLOW_DUE",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "EMAIL",
+    "minimumSeverity": "INFO",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "subscriptionId": "NSUB-005",
+    "userId": "finance.controller@boat.com",
+    "roleCode": "FINANCE",
+    "eventType": "WORKFLOW_DUE",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "IN_APP",
+    "minimumSeverity": "WARNING",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "subscriptionId": "NSUB-006",
+    "userId": "sop.lead@boat.com",
+    "roleCode": "SOP_LEAD",
+    "eventType": "PO_DELAY",
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "channel": "EMAIL",
+    "minimumSeverity": "WARNING",
+    "active": true,
+    "effectiveFromWeek": "2026-W01",
+    "effectiveToWeek": null,
+    "version": 1,
+    "status": "ACTIVE",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

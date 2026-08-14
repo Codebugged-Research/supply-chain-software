@@ -14,9 +14,24 @@ import {
   REGIONS,
   DISTRIBUTORS,
   SKUS,
+  XYZ_CV_THRESHOLDS,
 } from '@/lib/dummyData'
 import { getDb, getOrdersCollection } from '@/lib/mongodb'
 import { getOverviewMetrics, getCapacityGapAnalysis, getPurchaseOrdersWorkbench, getOdmEmsMaster } from '@/lib/supplyChainService'
+import { WORKFLOW_TYPES, demandAuditTrail, persistWorkflowSnapshot } from '@/lib/workflowAudit'
+import { getCanonicalChannelInventoryNorms, saveCanonicalChannelInventoryNorm } from '@/lib/channelInventoryNorms'
+import { applyDemandEvents, applyDemandFactorsAndEvents } from '@/lib/demandEvents'
+import { summarizeStoredForecastAccuracy } from '@/lib/forecastAccuracy'
+import { canonicalNpiRecord } from '@/lib/npiReadiness'
+import { getPublishedScenarioContext, getScenarioCatalog, publishScenarioVersion } from '@/lib/scenarioPlanning'
+import {
+  applyLifecycleToInventoryQuantity,
+  buildCanonicalLifecycleTransition,
+  inventoryMultiplierForLifecycle,
+  lifecycleRowFromCanonicalSku,
+  normalizeLifecycleStage,
+  resolveEffectiveLifecycle,
+} from '@/lib/skuLifecycle'
 import {
   fmtInrMoney,
   fmtInrInteger,
@@ -40,10 +55,7 @@ let persistedOrderRules = null
 const DEMAND_COLLECTIONS = {
   channelIntegrations: 'demand_channel_integrations',
   listings: 'demand_listings',
-  lifecycle: 'demand_lifecycle',
-  npiForecasts: 'demand_npi_forecasts',
   events: 'demand_events',
-  inventoryNorms: 'demand_inventory_norms',
   consensusWorkflows: 'demand_consensus_workflows',
 }
 
@@ -81,14 +93,12 @@ async function hydratePersistedState() {
   if (demandRows.every((rows) => rows.length > 0)) {
     demandPlanningMasters = Object.fromEntries(Object.keys(DEMAND_COLLECTIONS).map((key, idx) => [key, demandRows[idx]]))
   }
-  const [reviewCycles, policies, storedSessions, storedOrderRules] = await Promise.all([
+  const [reviewCycles, storedSessions, storedOrderRules] = await Promise.all([
     readPersistedCollection('dashboard_review_cycles'),
-    readPersistedCollection('inventory_policies'),
     readPersistedCollection('chat_sessions'),
     readPersistedCollection('order_rules'),
   ])
   if (reviewCycles.length) dashboardReviewCycle = reviewCycles[0]
-  if (policies.length) inventoryPlanningPolicies = policies
   if (storedOrderRules.length) persistedOrderRules = storedOrderRules
   if (storedSessions.length) {
     chatSessions.clear()
@@ -163,9 +173,16 @@ function enrichInventoryPolicy(row) {
 }
 
 async function getInventoryPlanningPolicies() {
-  if (inventoryPlanningPolicies) return inventoryPlanningPolicies
   const dataset = getDataset()
-  const odmEms = await getOdmEmsMaster()
+  const [odmEms, channelNorms, canonicalSkus, lifecycleHistory, calendarVersions] = await Promise.all([
+    getOdmEmsMaster(),
+    getCanonicalChannelInventoryNorms(),
+    readPersistedCollection('sop_skus'),
+    readPersistedCollection('lifecycle_transition_history'),
+    readPersistedCollection('planning_calendar_versions'),
+  ])
+  const anchorWeek = calendarVersions[0]?.anchorWeekId || null
+  const effectiveSkus = canonicalSkus.map((sku) => resolveEffectiveLifecycle(sku, lifecycleHistory, anchorWeek))
   const leadTimeBySku = new Map()
   odmEms.forEach((vendor) => (vendor.lines || []).forEach((line) => {
     const current = leadTimeBySku.get(line.skuCode)
@@ -178,7 +195,7 @@ async function getInventoryPlanningPolicies() {
     })
   }))
 
-  const analytics = SKUS.map((sku) => {
+  const analytics = effectiveSkus.map((sku) => {
     const history = (dataset.weekly || []).filter((row) => row.skuId === sku.id).sort((a, b) => a.weekId.localeCompare(b.weekId))
     const weeklyTotals = new Map()
     history.forEach((row) => weeklyTotals.set(row.weekId, (weeklyTotals.get(row.weekId) || 0) + (row.tertiary || 0)))
@@ -189,7 +206,7 @@ async function getInventoryPlanningPolicies() {
     const consumptionValue = history.reduce((sum, row) => sum + (row.tertiary || 0) * (row.price || sku.price || 0), 0)
     const latestWeek = demand.length ? Array.from(weeklyTotals.keys()).sort().at(-1) : null
     const currentInventoryUnits = history.filter((row) => row.weekId === latestWeek).reduce((sum, row) => sum + (row.distributorStock || 0) + (row.retailStock || 0), 0)
-    return { sku, avgWeeklyDemand, stdDevWeeklyDemand, demandCv, consumptionValue, currentInventoryUnits }
+    return { sku, applicableNorms: channelNorms.filter((norm) => norm.skuId === sku.id && norm.status === 'ACTIVE'), avgWeeklyDemand, stdDevWeeklyDemand, demandCv, consumptionValue, currentInventoryUnits }
   }).sort((a, b) => b.consumptionValue - a.consumptionValue)
 
   const totalValue = analytics.reduce((sum, row) => sum + row.consumptionValue, 0) || 1
@@ -198,13 +215,16 @@ async function getInventoryPlanningPolicies() {
     cumulativeValue += item.consumptionValue
     const cumulativePct = cumulativeValue / totalValue * 100
     const abcClass = cumulativePct <= 80 ? 'A' : cumulativePct <= 95 ? 'B' : 'C'
-    const xyzClass = item.demandCv <= 0.25 ? 'X' : item.demandCv <= 0.5 ? 'Y' : 'Z'
-    const serviceLevelTargetPct = abcClass === 'A' ? 98 : abcClass === 'B' ? 95 : 90
+    const xyzClass = item.demandCv <= XYZ_CV_THRESHOLDS.X_MAX ? 'X' : item.demandCv <= XYZ_CV_THRESHOLDS.Y_MAX ? 'Y' : 'Z'
+    const canonicalNorm = item.applicableNorms[0] || null
+    const serviceLevelTargetPct = canonicalNorm ? Number(canonicalNorm.serviceLevelTarget ?? canonicalNorm.serviceLevel * 100) : (abcClass === 'A' ? 98 : abcClass === 'B' ? 95 : 90)
     const lead = leadTimeBySku.get(item.sku.id) || { leadTimeDays: 14, source: 'Supply Planning default lead time', supplierName: 'Unmapped supplier', minimumOrderQuantity: 0, orderMultiple: 1 }
     const avgDailyDemand = item.avgWeeklyDemand / 7
     const dailyStdDev = item.stdDevWeeklyDemand / Math.sqrt(7)
-    const suggestedSafetyStockUnits = Math.ceil(serviceLevelZ(serviceLevelTargetPct) * dailyStdDev * Math.sqrt(lead.leadTimeDays))
-    const suggestedDos = Math.max(7, Math.min(90, Math.ceil(lead.leadTimeDays + (avgDailyDemand ? suggestedSafetyStockUnits / avgDailyDemand : 0))))
+    const lifecycleMultiplier = inventoryMultiplierForLifecycle(item.sku.lifecycleStage)
+    const baseSafetyStockUnits = canonicalNorm?.safetyStockQty ?? Math.ceil(serviceLevelZ(serviceLevelTargetPct) * dailyStdDev * Math.sqrt(lead.leadTimeDays))
+    const suggestedSafetyStockUnits = applyLifecycleToInventoryQuantity(baseSafetyStockUnits, item.sku.lifecycleStage)
+    const suggestedDos = canonicalNorm?.targetDos ?? Math.max(7, Math.min(90, Math.ceil(lead.leadTimeDays + (avgDailyDemand ? suggestedSafetyStockUnits / avgDailyDemand : 0))))
     return {
       policyId: `INV-${item.sku.id}`,
       skuId: item.sku.id,
@@ -226,10 +246,20 @@ async function getInventoryPlanningPolicies() {
       minimumOrderQuantity: lead.minimumOrderQuantity,
       orderMultiple: lead.orderMultiple,
       serviceLevelTargetPct,
+      baseSafetyStockUnits,
+      lifecycleSafetyStockMultiplier: lifecycleMultiplier,
       suggestedSafetyStockUnits,
       overrideSafetyStockUnits: null,
       suggestedDos,
-      overrideDos: null,
+      overrideDos: canonicalNorm?.overrideDos ?? null,
+      lifecycleStage: item.sku.lifecycleStage,
+      forecastMethod: item.sku.forecastMethod,
+      lifecycleTransitionId: item.sku.lifecycleTransitionId,
+      lifecycleSourceCollection: item.sku.lifecycleSourceCollection,
+      lifecycleHistoryCollection: item.sku.lifecycleHistoryCollection,
+      channelNormIds: item.applicableNorms.map((norm) => norm.normId),
+      channelNorms: item.applicableNorms,
+      canonicalNormCollection: 'channel_inventory_norms',
       currentInventoryUnits: item.currentInventoryUnits,
       overrideReason: null,
       updatedAt: new Date().toISOString(),
@@ -409,18 +439,6 @@ function seedListingStatus(skuIdx, distIdx) {
   return 'DELISTED'
 }
 
-function lifecycleMethods(stage) {
-  const methods = {
-    NPI: { short: 'NPI_CURVE', mid: 'NPI_CURVE', long: 'ANALOG_FORECAST' },
-    LAUNCH: { short: 'XGBF', mid: 'MLRF', long: 'ANALOG_FORECAST' },
-    GROWTH: { short: 'XGBF', mid: 'MLRF', long: 'XGBF' },
-    MATURITY: { short: 'XGBF', mid: 'MLRF', long: 'STATISTICAL' },
-    DECLINE: { short: 'STATISTICAL', mid: 'STATISTICAL', long: 'RAMP_DOWN' },
-    EOL: { short: 'RAMP_DOWN', mid: 'RAMP_DOWN', long: 'RAMP_DOWN' },
-  }
-  return methods[stage] || methods.MATURITY
-}
-
 function npiProjection(row) {
   if (Array.isArray(row.projection) && row.projection.length) return row.projection
   return Array.from({ length: 12 }, (_, idx) => {
@@ -432,13 +450,22 @@ function npiProjection(row) {
   })
 }
 
-function enrichInventoryNorm(row) {
-  const target = row.overrideDos ?? row.suggestedDos
-  const minDos = row.overrideDos == null ? row.minDos : Math.max(0, target - 5)
-  const maxDos = row.overrideDos == null ? row.maxDos : target + 7
-  const variance = row.actualDos - target
-  const normStatus = row.actualDos < minDos ? 'CRITICAL' : row.actualDos > maxDos ? 'OVERSTOCK' : Math.abs(variance) <= 3 ? 'HEALTHY' : 'WATCH'
-  return { ...row, minDos, maxDos, effectiveDos: target, varianceDays: variance, normStatus }
+function npiRowFromCanonical(product, readinessItems, vintages) {
+  const canonical = canonicalNpiRecord(product, readinessItems)
+  const projection = vintages
+    .filter((row) => row.skuId === product.skuId && row.targetWeek >= product.launchWeek)
+    .sort((a, b) => a.targetWeek.localeCompare(b.targetWeek) || a.horizonWeeks - b.horizonWeeks)
+    .filter((row, index, rows) => index === rows.findIndex((candidate) => candidate.targetWeek === row.targetWeek))
+    .slice(0, product.rampWeeks || 12)
+    .map((row) => ({ week: row.targetWeek, units: row.forecastQty, forecastId: row.forecastId }))
+  return {
+    ...canonical,
+    skuName: product.productName,
+    curveTemplate: product.rampCurve,
+    peakWeeklyUnits: product.targetPeakWeeklyUnits,
+    analogSkuId: product.analogSkuIds?.[0] || null,
+    projection,
+  }
 }
 
 const CONSENSUS_STEPS = [
@@ -507,33 +534,10 @@ function getDemandPlanningMasters() {
   const lifecycle = generatedDataset.lifecycle.map((row) => ({ ...row }))
   const npiForecasts = generatedDataset.npiForecasts.map((row) => ({ ...row }))
 
-  const weeks = getDataset().weeks || []
-  const weekAt = (idx) => weeks[Math.min(Math.max(idx, 0), Math.max(weeks.length - 1, 0))]?.weekId || `2026-W${String(idx + 1).padStart(2, '0')}`
   const events = generatedDataset.demandEvents.map((row) => ({ ...row }))
-  const inventoryNorms = generatedDataset.inventoryNorms.map((row) => ({ ...row }))
+  const consensusWorkflows = generatedDataset.demandConsensusWorkflows.map((row) => ({ ...row }))
 
-  const consensusWorkflows = SKUS.slice(0, 5).map((sku, idx) => {
-    const statistical = Math.round(sku.baseWeekly * 4)
-    const proposed = Math.round(statistical * (1 + [0.06, -0.04, 0.11, 0.02, -0.08][idx]))
-    const status = ['CATEGORY_REVIEW', 'SALES_REVIEW', 'SOP_REVIEW', 'FINANCE_REVIEW', 'LOCKED'][idx]
-    return {
-      workflowId: `DCW-${sku.id}`,
-      skuId: sku.id,
-      skuName: sku.name,
-      planningWeek: weekAt(25),
-      horizonType: idx < 2 ? 'SHORT' : 'MID',
-      statisticalFcst: statistical,
-      channelSubmittedFcst: Math.round(statistical * 1.04),
-      proposedConsensusFcst: proposed,
-      finalConsensusFcst: status === 'LOCKED' ? proposed : null,
-      status,
-      currentStepOwner: CONSENSUS_STEPS.find((step) => step.status === status)?.role || null,
-      auditTrail: [{ auditId: `AUD-${idx}-1`, action: 'CREATED', actorRole: 'Demand Planner', actor: 'demand.planner@boat.com', oldValue: null, newValue: proposed, reason: 'Initial consensus proposal', at: new Date(now - (idx + 1) * 3600000).toISOString() }],
-      updatedAt: new Date(now).toISOString(),
-    }
-  })
-
-  demandPlanningMasters = { channelIntegrations, listings, lifecycle, npiForecasts, events, inventoryNorms, consensusWorkflows }
+  demandPlanningMasters = { channelIntegrations, listings, lifecycle, npiForecasts, events, consensusWorkflows }
   return demandPlanningMasters
 }
 
@@ -565,28 +569,25 @@ function enrichChannelIntegrations() {
 async function buildDashboardPlanBalance() {
   const dataset = getDataset()
   const masters = getDemandPlanningMasters()
-  const [overview, capacity, purchaseOrders, inventoryPolicies] = await Promise.all([
+  const [overview, capacity, purchaseOrders, inventoryPolicies, activeScenario] = await Promise.all([
     getOverviewMetrics(),
     getCapacityGapAnalysis(null, { weekCount: 26 }),
     getPurchaseOrdersWorkbench(),
     getInventoryPlanningPolicies(),
+    getPublishedScenarioContext(),
   ])
   const generatedAt = new Date()
   const supplyTrend = overview.demandVsSupplyTrend || []
 
   // Live Demand Planning signal: current secondary baseline, overwritten by the
   // latest workflow proposal/final consensus and then uplifted by active/planned events.
-  const workflowBySkuWeek = new Map(masters.consensusWorkflows.map((row) => [`${row.skuId}|${row.planningWeek}`, row.finalConsensusFcst ?? row.proposedConsensusFcst]))
+  const workflowBySkuWeek = new Map(masters.consensusWorkflows.map((row) => [`${row.skuId}|${row.planningWeek}`, row]))
   const forecastByWeek = new Map()
   ;(dataset.weekly || []).forEach((row) => {
-    const workflowValue = workflowBySkuWeek.get(`${row.skuId}|${row.weekId}`)
-    const matchingEvents = masters.events.filter((event) => ['PLANNED', 'ACTIVE'].includes(event.status)
-      && row.weekId >= event.startWeek && row.weekId <= event.endWeek
-      && (!event.affectedSkus?.length || event.affectedSkus.includes(row.skuId))
-      && (!event.affectedChannels?.length || event.affectedChannels.includes(row.distributorId)))
-    const eventFactor = matchingEvents.reduce((factor, event) => factor * (1 + Number(event.upliftPercent || 0) / 100), 1)
-    const base = workflowValue === undefined ? Number(row.secondary || 0) : Number(workflowValue || 0) / Math.max(1, DISTRIBUTORS.length)
-    const currentForecast = Math.round(base * eventFactor)
+    const workflow = workflowBySkuWeek.get(`${row.skuId}|${row.weekId}`)
+    const base = workflow === undefined ? Number(row.secondary || 0) : Number(workflow.finalConsensusFcst ?? workflow.proposedConsensusFcst ?? 0) / Math.max(1, DISTRIBUTORS.length)
+    const impact = workflow?.includesDemandEvents ? { adjustedQty: Math.round(base) } : applyDemandEvents(base, masters.events, { weekId: row.weekId, skuId: row.skuId, channelId: row.distributorId, category: row.category, regionIds: [row.regionId, row.region].filter(Boolean) })
+    const currentForecast = impact.adjustedQty
     const current = forecastByWeek.get(row.weekId) || { sourceWeek: row.weekId, forecastUnits: 0, consensusUnits: 0, eventUpliftUnits: 0 }
     current.forecastUnits += currentForecast
     current.consensusUnits += Math.round(base)
@@ -612,30 +613,33 @@ async function buildDashboardPlanBalance() {
   const currentInventoryUnits = inventoryPolicies.reduce((sum, row) => sum + Number(row.currentInventoryUnits || 0), 0)
   const safetyStockUnits = inventoryPolicies.reduce((sum, row) => sum + Number(row.overrideSafetyStockUnits ?? row.suggestedSafetyStockUnits ?? 0), 0)
   let rollingInventoryUnits = currentInventoryUnits
+  const scenarioWeeks = activeScenario?.weekly || []
   const rows = Array.from({ length: 26 }, (_, idx) => {
     const demand = phase3Forecast[idx % Math.max(phase3Forecast.length, 1)] || { sourceWeek: `Phase3-W${idx + 1}`, forecastUnits: 0 }
     const supply = supplyTrend[idx % Math.max(supplyTrend.length, 1)] || {}
     const cap = capacity[idx] || {}
-    const plannedProduction = supply.plannedProduction || Math.round((cap.plannedWorkload || 0) * 0.72)
-    const plannedPurchase = supply.plannedPurchase || Math.round((cap.plannedWorkload || 0) * 0.28)
+    const scenarioWeek = scenarioWeeks[idx]
+    const forecastUnits = scenarioWeek?.scenarioDemandQty ?? demand.forecastUnits
+    const plannedProduction = scenarioWeek?.scenarioSupplyQty ?? supply.plannedProduction ?? Math.round((cap.plannedWorkload || 0) * 0.72)
+    const plannedPurchase = scenarioWeek ? 0 : supply.plannedPurchase || Math.round((cap.plannedWorkload || 0) * 0.28)
     const operatingPlanUnits = plannedProduction + plannedPurchase
     const constrainedProduction = Math.min(plannedProduction, cap.ratedWeeklyCapacity || plannedProduction)
-    const confirmedPoReceipts = poReceiptsByBucket[idx]
-    const netSupplyUnits = constrainedProduction + confirmedPoReceipts
-    const gapUnits = netSupplyUnits - demand.forecastUnits
-    const openingInventoryUnits = rollingInventoryUnits
-    const projectedInventoryUnits = Math.max(0, openingInventoryUnits + netSupplyUnits - demand.forecastUnits)
-    const unmetDemandUnits = Math.max(0, demand.forecastUnits - openingInventoryUnits - netSupplyUnits)
+    const confirmedPoReceipts = scenarioWeek ? 0 : poReceiptsByBucket[idx]
+    const netSupplyUnits = scenarioWeek?.scenarioSupplyQty ?? constrainedProduction + confirmedPoReceipts
+    const gapUnits = netSupplyUnits - forecastUnits
+    const openingInventoryUnits = scenarioWeek?.openingInventoryQty ?? rollingInventoryUnits
+    const projectedInventoryUnits = scenarioWeek?.closingInventoryQty ?? Math.max(0, openingInventoryUnits + netSupplyUnits - forecastUnits)
+    const unmetDemandUnits = scenarioWeek?.unmetDemandQty ?? Math.max(0, forecastUnits - openingInventoryUnits - netSupplyUnits)
     rollingInventoryUnits = projectedInventoryUnits
     const inventoryRisk = projectedInventoryUnits < safetyStockUnits
     return {
       bucket: `W${String(idx + 1).padStart(2, '0')}`,
       horizon: idx < 5 ? 'SHORT' : 'MEDIUM',
-      planningWeek: cap.week || supply.week || demand.sourceWeek,
+      planningWeek: scenarioWeek?.weekId || cap.week || supply.week || demand.sourceWeek,
       demandSourceWeek: demand.sourceWeek,
-      forecastUnits: demand.forecastUnits,
-      consensusUnits: demand.consensusUnits || demand.forecastUnits,
-      eventUpliftUnits: demand.eventUpliftUnits || 0,
+      forecastUnits,
+      consensusUnits: scenarioWeek?.scenarioDemandQty ?? demand.consensusUnits ?? demand.forecastUnits,
+      eventUpliftUnits: scenarioWeek ? Math.max(0, scenarioWeek.scenarioDemandQty - (demand.consensusUnits || demand.forecastUnits)) : demand.eventUpliftUnits || 0,
       netSupplyUnits,
       operatingPlanUnits,
       plannedProduction,
@@ -649,7 +653,8 @@ async function buildDashboardPlanBalance() {
       projectedInventoryUnits,
       safetyStockUnits,
       unmetDemandUnits,
-      status: unmetDemandUnits > 0 ? 'STOCKOUT' : inventoryRisk ? 'INVENTORY_RISK' : gapUnits < 0 ? 'DEFICIT' : gapUnits < demand.forecastUnits * 0.05 ? 'TIGHT' : 'COVERED',
+      status: unmetDemandUnits > 0 ? 'STOCKOUT' : inventoryRisk ? 'INVENTORY_RISK' : gapUnits < 0 ? 'DEFICIT' : gapUnits < forecastUnits * 0.05 ? 'TIGHT' : 'COVERED',
+      sourceScenarioVersionId: activeScenario?.scenarioVersionId || null,
     }
   })
   const totalForecast = rows.reduce((sum, row) => sum + row.forecastUnits, 0)
@@ -671,10 +676,10 @@ async function buildDashboardPlanBalance() {
       inventoryRiskWeeks: rows.filter((row) => row.projectedInventoryUnits < row.safetyStockUnits).length,
     },
     sources: {
-      forecast: 'Current Demand Planning secondary baseline + latest consensus workflow + active event uplifts',
-      netSupply: 'Supply Planning constrained capacity + purchase commitments on expected delivery dates',
-      operatingPlan: 'Supply Planning planned production + planned purchase',
-      inventory: 'Current Inventory Planning position aggregated from latest channel stock snapshots',
+      forecast: activeScenario ? `Published scenario ${activeScenario.scenarioVersionId} scenarioDemandQty` : 'Current Demand Planning secondary baseline + latest consensus workflow + active event uplifts',
+      netSupply: activeScenario ? `Published scenario ${activeScenario.scenarioVersionId} scenarioSupplyQty` : 'Supply Planning constrained capacity + purchase commitments on expected delivery dates',
+      operatingPlan: activeScenario ? `Consensus plan selected by sourceScenarioVersionId=${activeScenario.scenarioVersionId}` : 'Supply Planning planned production + planned purchase',
+      inventory: activeScenario ? `Published scenario ${activeScenario.scenarioVersionId} opening/closing inventory` : 'Current Inventory Planning position aggregated from latest channel stock snapshots',
     },
     freshness: {
       generatedAt: generatedAt.toISOString(),
@@ -684,6 +689,7 @@ async function buildDashboardPlanBalance() {
       refreshSeconds: 30,
     },
     isLive: true,
+    activeScenario: activeScenario ? { scenarioVersionId: activeScenario.scenarioVersionId, name: activeScenario.name, publishedAt: activeScenario.publishedAt } : null,
   }
 }
 
@@ -1240,7 +1246,7 @@ export async function GET(request, { params }) {
 
   // ---- Dataset endpoints ----------------------------------------------
   if (path === 'data/meta') return NextResponse.json(getDataset().meta)
-  if (path === 'data/skus') return NextResponse.json(SKUS)
+  if (path === 'data/skus') return NextResponse.json(getDataset().skus)
   if (path === 'data/distributors') return NextResponse.json(DISTRIBUTORS)
   if (path === 'data/regions') return NextResponse.json(REGIONS)
   if (path === 'data/weeks') return NextResponse.json(getDataset().weeks)
@@ -1272,11 +1278,43 @@ export async function GET(request, { params }) {
   }
 
   if (path === 'scenarios') {
-    return NextResponse.json({ rows: await readPersistedCollection('what_if_scenarios') })
+    return NextResponse.json(await getScenarioCatalog({ includeActiveOutputs: true }))
   }
 
   if (path === 'demand/market-benchmarks') {
     return NextResponse.json({ rows: await readPersistedCollection('demand_market_benchmarks') })
+  }
+
+  if (path === 'demand/forecast-vintages') {
+    const query = q(request)
+    const rows = (await readPersistedCollection('forecast_vintages')).filter((row) => {
+      if (query.horizonWeeks && Number(row.horizonWeeks) !== Number(query.horizonWeeks)) return false
+      if (query.skuId && row.skuId !== query.skuId) return false
+      if (query.channelId && row.channelId !== query.channelId) return false
+      return true
+    })
+    return NextResponse.json({ count: rows.length, rows })
+  }
+
+  if (path === 'demand/forecast-accuracy') {
+    const query = q(request)
+    const distributors = await readPersistedCollection('sop_distributors')
+    const channelIdsForRegion = query.region
+      ? distributors.filter((row) => row.region === query.region).map((row) => row.id)
+      : null
+    const rows = (await readPersistedCollection('forecast_accuracy_history')).filter((row) => {
+      if (query.horizonWeeks && Number(row.horizonWeeks) !== Number(query.horizonWeeks)) return false
+      if (query.skuId && row.skuId !== query.skuId) return false
+      if (query.channelId && row.channelId !== query.channelId) return false
+      if (channelIdsForRegion && !channelIdsForRegion.includes(row.channelId)) return false
+      return true
+    })
+    return NextResponse.json({ count: rows.length, rows, summary: summarizeStoredForecastAccuracy(rows) })
+  }
+
+  if (path === 'demand/event-templates') {
+    const rows = await readPersistedCollection('event_templates')
+    return NextResponse.json({ count: rows.length, rows })
   }
 
   if (path === 'demand/factor-config') {
@@ -1296,7 +1334,7 @@ export async function GET(request, { params }) {
       rows,
       methodology: {
         segmentation: 'ABC by cumulative tertiary consumption value (80/15/5); XYZ by weekly-demand coefficient of variation (X <= 0.25, Y <= 0.50, Z > 0.50)',
-        safetyStock: 'service-level z-score × daily demand standard deviation × square root of lead time in days',
+        safetyStock: 'canonical norm or statistical base × effective SKU lifecycle multiplier from sop_skus/lifecycle_transition_history',
         demandSource: 'Demand Planning tertiary history aggregated to SKU-week',
         leadTimeSource: 'Supply Planning supplier-product lead time, with supplier/default fallback',
       },
@@ -1323,27 +1361,49 @@ export async function GET(request, { params }) {
   }
 
   if (path === 'demand/lifecycle') {
-    const rows = getDemandPlanningMasters().lifecycle
-    return NextResponse.json({ count: rows.length, rows })
+    const [skus, transitionHistory, calendarVersions] = await Promise.all([
+      readPersistedCollection('sop_skus'),
+      readPersistedCollection('lifecycle_transition_history'),
+      readPersistedCollection('planning_calendar_versions'),
+    ])
+    const anchorWeek = calendarVersions[0]?.anchorWeekId || null
+    const rows = skus.map((sku) => lifecycleRowFromCanonicalSku(sku, transitionHistory, anchorWeek))
+    return NextResponse.json({ count: rows.length, rows, sourceCollection: 'sop_skus', historyCollection: 'lifecycle_transition_history', asOfWeek: anchorWeek })
   }
 
   if (path === 'demand/npi-forecasts') {
-    const rows = getDemandPlanningMasters().npiForecasts.map((row) => ({ ...row, projection: npiProjection(row) }))
+    const [products, readinessItems, vintages] = await Promise.all([
+      readPersistedCollection('npi_products'),
+      readPersistedCollection('npi_readiness_items'),
+      readPersistedCollection('forecast_vintages'),
+    ])
+    const rows = products.map((product) => npiRowFromCanonical(product, readinessItems, vintages))
     return NextResponse.json({ count: rows.length, rows })
   }
 
   if (path === 'demand/events') {
-    const rows = getDemandPlanningMasters().events
+    const rows = await readPersistedCollection('demand_events')
     return NextResponse.json({ count: rows.length, rows })
   }
 
   if (path === 'demand/inventory-norms') {
-    const rows = getDemandPlanningMasters().inventoryNorms.map(enrichInventoryNorm)
+    const rows = await getCanonicalChannelInventoryNorms()
     return NextResponse.json({ count: rows.length, rows })
   }
 
   if (path === 'demand/consensus-workflows') {
-    const rows = getDemandPlanningMasters().consensusWorkflows
+    const subjects = getDemandPlanningMasters().consensusWorkflows
+    const [instances, workflowSteps, auditEvents] = await Promise.all([
+      readPersistedCollection('workflow_instances'),
+      readPersistedCollection('workflow_steps'),
+      readPersistedCollection('entity_audit_events'),
+    ])
+    const rows = subjects.map((subject) => ({
+      ...subject,
+      workflow: instances.find((row) => row.workflowId === subject.workflowId) || null,
+      workflowSteps: workflowSteps.filter((row) => row.workflowId === subject.workflowId).sort((a, b) => a.stepSequence - b.stepSequence),
+      auditTrail: demandAuditTrail(auditEvents.filter((row) => row.workflowId === subject.workflowId)),
+    }))
     return NextResponse.json({ count: rows.length, rows, steps: CONSENSUS_STEPS })
   }
 
@@ -1559,6 +1619,16 @@ export async function POST(request, { params }) {
   await hydratePersistedState()
   const path = (params?.path || []).join('/')
 
+  if (path === 'scenarios/publish') {
+    const body = await request.json()
+    if (!body?.scenarioVersionId) return NextResponse.json({ error: 'scenarioVersionId is required' }, { status: 400 })
+    try {
+      return NextResponse.json(await publishScenarioVersion({ scenarioVersionId: body.scenarioVersionId, actor: body.actor }))
+    } catch (error) {
+      return NextResponse.json({ error: error.message }, { status: error.message.includes('not found') ? 404 : 409 })
+    }
+  }
+
   if (path === 'demand/events') {
     const body = await request.json()
     if (!body?.eventName || !body?.startWeek || !body?.endWeek) return NextResponse.json({ error: 'eventName, startWeek and endWeek are required' }, { status: 400 })
@@ -1567,22 +1637,148 @@ export async function POST(request, { params }) {
     if (body.affectedChannels?.some((channelId) => !DISTRIBUTORS.some((d) => d.id === channelId))) return NextResponse.json({ error: 'Unknown affected channel' }, { status: 400 })
     const row = {
       eventId: `EVT-${uuidv4().slice(0, 8).toUpperCase()}`,
+      eventTemplateId: body.eventTemplateId || null,
       eventName: body.eventName,
+      name: body.eventName,
       eventType: body.eventType || 'PROMOTIONAL',
       startWeek: body.startWeek,
       endWeek: body.endWeek,
       affectedSkus: Array.isArray(body.affectedSkus) ? body.affectedSkus : [],
       affectedChannels: Array.isArray(body.affectedChannels) ? body.affectedChannels : [],
+      skuIds: Array.isArray(body.affectedSkus) ? body.affectedSkus : [],
+      channelIds: Array.isArray(body.affectedChannels) ? body.affectedChannels : [],
+      categories: Array.isArray(body.categories) ? body.categories : [],
+      regionIds: Array.isArray(body.regionIds) ? body.regionIds : [],
       upliftPercent: Math.max(-100, Math.min(500, Number(body.upliftPercent) || 0)),
+      upliftPct: Math.max(-1, Math.min(5, Number(body.upliftPercent) / 100 || 0)),
+      upliftShape: body.upliftShape || 'FLAT',
+      stackingGroup: body.stackingGroup || 'CUSTOM',
+      maxStackedUpliftPct: Number(body.maxStackedUpliftPct || 1),
       status: body.status || 'PLANNED',
       actualUpliftPercent: null,
+      effectiveFromWeek: body.startWeek,
+      effectiveToWeek: body.endWeek,
+      version: 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       updatedBy: 'category.manager@boat.com',
+      source: 'USER',
     }
     getDemandPlanningMasters().events.push(row)
     await replacePersisted('demand_events', { eventId: row.eventId }, row)
     return NextResponse.json({ ok: true, row }, { status: 201 })
+  }
+
+  if (path === 'demand/factor-adjusted-demand') {
+    const body = await request.json()
+    const skuId = body?.skuId
+    const sku = getDataset().skus.find((item) => item.id === skuId)
+    if (!sku) return NextResponse.json({ error: 'Unknown skuId' }, { status: 404 })
+
+    const [events, weekly, factorConfigs] = await Promise.all([
+      readPersistedCollection('demand_events'),
+      readPersistedCollection('sop_weekly'),
+      readPersistedCollection('demand_factor_config'),
+    ])
+    const byWeek = new Map()
+    weekly.filter((row) => row.skuId === skuId).forEach((row) => {
+      const impact = applyDemandFactorsAndEvents(row.secondary, events, {
+        weekId: row.weekId,
+        weekStart: row.weekStart,
+        skuId: row.skuId,
+        channelId: row.distributorId,
+        category: row.category,
+        lifecycleStage: row.lifecycleStage || sku.lifecycleStage,
+        region: row.region,
+        regionIds: [row.regionId, row.region].filter(Boolean),
+      }, factorConfigs[0] || {}, { plc: true, seasonality: true, promotions: true, location: false })
+      const line = byWeek.get(row.weekId) || { weekId: row.weekId, baseQty: 0, proposedQty: 0, appliedEventIds: new Set() }
+      line.baseQty += Number(row.secondary || 0)
+      line.proposedQty += impact.adjustedQty
+      impact.appliedEventIds.forEach((eventId) => line.appliedEventIds.add(eventId))
+      byWeek.set(row.weekId, line)
+    })
+    const lines = Array.from(byWeek.values())
+      .filter((line) => line.appliedEventIds.size > 0)
+      .sort((a, b) => a.weekId.localeCompare(b.weekId))
+      .map((line) => ({
+        weekId: line.weekId,
+        baseQty: line.baseQty,
+        proposedQty: line.proposedQty,
+        netAdjustmentQty: line.proposedQty - line.baseQty,
+        factorIds: ['DEMAND_EVENT'],
+        appliedEventIds: Array.from(line.appliedEventIds),
+      }))
+    if (!lines.length) return NextResponse.json({ error: 'No canonical demand events apply to this SKU in the available demand horizon' }, { status: 409 })
+
+    const db = await getDb()
+    const now = new Date().toISOString()
+    const proposalId = `FDP-${skuId}-${Date.now()}`
+    const proposal = {
+      proposalId,
+      sourceForecastVersionId: 'SOP-WEEKLY-SECONDARY',
+      scenarioVersionId: null,
+      status: 'APPROVED',
+      authorUserId: 'demand.planner@boat.com',
+      submittedAt: now,
+      approvedAt: now,
+      comment: 'Canonical demand-event adjustment published by Demand Factors into consensus.',
+      lines,
+      source: 'USER',
+      updatedAt: now,
+    }
+    await db.collection('factor_adjusted_demand_proposals').replaceOne({ proposalId }, proposal, { upsert: true })
+
+    let publishedWeeks = 0
+    const skippedLockedWeeks = []
+    for (const line of lines) {
+      const workflowId = `DCW-${skuId}-${line.weekId}`
+      const existing = await db.collection('demand_consensus_workflows').findOne({ workflowId })
+      if (existing?.status === 'LOCKED') {
+        skippedLockedWeeks.push(line.weekId)
+        continue
+      }
+      const subject = {
+        ...(existing || {}),
+        workflowId,
+        skuId,
+        skuName: sku.name,
+        planningWeek: line.weekId,
+        horizonType: 'SHORT',
+        statisticalFcst: line.baseQty,
+        channelSubmittedFcst: line.baseQty,
+        proposedConsensusFcst: line.proposedQty,
+        finalConsensusFcst: null,
+        status: existing?.status || 'CATEGORY_REVIEW',
+        currentStepOwner: existing?.currentStepOwner || 'Category Manager',
+        sourceProposalId: proposalId,
+        appliedEventIds: line.appliedEventIds,
+        includesDemandEvents: true,
+        updatedAt: now,
+        updatedBy: 'demand.planner@boat.com',
+        source: 'USER',
+      }
+      delete subject._id
+      await db.collection('demand_consensus_workflows').replaceOne({ workflowId }, subject, { upsert: true })
+      if (!existing) {
+        await db.collection('workflow_instances').replaceOne({ workflowId }, {
+          workflowId, workflowType: WORKFLOW_TYPES.DEMAND_CONSENSUS, subjectType: 'DEMAND_FORECAST', subjectId: `${skuId}|${line.weekId}`,
+          sourceVersionId: proposalId, status: 'CATEGORY_REVIEW', currentStep: 1, dueAt: null, lockedAt: null, createdAt: now, updatedAt: now, source: 'USER',
+        }, { upsert: true })
+        for (let index = 0; index < CONSENSUS_STEPS.length; index += 1) {
+          const step = CONSENSUS_STEPS[index]
+          await db.collection('workflow_steps').replaceOne({ workflowId, stepSequence: index + 1 }, {
+            workflowId, stepSequence: index + 1, stepCode: step.status, assignedRole: step.role, assignedUserId: null,
+            status: index === 0 ? 'IN_PROGRESS' : 'PENDING', decision: null, comment: null, actedAt: null, createdAt: now, updatedAt: now, source: 'USER',
+          }, { upsert: true })
+        }
+      }
+      const memoryIndex = getDemandPlanningMasters().consensusWorkflows.findIndex((row) => row.workflowId === workflowId)
+      if (memoryIndex >= 0) getDemandPlanningMasters().consensusWorkflows[memoryIndex] = subject
+      else getDemandPlanningMasters().consensusWorkflows.push(subject)
+      publishedWeeks += 1
+    }
+    return NextResponse.json({ ok: true, proposalId, publishedWeeks, skippedLockedWeeks, lines })
   }
 
   // -------- CHATBOT endpoints (POST) ----------------------------------
@@ -1871,35 +2067,53 @@ export async function PATCH(request, { params }) {
   if (path === 'demand/lifecycle') {
     const body = await request.json()
     const { skuId, stage } = body || {}
-    const row = getDemandPlanningMasters().lifecycle.find((item) => item.skuId === skuId)
-    if (!row) return NextResponse.json({ error: 'Unknown skuId' }, { status: 404 })
-    if (!['NPI', 'LAUNCH', 'GROWTH', 'MATURITY', 'DECLINE', 'EOL'].includes(stage)) return NextResponse.json({ error: 'Invalid lifecycle stage' }, { status: 400 })
-    row.stage = stage
-    row.stageSince = new Date().toISOString().slice(0, 10)
-    row.forecastMethods = lifecycleMethods(stage)
-    row.updatedAt = new Date().toISOString()
-    row.updatedBy = 'category.manager@boat.com'
-    await replacePersisted('demand_lifecycle', { skuId }, row)
-    return NextResponse.json({ ok: true, row })
+    const newStage = normalizeLifecycleStage(stage)
+    if (!newStage) return NextResponse.json({ error: 'Invalid lifecycle stage' }, { status: 400 })
+    const db = await getDb()
+    const storedSku = await db.collection('sop_skus').findOne({ $or: [{ id: skuId }, { skuId }, { skuCode: skuId }] })
+    if (!storedSku) return NextResponse.json({ error: 'Unknown skuId' }, { status: 404 })
+    const anchorWeek = (await readPersistedCollection('planning_calendar_versions'))[0]?.anchorWeekId || '2026-W33'
+    const occurredAt = new Date().toISOString()
+    if (normalizeLifecycleStage(storedSku.lifecycleStage) === newStage) {
+      const history = await db.collection('lifecycle_transition_history').find({ skuId }).project({ _id: 0 }).toArray()
+      return NextResponse.json({ ok: true, unchanged: true, row: lifecycleRowFromCanonicalSku(storedSku, history, anchorWeek) })
+    }
+    const transitionId = `LCT-${skuId}-${anchorWeek}-${newStage}-${uuidv4().slice(0, 8)}`
+    const { nextSku, transition } = buildCanonicalLifecycleTransition({
+      sku: storedSku,
+      stage: newStage,
+      effectiveWeek: anchorWeek,
+      occurredAt,
+      actorUserId: 'category.manager@boat.com',
+      actorRole: 'Category Manager',
+      transitionId,
+    })
+    delete nextSku._id
+    await db.collection('lifecycle_transition_history').insertOne(transition)
+    await db.collection('lifecycle_transition_history').updateMany({ skuId, transitionId: { $ne: transitionId }, effectiveToWeek: null }, { $set: { effectiveToWeek: anchorWeek } })
+    await db.collection('sop_skus').replaceOne({ _id: storedSku._id }, nextSku)
+    inventoryPlanningPolicies = null
+    return NextResponse.json({ ok: true, row: lifecycleRowFromCanonicalSku(nextSku, [transition], anchorWeek), transition })
   }
 
   if (path === 'demand/npi-forecasts') {
     const body = await request.json()
     const { npiId, ...changes } = body || {}
-    const row = getDemandPlanningMasters().npiForecasts.find((item) => item.npiId === npiId)
+    const row = (await readPersistedCollection('npi_products')).find((item) => item.npiId === npiId)
     if (!row) return NextResponse.json({ error: 'Unknown npiId' }, { status: 404 })
     if (changes.launchWeek !== undefined && !/^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/.test(changes.launchWeek)) return NextResponse.json({ error: 'launchWeek must use YYYY-Www format with week 01-53' }, { status: 400 })
     if (changes.curveTemplate !== undefined && !['S_CURVE', 'LINEAR', 'HOCKEY_STICK'].includes(changes.curveTemplate)) return NextResponse.json({ error: 'Invalid curveTemplate' }, { status: 400 })
     if (changes.analogSkuId !== undefined && !SKUS.some((sku) => sku.id === changes.analogSkuId)) return NextResponse.json({ error: 'Unknown analogSkuId' }, { status: 400 })
-    const allowed = ['launchWeek', 'curveTemplate', 'peakWeeklyUnits', 'analogSkuId', 'cannibalizationRatePct', 'readinessPct']
-    allowed.forEach((field) => { if (changes[field] !== undefined) row[field] = changes[field] })
-    row.peakWeeklyUnits = Math.max(0, Math.round(Number(row.peakWeeklyUnits) || 0))
-    row.cannibalizationRatePct = Math.max(0, Math.min(100, Number(row.cannibalizationRatePct) || 0))
-    row.readinessPct = Math.max(0, Math.min(100, Number(row.readinessPct) || 0))
+    if (changes.launchWeek !== undefined) row.launchWeek = changes.launchWeek
+    if (changes.curveTemplate !== undefined) row.rampCurve = changes.curveTemplate
+    if (changes.peakWeeklyUnits !== undefined) row.targetPeakWeeklyUnits = Math.max(0, Math.round(Number(changes.peakWeeklyUnits) || 0))
+    if (changes.analogSkuId !== undefined) row.analogSkuIds = [changes.analogSkuId, ...(row.analogSkuIds || []).filter((id) => id !== changes.analogSkuId)].slice(0, 3)
+    if (changes.cannibalizationRatePct !== undefined) row.cannibalizationRatePct = Math.max(0, Math.min(100, Number(changes.cannibalizationRatePct) || 0))
     row.updatedAt = new Date().toISOString()
-    row.updatedBy = 'npi.manager@boat.com'
-    await replacePersisted('demand_npi_forecasts', { npiId }, row)
-    return NextResponse.json({ ok: true, row: { ...row, projection: npiProjection(row) } })
+    row.source = 'USER'
+    await replacePersisted('npi_products', { npiId }, row)
+    const [items, vintages] = await Promise.all([readPersistedCollection('npi_readiness_items'), readPersistedCollection('forecast_vintages')])
+    return NextResponse.json({ ok: true, row: npiRowFromCanonical(row, items, vintages) })
   }
 
   if (path === 'demand/events') {
@@ -1911,9 +2125,15 @@ export async function PATCH(request, { params }) {
     const startWeek = changes.startWeek ?? row.startWeek
     const endWeek = changes.endWeek ?? row.endWeek
     if (endWeek < startWeek) return NextResponse.json({ error: 'endWeek cannot precede startWeek' }, { status: 400 })
-    const allowed = ['eventName', 'eventType', 'startWeek', 'endWeek', 'affectedSkus', 'affectedChannels', 'upliftPercent', 'actualUpliftPercent', 'status']
+    const allowed = ['eventName', 'eventType', 'startWeek', 'endWeek', 'affectedSkus', 'affectedChannels', 'categories', 'regionIds', 'upliftPercent', 'upliftShape', 'stackingGroup', 'maxStackedUpliftPct', 'actualUpliftPercent', 'status']
     allowed.forEach((field) => { if (changes[field] !== undefined) row[field] = changes[field] })
     row.upliftPercent = Math.max(-100, Math.min(500, Number(row.upliftPercent) || 0))
+    row.upliftPct = row.upliftPercent / 100
+    row.skuIds = Array.isArray(row.affectedSkus) ? row.affectedSkus : []
+    row.channelIds = Array.isArray(row.affectedChannels) ? row.affectedChannels : []
+    row.name = row.eventName
+    row.effectiveFromWeek = row.startWeek
+    row.effectiveToWeek = row.endWeek
     if (row.actualUpliftPercent !== null) row.actualUpliftPercent = Number(row.actualUpliftPercent)
     row.updatedAt = new Date().toISOString()
     row.updatedBy = 'category.manager@boat.com'
@@ -1924,15 +2144,15 @@ export async function PATCH(request, { params }) {
   if (path === 'demand/inventory-norms') {
     const body = await request.json()
     const { normId, overrideDos, overrideReason } = body || {}
-    const row = getDemandPlanningMasters().inventoryNorms.find((item) => item.normId === normId)
+    const row = (await getCanonicalChannelInventoryNorms()).find((item) => item.normId === normId)
     if (!row) return NextResponse.json({ error: 'Unknown normId' }, { status: 404 })
     if (overrideDos !== null && (!Number.isFinite(Number(overrideDos)) || Number(overrideDos) < 0 || Number(overrideDos) > 180)) return NextResponse.json({ error: 'overrideDos must be between 0 and 180 days' }, { status: 400 })
     row.overrideDos = overrideDos === null ? null : Math.round(Number(overrideDos))
     row.overrideReason = row.overrideDos === null ? null : (overrideReason || 'Planner override')
     row.updatedAt = new Date().toISOString()
     row.updatedBy = 'inventory.planner@boat.com'
-    await replacePersisted('demand_inventory_norms', { normId }, row)
-    return NextResponse.json({ ok: true, row: enrichInventoryNorm(row) })
+    row.source = 'USER'
+    return NextResponse.json({ ok: true, row: await saveCanonicalChannelInventoryNorm(row) })
   }
 
   if (path === 'demand/consensus-workflows') {
@@ -1941,9 +2161,18 @@ export async function PATCH(request, { params }) {
     const row = getDemandPlanningMasters().consensusWorkflows.find((item) => item.workflowId === workflowId)
     if (!row) return NextResponse.json({ error: 'Unknown workflowId' }, { status: 404 })
     if (row.status === 'LOCKED') return NextResponse.json({ error: 'Locked consensus forecasts cannot be changed' }, { status: 409 })
-    const step = CONSENSUS_STEPS.find((item) => item.status === row.status)
-    if (!step || actorRole !== step.role) return NextResponse.json({ error: `Current action belongs to ${step?.role || 'no role'}` }, { status: 403 })
-    const appendAudit = (auditAction, oldValue, newValue, auditReason) => row.auditTrail.push({ auditId: `AUD-${uuidv4().slice(0, 8).toUpperCase()}`, action: auditAction, actorRole, actor: `${actorRole.toLowerCase().replaceAll(/[^a-z]+/g, '.').replace(/^\.|\.$/g, '')}@boat.com`, oldValue, newValue, reason: auditReason, at: new Date().toISOString() })
+    const [instances, storedSteps, storedEvents] = await Promise.all([
+      readPersistedCollection('workflow_instances'),
+      readPersistedCollection('workflow_steps'),
+      readPersistedCollection('entity_audit_events'),
+    ])
+    const instance = instances.find((item) => item.workflowId === workflowId)
+    const workflowSteps = storedSteps.filter((item) => item.workflowId === workflowId).sort((a, b) => a.stepSequence - b.stepSequence)
+    if (!instance || workflowSteps.length !== 4) return NextResponse.json({ error: 'Shared workflow state is missing' }, { status: 409 })
+    const currentWorkflowStep = workflowSteps.find((item) => item.stepSequence === instance.currentStep)
+    if (!currentWorkflowStep || actorRole !== currentWorkflowStep.assignedRole) return NextResponse.json({ error: `Current action belongs to ${currentWorkflowStep?.assignedRole || 'no role'}` }, { status: 403 })
+    const occurredAt = new Date().toISOString()
+    let event
 
     if (action === 'override') {
       const nextValue = Number(body.proposedConsensusFcst)
@@ -1951,25 +2180,45 @@ export async function PATCH(request, { params }) {
       if (!reason?.trim()) return NextResponse.json({ error: 'A reason is required for every override' }, { status: 400 })
       const oldValue = row.proposedConsensusFcst
       row.proposedConsensusFcst = Math.round(nextValue)
-      appendAudit('OVERRIDE', oldValue, row.proposedConsensusFcst, reason.trim())
+      event = { workflowId, workflowType: WORKFLOW_TYPES.DEMAND_CONSENSUS, stepSequence: instance.currentStep, entityType: 'DEMAND_FORECAST', entityId: row.skuId, action: 'OVERRIDE', fieldPath: 'proposedConsensusFcst', oldValue, newValue: row.proposedConsensusFcst, actorRole, reasonCode: 'PLANNER_OVERRIDE', comment: reason.trim(), occurredAt }
     } else if (action === 'approve') {
       const oldStatus = row.status
-      row.status = step.next
-      row.currentStepOwner = CONSENSUS_STEPS.find((item) => item.status === row.status)?.role || null
+      currentWorkflowStep.status = 'COMPLETED'
+      currentWorkflowStep.decision = 'APPROVED'
+      currentWorkflowStep.comment = reason || 'Approved'
+      currentWorkflowStep.actedAt = occurredAt
+      const nextWorkflowStep = workflowSteps.find((item) => item.stepSequence === instance.currentStep + 1)
+      row.status = nextWorkflowStep?.stepCode || 'LOCKED'
+      row.currentStepOwner = nextWorkflowStep?.assignedRole || null
+      instance.status = row.status
+      instance.currentStep = nextWorkflowStep?.stepSequence || null
+      instance.lockedAt = row.status === 'LOCKED' ? occurredAt : null
+      if (nextWorkflowStep) nextWorkflowStep.status = 'IN_PROGRESS'
       if (row.status === 'LOCKED') row.finalConsensusFcst = row.proposedConsensusFcst
-      appendAudit(row.status === 'LOCKED' ? 'LOCKED' : 'APPROVED', oldStatus, row.status, reason || 'Approved')
+      event = { workflowId, workflowType: WORKFLOW_TYPES.DEMAND_CONSENSUS, stepSequence: currentWorkflowStep.stepSequence, entityType: 'DEMAND_FORECAST', entityId: row.skuId, action: row.status === 'LOCKED' ? 'LOCKED' : 'APPROVED', fieldPath: 'status', oldValue: oldStatus, newValue: row.status, actorRole, reasonCode: 'APPROVAL', comment: reason || 'Approved', occurredAt }
     } else if (action === 'reject') {
       if (!reason?.trim()) return NextResponse.json({ error: 'A rejection reason is required' }, { status: 400 })
       const oldStatus = row.status
       row.status = 'CATEGORY_REVIEW'
       row.currentStepOwner = 'Category Manager'
-      appendAudit('REJECTED_REWORK', oldStatus, row.status, reason.trim())
+      workflowSteps.forEach((workflowStep) => {
+        workflowStep.status = workflowStep.stepSequence === 1 ? 'IN_PROGRESS' : 'PENDING'
+        workflowStep.decision = workflowStep.stepSequence === currentWorkflowStep.stepSequence ? 'REJECTED' : null
+        workflowStep.comment = workflowStep.stepSequence === currentWorkflowStep.stepSequence ? reason.trim() : null
+        workflowStep.actedAt = workflowStep.stepSequence === currentWorkflowStep.stepSequence ? occurredAt : null
+      })
+      instance.status = row.status
+      instance.currentStep = 1
+      instance.lockedAt = null
+      event = { workflowId, workflowType: WORKFLOW_TYPES.DEMAND_CONSENSUS, stepSequence: currentWorkflowStep.stepSequence, entityType: 'DEMAND_FORECAST', entityId: row.skuId, action: 'REJECTED_REWORK', fieldPath: 'status', oldValue: oldStatus, newValue: row.status, actorRole, reasonCode: 'REWORK_REQUIRED', comment: reason.trim(), occurredAt }
     } else {
       return NextResponse.json({ error: 'action must be override, approve or reject' }, { status: 400 })
     }
-    row.updatedAt = new Date().toISOString()
-    await replacePersisted('demand_consensus_workflows', { workflowId }, row)
-    return NextResponse.json({ ok: true, row })
+    row.updatedAt = occurredAt
+    instance.updatedAt = occurredAt
+    const db = await getDb()
+    const auditEvent = await persistWorkflowSnapshot(db, { subjectCollection: 'demand_consensus_workflows', subjectFilter: { workflowId }, subject: row, instance, steps: workflowSteps, event })
+    return NextResponse.json({ ok: true, row: { ...row, workflow: instance, workflowSteps, auditTrail: demandAuditTrail([...storedEvents.filter((item) => item.workflowId === workflowId), auditEvent]) } })
   }
 
   if (path === 'orders/update') {

@@ -13,5 +13,20 @@
     "id": "REG-W",
     "name": "West",
     "color": "#f59e0b"
+  },
+  {
+    "id": "REG-E",
+    "name": "East",
+    "color": "#8b5cf6"
+  },
+  {
+    "id": "REG-C",
+    "name": "Central",
+    "color": "#ef4444"
+  },
+  {
+    "id": "REG-NE",
+    "name": "Northeast",
+    "color": "#06b6d4"
   }
 ]

@@ -1,6 +1,80 @@
 # Data Model Master
 
-Status: design only; no implementation is included in this document.
+Status: implementation gate passed. Every entity in the registry below is `DB-verified` against the configured MongoDB database using generated natural keys and the integrity checks in `scripts/verify_data_model_master.js`.
+
+## 0. Implementation and persistence status
+
+Status progression is strict: `designed` means the schema exists only here; `implemented` means a deterministic generator and persistence key exist; `DB-verified` means every generated natural key was read back from a physical MongoDB collection and its domain integrity checks passed. Computed API projections and local JSON files do not qualify as DB verification.
+
+| Domain | Entity / persisted collection | Status |
+|---|---|---|
+| Calendar | `planning_calendar_versions` | DB-verified |
+| Calendar | `planning_weeks` | DB-verified |
+| Demand master | SKU/product lifecycle fields in `sop_skus` | DB-verified |
+| Demand master | `lifecycle_transition_history` | DB-verified |
+| NPI | `npi_products` | DB-verified |
+| NPI | `npi_readiness_items` | DB-verified |
+| Events | `event_templates` | DB-verified |
+| Events | `demand_events` | DB-verified |
+| Forecast | `forecast_vintages` | DB-verified |
+| Forecast | `forecast_accuracy_history` | DB-verified |
+| Demand factors | `factor_adjusted_demand_proposals` including persisted lines | DB-verified |
+| Shared workflow | `workflow_instances` | DB-verified |
+| Shared workflow | `workflow_steps` | DB-verified |
+| Shared workflow | `entity_audit_events` | DB-verified |
+| Official plan | `consensus_plan_versions` | DB-verified |
+| Official plan | `consensus_plan_lines` | DB-verified |
+| KPI | `kpi_definitions` | DB-verified |
+| KPI | `kpi_observations` | DB-verified |
+| Identity | `users` | DB-verified |
+| Identity | `role_assignments` | DB-verified |
+| Notification | `notification_subscriptions` | DB-verified |
+| Notification | `notification_deliveries` | DB-verified |
+| Reporting | `report_jobs` | DB-verified |
+| Reporting | `report_artifacts` | DB-verified |
+| Integration | `integration_runs` | DB-verified |
+| Market | `market_benchmark_facts` | DB-verified |
+| Channel | `channel_inventory_norms` | DB-verified |
+| Commercial | `commercial_schemes` | DB-verified |
+| Credit | `distributor_credit_accounts` | DB-verified |
+| Credit | `distributor_credit_snapshots` | DB-verified |
+| Dealer | `dealers` | DB-verified |
+| Dealer | `dealer_sku_weekly` | DB-verified |
+| Orders | Order amendments/approvals in shared `workflow_instances`, `workflow_steps`, and `entity_audit_events` | DB-verified |
+| Dispatch | `advance_ship_notices` including persisted lines | DB-verified |
+| Dispatch | `dispatch_milestones` | DB-verified |
+| Sourcing | `supplier_master` | DB-verified |
+| Sourcing | `manufacturing_partners` | DB-verified |
+| Sourcing | `manufacturing_partner_lines` | DB-verified |
+| Sourcing | `supplier_reliability_history` | DB-verified |
+| Procurement | Extended `purchase_orders` including persisted lines | DB-verified |
+| Procurement | `po_exclusions` | DB-verified |
+| Procurement | `po_revisions` | DB-verified |
+| Procurement | `po_adherence_observations` | DB-verified |
+| Capacity | `line_capacity_plans` | DB-verified |
+| Capacity | `capacity_expansion_plans` | DB-verified |
+| Production | `production_execution_events` | DB-verified |
+| Quality | `goods_receipt_inspections` | DB-verified |
+| Imports | `import_shipment_milestones` | DB-verified |
+| Transfers | `transfer_milestones` | DB-verified |
+| Reorder | `reorder_recommendation_versions` including persisted lines | DB-verified |
+| Reorder | `reorder_decisions` | DB-verified |
+| Inventory scenario | `inventory_scenario_versions` | DB-verified |
+| Inventory scenario | `inventory_scenario_lines` | DB-verified |
+| Inventory health | `inventory_health_observations` | DB-verified |
+| Inventory aging | `inventory_batches` | DB-verified |
+| Inventory aging | `inventory_batch_movements` | DB-verified |
+| Scenario | `scenario_versions` | DB-verified |
+| Scenario | `scenario_assumption_sets` including persisted assumption rows | DB-verified |
+| Scenario | `scenario_output_lines` | DB-verified |
+| Finance | `financial_plan_versions` | DB-verified |
+| Finance | `budget_targets` | DB-verified |
+| Receivables | `customer_invoices` including persisted lines | DB-verified |
+| Receivables | `cash_receipts` including persisted allocations | DB-verified |
+| Receivables | `receivable_snapshots` | DB-verified |
+| Chat evidence | `assistant_grounding_traces` | DB-verified |
+
+Verification evidence is regenerated at [DATA_MODEL_DB_VERIFICATION.json](./DATA_MODEL_DB_VERIFICATION.json). The verifier accepts retained historical rows: the gate requires complete generated-key coverage, valid natural keys and provenance, and passing identities rather than exact total collection counts.
 
 This is the target persisted model for every entity marked `N` in `DATA_GAPS.md`, plus the existing entities that must be extended to make those gaps useful. It preserves the generator's current deterministic conventions and makes stored, versioned facts—not request-time reconstruction—the source for modules and charts.
 

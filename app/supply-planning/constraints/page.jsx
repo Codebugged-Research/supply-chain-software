@@ -21,6 +21,9 @@ export default function ConstraintsPage() {
   const [execRecommendations, setExecRecommendations] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeDrawer, setActiveDrawer] = useState(null)
+  const [resolutionReason, setResolutionReason] = useState('')
+  const [resolving, setResolving] = useState(false)
+  const [resolutionError, setResolutionError] = useState('')
 
   useEffect(() => {
     async function fetchConstraintsData() {
@@ -47,6 +50,8 @@ export default function ConstraintsPage() {
 
   const handleInspectDrawer = async (row) => {
     setActiveDrawer(row)
+    setResolutionReason('')
+    setResolutionError('')
     try {
       const res = await fetch(`/api/v1/supply-planning?action=root_cause_analysis&domain=${row.constraintType}&skuCode=${row.skuCode}`)
       const json = await res.json()
@@ -67,6 +72,30 @@ export default function ConstraintsPage() {
     })
     const payload = await response.json()
     if (payload.success) setExecRecommendations((rows) => rows.map((row) => row.recommendationId === recommendation.recommendationId ? { ...row, status: payload.data.status } : row))
+  }
+
+  const handleResolveRisk = async () => {
+    if (!activeDrawer || !resolutionReason.trim()) return
+    setResolving(true)
+    setResolutionError('')
+    try {
+      const response = await fetch('/api/v1/supply-planning', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'resolve_supply_risk', constraintId: activeDrawer.constraintId, reason: resolutionReason.trim(), actor: 'supply.planner@boat.com' })
+      })
+      const payload = await response.json()
+      if (!response.ok || !payload.success) throw new Error(payload.error || 'Risk resolution failed')
+      const refreshed = await fetch('/api/v1/supply-planning?action=constraints').then((res) => res.json())
+      setConstraints(refreshed.success ? refreshed.data || [] : (rows) => rows.filter((row) => row.constraintId !== activeDrawer.constraintId))
+      setActiveDrawer(null)
+      setRootCauseTree(null)
+      setResolutionReason('')
+    } catch (error) {
+      setResolutionError(error.message)
+    } finally {
+      setResolving(false)
+    }
   }
 
   return (
@@ -166,9 +195,9 @@ export default function ConstraintsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
-                {constraints.map((row, idx) => (
+                {constraints.map((row) => (
                   <tr
-                    key={idx}
+                    key={row.constraintId}
                     onClick={() => handleInspectDrawer(row)}
                     className="hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors"
                   >
@@ -269,16 +298,26 @@ export default function ConstraintsPage() {
             </div>
 
             <div className="border-t border-slate-200 dark:border-slate-800 pt-4 flex items-center justify-end space-x-3">
+              <div className="flex-1 space-y-1.5">
+                <label htmlFor="resolution-reason" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">Resolution reason</label>
+                <textarea
+                  id="resolution-reason"
+                  value={resolutionReason}
+                  onChange={(event) => setResolutionReason(event.target.value)}
+                  onClick={(event) => event.stopPropagation()}
+                  rows={2}
+                  placeholder="Describe the executed mitigation and evidence…"
+                  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                {resolutionError && <p className="text-[11px] text-rose-600 dark:text-rose-400">{resolutionError}</p>}
+              </div>
               <button
-                onClick={() => {
-                  alert("Constraint marked as resolved!")
-                  setActiveDrawer(null)
-                  setRootCauseTree(null)
-                }}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-600/30 transition-colors"
+                onClick={handleResolveRisk}
+                disabled={resolving || !resolutionReason.trim()}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-600/30 transition-colors"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Mark Resolution Executed</span>
+                <span>{resolving ? 'Resolving…' : 'Mark Resolution Executed'}</span>
               </button>
             </div>
           </div>

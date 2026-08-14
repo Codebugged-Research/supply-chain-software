@@ -1,0 +1,653 @@
+[
+  {
+    "poNumber": "PUR-2026-01001",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 4400
+    },
+    "newValues": {
+      "orderedQty": 4500
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-02-10T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01002",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3300
+    },
+    "newValues": {
+      "orderedQty": 3400
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-05-12T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01003",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 2500
+    },
+    "newValues": {
+      "orderedQty": 2600
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-06-16T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01003",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 2600
+    },
+    "newValues": {
+      "orderedQty": 2700
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-06-17T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01005",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 2300
+    },
+    "newValues": {
+      "orderedQty": 2400
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-04T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01006",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 6200
+    },
+    "newValues": {
+      "orderedQty": 6300
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-25T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01007",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3200
+    },
+    "newValues": {
+      "orderedQty": 3300
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-09-15T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01007",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3300
+    },
+    "newValues": {
+      "orderedQty": 3400
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-09-16T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01009",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 4900
+    },
+    "newValues": {
+      "orderedQty": 5000
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-02-10T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01010",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 600
+    },
+    "newValues": {
+      "orderedQty": 700
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-05-12T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01012",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1800
+    },
+    "newValues": {
+      "orderedQty": 1900
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-07-14T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01012",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1900
+    },
+    "newValues": {
+      "orderedQty": 2000
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-07-15T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01013",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1100
+    },
+    "newValues": {
+      "orderedQty": 1200
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-04T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01016",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 2500
+    },
+    "newValues": {
+      "orderedQty": 2600
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2025-08-26T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01016",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 2600
+    },
+    "newValues": {
+      "orderedQty": 2700
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2025-08-27T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01017",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 4000
+    },
+    "newValues": {
+      "orderedQty": 4100
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-02-10T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01018",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 700
+    },
+    "newValues": {
+      "orderedQty": 800
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-05-12T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01020",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 5300
+    },
+    "newValues": {
+      "orderedQty": 5400
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-07-14T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01020",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 5400
+    },
+    "newValues": {
+      "orderedQty": 5500
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-07-15T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01021",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 800
+    },
+    "newValues": {
+      "orderedQty": 900
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-04T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01021",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 900
+    },
+    "newValues": {
+      "orderedQty": 1000
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-05T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01023",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 4600
+    },
+    "newValues": {
+      "orderedQty": 4700
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-09-15T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01024",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1200
+    },
+    "newValues": {
+      "orderedQty": 1300
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2025-08-26T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01024",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1300
+    },
+    "newValues": {
+      "orderedQty": 1400
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2025-08-27T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01025",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3000
+    },
+    "newValues": {
+      "orderedQty": 3100
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-02-10T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01025",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3100
+    },
+    "newValues": {
+      "orderedQty": 3200
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-02-11T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01027",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 3500
+    },
+    "newValues": {
+      "orderedQty": 3600
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-06-16T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01028",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 500
+    },
+    "newValues": {
+      "orderedQty": 600
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-07-14T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01029",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1500
+    },
+    "newValues": {
+      "orderedQty": 1600
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-04T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01029",
+    "revisionNo": 2,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1600
+    },
+    "newValues": {
+      "orderedQty": 1700
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-05T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "poNumber": "PUR-2026-01030",
+    "revisionNo": 1,
+    "changedFields": [
+      "orderedQty"
+    ],
+    "oldValues": {
+      "orderedQty": 1100
+    },
+    "newValues": {
+      "orderedQty": 1200
+    },
+    "reasonCode": "PLAN_QUANTITY_CHANGE",
+    "comment": "Quantity aligned to the latest approved supply-plan revision.",
+    "changedBy": "sourcing.planner@boat.com",
+    "changedAt": "2026-08-25T09:00:00.000Z",
+    "sourceWorkflowId": null,
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

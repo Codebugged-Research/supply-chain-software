@@ -1,0 +1,692 @@
+{
+  "checkedAt": "2026-08-12T03:51:15.668Z",
+  "database": "supply_chain_app",
+  "collections": [
+    {
+      "collection": "planning_calendar_versions",
+      "expected": 1,
+      "stored": 1,
+      "uniqueExpected": 1,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "planning_weeks",
+      "expected": 157,
+      "stored": 157,
+      "uniqueExpected": 157,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "sop_skus",
+      "expected": 15,
+      "stored": 15,
+      "uniqueExpected": 15,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "lifecycle_transition_history",
+      "expected": 15,
+      "stored": 15,
+      "uniqueExpected": 15,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "npi_products",
+      "expected": 4,
+      "stored": 4,
+      "uniqueExpected": 4,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "npi_readiness_items",
+      "expected": 32,
+      "stored": 32,
+      "uniqueExpected": 32,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "event_templates",
+      "expected": 8,
+      "stored": 8,
+      "uniqueExpected": 8,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "demand_events",
+      "expected": 8,
+      "stored": 11,
+      "uniqueExpected": 8,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "forecast_vintages",
+      "expected": 23400,
+      "stored": 23400,
+      "uniqueExpected": 23400,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "forecast_accuracy_history",
+      "expected": 23400,
+      "stored": 23400,
+      "uniqueExpected": 23400,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "factor_adjusted_demand_proposals",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "workflow_instances",
+      "expected": 8,
+      "stored": 8,
+      "uniqueExpected": 8,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "workflow_steps",
+      "expected": 30,
+      "stored": 30,
+      "uniqueExpected": 30,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "entity_audit_events",
+      "expected": 25,
+      "stored": 25,
+      "uniqueExpected": 25,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "consensus_plan_versions",
+      "expected": 1,
+      "stored": 1,
+      "uniqueExpected": 1,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "consensus_plan_lines",
+      "expected": 390,
+      "stored": 390,
+      "uniqueExpected": 390,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "kpi_definitions",
+      "expected": 13,
+      "stored": 13,
+      "uniqueExpected": 13,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "kpi_observations",
+      "expected": 338,
+      "stored": 338,
+      "uniqueExpected": 338,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "users",
+      "expected": 11,
+      "stored": 11,
+      "uniqueExpected": 11,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "role_assignments",
+      "expected": 11,
+      "stored": 11,
+      "uniqueExpected": 11,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "notification_subscriptions",
+      "expected": 6,
+      "stored": 6,
+      "uniqueExpected": 6,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "notification_deliveries",
+      "expected": 12,
+      "stored": 12,
+      "uniqueExpected": 12,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "report_jobs",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "report_artifacts",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "integration_runs",
+      "expected": 35,
+      "stored": 35,
+      "uniqueExpected": 35,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "market_benchmark_facts",
+      "expected": 420,
+      "stored": 420,
+      "uniqueExpected": 420,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "channel_inventory_norms",
+      "expected": 75,
+      "stored": 75,
+      "uniqueExpected": 75,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "commercial_schemes",
+      "expected": 6,
+      "stored": 6,
+      "uniqueExpected": 6,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "distributor_credit_accounts",
+      "expected": 5,
+      "stored": 5,
+      "uniqueExpected": 5,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "distributor_credit_snapshots",
+      "expected": 5,
+      "stored": 5,
+      "uniqueExpected": 5,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "dealers",
+      "expected": 50,
+      "stored": 50,
+      "uniqueExpected": 50,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "dealer_sku_weekly",
+      "expected": 6500,
+      "stored": 6500,
+      "uniqueExpected": 6500,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "advance_ship_notices",
+      "expected": 10,
+      "stored": 10,
+      "uniqueExpected": 10,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "dispatch_milestones",
+      "expected": 40,
+      "stored": 40,
+      "uniqueExpected": 40,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "supplier_master",
+      "expected": 4,
+      "stored": 8,
+      "uniqueExpected": 4,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "manufacturing_partners",
+      "expected": 4,
+      "stored": 4,
+      "uniqueExpected": 4,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "manufacturing_partner_lines",
+      "expected": 10,
+      "stored": 10,
+      "uniqueExpected": 10,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "supplier_reliability_history",
+      "expected": 12,
+      "stored": 16,
+      "uniqueExpected": 12,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "purchase_orders",
+      "expected": 32,
+      "stored": 80,
+      "uniqueExpected": 32,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "po_exclusions",
+      "expected": 2,
+      "stored": 2,
+      "uniqueExpected": 2,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "po_revisions",
+      "expected": 31,
+      "stored": 31,
+      "uniqueExpected": 31,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "po_adherence_observations",
+      "expected": 12,
+      "stored": 12,
+      "uniqueExpected": 12,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "line_capacity_plans",
+      "expected": 1570,
+      "stored": 1570,
+      "uniqueExpected": 1570,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "capacity_expansion_plans",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "production_execution_events",
+      "expected": 10,
+      "stored": 10,
+      "uniqueExpected": 10,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "goods_receipt_inspections",
+      "expected": 20,
+      "stored": 20,
+      "uniqueExpected": 20,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "import_shipment_milestones",
+      "expected": 28,
+      "stored": 28,
+      "uniqueExpected": 28,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "transfer_milestones",
+      "expected": 24,
+      "stored": 24,
+      "uniqueExpected": 24,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "reorder_recommendation_versions",
+      "expected": 1,
+      "stored": 1,
+      "uniqueExpected": 1,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "reorder_decisions",
+      "expected": 9,
+      "stored": 9,
+      "uniqueExpected": 9,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "inventory_scenario_versions",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "inventory_scenario_lines",
+      "expected": 2700,
+      "stored": 2700,
+      "uniqueExpected": 2700,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "inventory_health_observations",
+      "expected": 1950,
+      "stored": 1950,
+      "uniqueExpected": 1950,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "inventory_batches",
+      "expected": 75,
+      "stored": 75,
+      "uniqueExpected": 75,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "inventory_batch_movements",
+      "expected": 150,
+      "stored": 150,
+      "uniqueExpected": 150,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "scenario_versions",
+      "expected": 3,
+      "stored": 3,
+      "uniqueExpected": 3,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "scenario_assumption_sets",
+      "expected": 24,
+      "stored": 24,
+      "uniqueExpected": 24,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "scenario_output_lines",
+      "expected": 5850,
+      "stored": 5850,
+      "uniqueExpected": 5850,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "financial_plan_versions",
+      "expected": 1,
+      "stored": 1,
+      "uniqueExpected": 1,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "budget_targets",
+      "expected": 300,
+      "stored": 300,
+      "uniqueExpected": 300,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "customer_invoices",
+      "expected": 10,
+      "stored": 10,
+      "uniqueExpected": 10,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "cash_receipts",
+      "expected": 6,
+      "stored": 6,
+      "uniqueExpected": 6,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "receivable_snapshots",
+      "expected": 10,
+      "stored": 10,
+      "uniqueExpected": 10,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    },
+    {
+      "collection": "assistant_grounding_traces",
+      "expected": 5,
+      "stored": 5,
+      "uniqueExpected": 5,
+      "missingKeys": 0,
+      "invalidKeys": 0,
+      "missingProvenance": 0,
+      "status": "DB-verified"
+    }
+  ],
+  "integrity": [
+    {
+      "check": "planning window is 157 unique weeks",
+      "pass": true
+    },
+    {
+      "check": "NPI has no pre-launch actuals",
+      "pass": true
+    },
+    {
+      "check": "forecast accuracy stores forecast and actual",
+      "pass": true
+    },
+    {
+      "check": "all workflow subjects have ordered steps",
+      "pass": true
+    },
+    {
+      "check": "Demand and Production share audit collection",
+      "pass": true
+    },
+    {
+      "check": "partner capacity reconciles",
+      "pass": true
+    },
+    {
+      "check": "PO handover dates retain legal state",
+      "pass": true
+    },
+    {
+      "check": "capacity arithmetic reconciles",
+      "pass": true
+    },
+    {
+      "check": "inventory scenario identity reconciles",
+      "pass": true
+    },
+    {
+      "check": "invoice amounts reconcile",
+      "pass": true
+    },
+    {
+      "check": "receipt allocations do not exceed receipt",
+      "pass": true
+    }
+  ]
+}

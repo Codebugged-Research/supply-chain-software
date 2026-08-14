@@ -2,12 +2,15 @@ import { NextResponse } from 'next/server'
 import {
   getOverviewMetrics,
   getSupplyPlanGrid,
+  recalculateMrp,
   getBomExplosion,
   getCapacityRccp,
   getPurchaseOrdersWorkbench,
   getDistributionNetwork,
   getConstraintsList,
+  resolveSupplyRisk,
   getScenariosList,
+  publishSupplyScenario,
   getSkuDetail360,
   getSupplierDetail360,
   getPlantDetail360,
@@ -39,8 +42,10 @@ import {
   submitConsensusProductionPlanForReview,
   reviewConsensusProductionPlan,
   lockConsensusProductionPlan,
-  getImportControlTower
+  getImportControlTower,
+  getNpiSupplyPipeline
 } from '@/lib/supplyChainService'
+import { getCanonicalChannelInventoryNorms } from '@/lib/channelInventoryNorms'
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
@@ -57,6 +62,11 @@ export async function GET(request) {
       const location = searchParams.get('location')
       const startWeek = searchParams.get('startWeek')
       const data = await getSupplyPlanGrid({ skuCode, location, startWeek })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'npi_readiness' || action === 'npi_pipeline') {
+      const data = await getNpiSupplyPipeline()
       return NextResponse.json({ success: true, data })
     }
 
@@ -83,6 +93,11 @@ export async function GET(request) {
       return NextResponse.json({ success: true, data })
     }
 
+    if (action === 'channel_inventory_norms') {
+      const data = await getCanonicalChannelInventoryNorms()
+      return NextResponse.json({ success: true, data })
+    }
+
     if (action === 'import_control_tower') {
       const data = await getImportControlTower()
       return NextResponse.json({ success: true, data })
@@ -105,7 +120,8 @@ export async function GET(request) {
     }
 
     if (action === 'supplier_detail') {
-      const supplierCode = searchParams.get('supplierCode') || 'SUP-DIXON-NOIDA'
+      const supplierCode = searchParams.get('supplierCode')
+      if (!supplierCode) return NextResponse.json({ success: false, error: 'supplierCode is required' }, { status: 400 })
       const data = await getSupplierDetail360(supplierCode)
       return NextResponse.json({ success: true, data })
     }
@@ -227,7 +243,26 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json()
-    const { action, recommendationId, plantCode, poNumber, actionCode, warningId, issueId, exclusionCode, reason, actor, decision, notes } = body
+    const { action, recommendationId, plantCode, poNumber, actionCode, warningId, issueId, constraintId, exclusionCode, reason, actor, decision, notes, skuCode, location, startWeek } = body
+
+    if (action === 'recalculate_mrp') {
+      const data = await recalculateMrp({ skuCode, location, startWeek })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'resolve_supply_risk') {
+      if (!constraintId || !String(reason || '').trim()) {
+        return NextResponse.json({ success: false, error: 'constraintId and a resolution reason are required' }, { status: 400 })
+      }
+      const data = await resolveSupplyRisk({ constraintId, reason, actor })
+      return NextResponse.json({ success: true, data })
+    }
+
+    if (action === 'publish_scenario') {
+      if (!body.scenarioVersionId) return NextResponse.json({ success: false, error: 'scenarioVersionId is required' }, { status: 400 })
+      const data = await publishSupplyScenario({ scenarioVersionId: body.scenarioVersionId, actor })
+      return NextResponse.json({ success: true, data })
+    }
 
     if (action === 'execute_capacity_recommendation') {
       const result = await executeCapacityRecommendation(recommendationId || 'REC-PLANT-NOIDA-2026-W34')

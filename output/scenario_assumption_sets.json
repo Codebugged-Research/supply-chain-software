@@ -1,0 +1,626 @@
+[
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "DEMAND_UPLIFT",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.1174,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 1,
+    "source": "SEED",
+    "comment": "Baseline Consensus DEMAND_UPLIFT lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "CHANNEL_MIX",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.0443,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 2,
+    "source": "SEED",
+    "comment": "Baseline Consensus CHANNEL_MIX lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "SUPPLIER_DELAY_DAYS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 5.3159,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 3,
+    "source": "SEED",
+    "comment": "Baseline Consensus SUPPLIER_DELAY_DAYS lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "LINE_CAPACITY_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "CAPACITY",
+    "value": 0.137,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 4,
+    "source": "SEED",
+    "comment": "Baseline Consensus LINE_CAPACITY_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "LEAD_TIME_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 3.1994,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 5,
+    "source": "SEED",
+    "comment": "Baseline Consensus LEAD_TIME_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "SERVICE_LEVEL_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "INVENTORY",
+    "value": 0.0206,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 6,
+    "source": "SEED",
+    "comment": "Baseline Consensus SERVICE_LEVEL_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "NET_PRICE_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0363,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 7,
+    "source": "SEED",
+    "comment": "Baseline Consensus NET_PRICE_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-BASELINE-V1",
+    "assumptionCode": "UNIT_COST_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0333,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 8,
+    "source": "SEED",
+    "comment": "Baseline Consensus UNIT_COST_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "DEMAND_UPLIFT",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.1239,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 1,
+    "source": "SEED",
+    "comment": "Festive Demand Surge DEMAND_UPLIFT lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "CHANNEL_MIX",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.0521,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 2,
+    "source": "SEED",
+    "comment": "Festive Demand Surge CHANNEL_MIX lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "SUPPLIER_DELAY_DAYS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 4.8729,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 3,
+    "source": "SEED",
+    "comment": "Festive Demand Surge SUPPLIER_DELAY_DAYS lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "LINE_CAPACITY_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "CAPACITY",
+    "value": 0.1575,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 4,
+    "source": "SEED",
+    "comment": "Festive Demand Surge LINE_CAPACITY_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "LEAD_TIME_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 3.4061,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 5,
+    "source": "SEED",
+    "comment": "Festive Demand Surge LEAD_TIME_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "SERVICE_LEVEL_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "INVENTORY",
+    "value": 0.0224,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 6,
+    "source": "SEED",
+    "comment": "Festive Demand Surge SERVICE_LEVEL_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "NET_PRICE_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0366,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 7,
+    "source": "SEED",
+    "comment": "Festive Demand Surge NET_PRICE_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-FESTIVE-V1",
+    "assumptionCode": "UNIT_COST_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0331,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 8,
+    "source": "SEED",
+    "comment": "Festive Demand Surge UNIT_COST_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "DEMAND_UPLIFT",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.1238,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 1,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery DEMAND_UPLIFT lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "CHANNEL_MIX",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "DEMAND",
+    "value": 0.0565,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 2,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery CHANNEL_MIX lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "SUPPLIER_DELAY_DAYS",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 4.5481,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 3,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery SUPPLIER_DELAY_DAYS lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "LINE_CAPACITY_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "CAPACITY",
+    "value": 0.1478,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 4,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery LINE_CAPACITY_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "LEAD_TIME_DELTA",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "PROCUREMENT",
+    "value": 2.8969,
+    "unit": "DAYS",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 30,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 5,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery LEAD_TIME_DELTA lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "SERVICE_LEVEL_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "INVENTORY",
+    "value": 0.0213,
+    "unit": "RATE",
+    "operator": "ADD",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 6,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery SERVICE_LEVEL_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "NET_PRICE_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0356,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 7,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery NET_PRICE_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "assumptionSetId": "ASM-SUPPLIER_DELAY-V1",
+    "assumptionCode": "UNIT_COST_CHANGE",
+    "scopeType": "ENTERPRISE",
+    "scopeId": "BOAT-INDIA",
+    "effectiveWeek": "2026-W34",
+    "domain": "FINANCE",
+    "value": 0.0326,
+    "unit": "RATE",
+    "operator": "MULTIPLY",
+    "lowerBound": 0,
+    "upperBound": 0.75,
+    "scope": {
+      "type": "ENTERPRISE",
+      "ids": [
+        "BOAT-INDIA"
+      ]
+    },
+    "effectiveFromWeek": "2026-W34",
+    "effectiveToWeek": "2027-W08",
+    "priority": 8,
+    "source": "SEED",
+    "comment": "Supplier Delay Recovery UNIT_COST_CHANGE lever",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

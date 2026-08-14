@@ -1,0 +1,128 @@
+[
+  {
+    "receiptId": "RCPT-0001",
+    "distributorId": "DST-001",
+    "receivedDate": "2025-10-16",
+    "amountPaise": 559050110,
+    "paymentMethod": "RTGS",
+    "bankReference": "UTR202600000001",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-1",
+    "allocations": [
+      {
+        "invoiceId": "INV-0001",
+        "allocatedAmountPaise": 559050110,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "receiptId": "RCPT-0002",
+    "distributorId": "DST-002",
+    "receivedDate": "2026-04-14",
+    "amountPaise": 483681634,
+    "paymentMethod": "NEFT",
+    "bankReference": "UTR202600000002",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-2",
+    "allocations": [
+      {
+        "invoiceId": "INV-0002",
+        "allocatedAmountPaise": 483681634,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "receiptId": "RCPT-0003",
+    "distributorId": "DST-003",
+    "receivedDate": "2026-07-01",
+    "amountPaise": 731262506,
+    "paymentMethod": "RTGS",
+    "bankReference": "UTR202600000003",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-3",
+    "allocations": [
+      {
+        "invoiceId": "INV-0003",
+        "allocatedAmountPaise": 731262506,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "receiptId": "RCPT-0004",
+    "distributorId": "DST-004",
+    "receivedDate": "2026-08-02",
+    "amountPaise": 377358825,
+    "paymentMethod": "NEFT",
+    "bankReference": "UTR202600000004",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-4",
+    "allocations": [
+      {
+        "invoiceId": "INV-0004",
+        "allocatedAmountPaise": 377358825,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "receiptId": "RCPT-0005",
+    "distributorId": "DST-005",
+    "receivedDate": "2026-08-10",
+    "amountPaise": 483972134,
+    "paymentMethod": "RTGS",
+    "bankReference": "UTR202600000005",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-5",
+    "allocations": [
+      {
+        "invoiceId": "INV-0005",
+        "allocatedAmountPaise": 483972134,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "receiptId": "RCPT-0006",
+    "distributorId": "DST-006",
+    "receivedDate": "2025-10-27",
+    "amountPaise": 445185073,
+    "paymentMethod": "NEFT",
+    "bankReference": "UTR202600000006",
+    "status": "CLEARED",
+    "sourceRunId": "RUN-CASH-6",
+    "allocations": [
+      {
+        "invoiceId": "INV-0006",
+        "allocatedAmountPaise": 445185073,
+        "writeOffPaise": 0,
+        "discountTakenPaise": 0
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

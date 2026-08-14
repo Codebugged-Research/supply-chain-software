@@ -3,30 +3,120 @@
     "id": "DST-001",
     "name": "boAt North Distribution Hub",
     "region": "North",
+    "regionId": "REG-N",
+    "headquartersCity": "Delhi",
+    "primaryStates": [
+      "Delhi",
+      "Haryana",
+      "Punjab",
+      "Uttar Pradesh"
+    ],
+    "coverageType": "REGIONAL",
     "tier": "A"
   },
   {
     "id": "DST-002",
     "name": "Western India Audio Channel Partners",
     "region": "West",
+    "regionId": "REG-W",
+    "headquartersCity": "Mumbai",
+    "primaryStates": [
+      "Maharashtra",
+      "Goa",
+      "Gujarat"
+    ],
+    "coverageType": "REGIONAL",
     "tier": "A"
   },
   {
     "id": "DST-003",
     "name": "Northland Electronics Distributors",
     "region": "North",
+    "regionId": "REG-N",
+    "headquartersCity": "Jaipur",
+    "primaryStates": [
+      "Rajasthan",
+      "Uttarakhand",
+      "Himachal Pradesh"
+    ],
+    "coverageType": "REGIONAL",
     "tier": "B"
   },
   {
     "id": "DST-004",
     "name": "South India Digital Retail Network",
     "region": "South",
+    "regionId": "REG-S",
+    "headquartersCity": "Bengaluru",
+    "primaryStates": [
+      "Karnataka",
+      "Tamil Nadu",
+      "Kerala",
+      "Telangana",
+      "Andhra Pradesh"
+    ],
+    "coverageType": "REGIONAL",
     "tier": "A"
   },
   {
     "id": "DST-005",
     "name": "West Bharat Consumer Electronics Traders",
     "region": "West",
+    "regionId": "REG-W",
+    "headquartersCity": "Ahmedabad",
+    "primaryStates": [
+      "Gujarat",
+      "Maharashtra"
+    ],
+    "coverageType": "REGIONAL",
     "tier": "C"
+  },
+  {
+    "id": "DST-006",
+    "name": "East India Consumer Tech Network",
+    "region": "East",
+    "regionId": "REG-E",
+    "headquartersCity": "Kolkata",
+    "primaryStates": [
+      "West Bengal",
+      "Odisha",
+      "Bihar",
+      "Jharkhand"
+    ],
+    "coverageType": "REGIONAL",
+    "tier": "A"
+  },
+  {
+    "id": "DST-007",
+    "name": "Central Bharat Retail Distribution",
+    "region": "Central",
+    "regionId": "REG-C",
+    "headquartersCity": "Nagpur",
+    "primaryStates": [
+      "Madhya Pradesh",
+      "Chhattisgarh",
+      "Vidarbha"
+    ],
+    "coverageType": "REGIONAL",
+    "tier": "B"
+  },
+  {
+    "id": "DST-008",
+    "name": "Northeast Digital Trade Network",
+    "region": "Northeast",
+    "regionId": "REG-NE",
+    "headquartersCity": "Guwahati",
+    "primaryStates": [
+      "Assam",
+      "Meghalaya",
+      "Manipur",
+      "Nagaland",
+      "Tripura",
+      "Mizoram",
+      "Arunachal Pradesh",
+      "Sikkim"
+    ],
+    "coverageType": "REGIONAL",
+    "tier": "B"
   }
 ]

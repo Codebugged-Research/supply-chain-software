@@ -24,7 +24,7 @@ S&OP Executive Dashboard — governed cross-functional review workspace over one
 
 ### Scenario Planning reuse decision
 
-The existing Scenario Planning tab already owns demand-uplift, input-cost, and capacity-change assumptions plus baseline comparison. Dashboard does **not** create another scenario editor. A shared `buildWhatIfScenarioComparison()` calculation now powers both tabs; Dashboard presents named, read-only comparisons for the review meeting, while assumption tuning remains in Scenario Planning. The shared calculation also closes Scenario Planning's prior disconnected-capacity bug by applying capacity as a deliverability constraint.
+Scenario Planning owns authoring and publication. Dashboard does **not** create another editor. It shows canonical named comparisons, identifies the `PUBLISHED` version, and consumes that version's stored output in the plan-balance view. With no published scenario it falls back to current consensus/event-adjusted demand and operational supply.
 
 ---
 
@@ -40,6 +40,7 @@ The existing Scenario Planning tab already owns demand-uplift, input-cost, and c
 | `/api/data/meta` → `meta{}` | `skuCount`, `distributorCount`, `weekCount` | Subtitle string |
 | `/api/dashboard/plan-balance` | `rows[]`: Phase 3 forecast, capacity-constrained net supply, operating plan, production/purchase split, confirmed PO receipts, rated capacity, utilization, gap and status; `summary{}` and source lineage | Unified 26-bucket S&OP balance chart, exception table and supply KPIs |
 | `/api/dashboard/review-cycle` | `cycleId`, cadence, status, start/next/close timestamps, completed roles, history | Weekly/fortnightly/monthly/on-demand cycle configuration, role completion and S&OP open/close governance |
+| `/api/scenarios` + active canonical scenario | `activeScenarioVersionId`, assumptions, weekly demand/supply/inventory outcomes | Active comparison marker and selected input for the 26-week balance |
 
 **Writes:** `PATCH /api/dashboard/review-cycle` for cadence changes, role review completion, and S&OP-only open/close actions. POC server-memory persistence.
 
@@ -74,7 +75,7 @@ The existing Scenario Planning tab already owns demand-uplift, input-cost, and c
 | **Order vs Dispatch** | Separate downstream execution view: ordered vs simulated dispatched per distributor. It does not duplicate the Dashboard's time-phased forecast/net-supply/operating-plan cut. |
 | **Supply Planning → Capacity / Procurement POs** | Supplies rated capacity, planned workload, production/purchase plan and open vendor PO units used to constrain the Dashboard net-supply series. |
 | **Financial Planning** | Dashboard Revenue KPI and Financial Planning Revenue total share the same data source. Financial Planning adds budget variance, contribution bridge, 13-week cash flow projection. |
-| **Scenario Planning** | Owns scenario assumption editing. Dashboard reuses the shared scenario calculation for meeting comparison and does not duplicate scenario CRUD/editor infrastructure. |
+| **Scenario Planning** | Owns scenario assumption editing and publication. Dashboard reads the published selection and outputs without duplicating state. |
 | **Chatbot** | The Chatbot's `/api/chat/insights` generates a structured exception list. The Dashboard Alerts panel currently shows 4 hardcoded strings that should be replaced by that feed. |
 
 ---

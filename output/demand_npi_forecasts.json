@@ -1,132 +1,3108 @@
 [
   {
-    "npiId": "NPI-BOAT-ARC",
-    "skuId": "SKU-BOAT-NPI-ARC",
-    "skuName": "boAt Airdopes Arc",
+    "npiId": "NPI-BOAT-NOVA-181",
+    "skuId": "SKU-BOAT-NPI-NOVA181",
+    "skuName": "boAt Airdopes Nova 181",
+    "productName": "boAt Airdopes Nova 181",
     "category": "TWS Earbuds",
+    "subCategory": "True Wireless Stereo",
     "launchWeek": "2026-W38",
+    "rampWeeks": 12,
+    "rampCurve": "S_CURVE",
+    "analogSkuIds": [
+      "SKU-BOAT-AD141",
+      "SKU-BOAT-AD161P",
+      "SKU-BOAT-AD131"
+    ],
+    "targetPeakWeeklyUnits": 7200,
+    "mrpPaise": 249900,
+    "plannedNetPricePaise": 179900,
+    "unitCostPaise": 78000,
+    "readinessRate": 0.75,
+    "cannibalizedSkuIds": [
+      "SKU-BOAT-AD131"
+    ],
+    "cannibalizationRate": 0.12,
     "curveTemplate": "S_CURVE",
-    "peakWeeklyUnits": 1250,
-    "analogSkuId": "SKU-BOAT-AD161P",
+    "analogSkuId": "SKU-BOAT-AD141",
+    "peakWeeklyUnits": 8175,
+    "readinessPct": 75,
     "cannibalizationRatePct": 12,
-    "readinessPct": 78,
+    "currency": "INR",
+    "lifecycleStage": "NEW",
     "stage": "NPI",
-    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "hasSalesHistory": false,
+    "forecastMethod": "NPI_RAMP",
+    "status": "PLANNED",
+    "ownerUserId": "npi.manager@boat.com",
+    "effectiveFromWeek": "2026-W33",
+    "effectiveToWeek": null,
+    "version": 1,
+    "createdAt": "2026-08-10T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
     "updatedBy": "system.seed",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701,
+    "analogWeeklyUnits": 9243,
     "projection": [
       {
-        "week": "Launch +1",
-        "units": 43
+        "week": "2026-W38",
+        "weekId": "2026-W38",
+        "launchOffsetWeek": 1,
+        "units": 129,
+        "forecastQty": 129
       },
       {
-        "week": "Launch +2",
-        "units": 81
+        "week": "2026-W39",
+        "weekId": "2026-W39",
+        "launchOffsetWeek": 2,
+        "units": 364,
+        "forecastQty": 364
       },
       {
-        "week": "Launch +3",
-        "units": 149
+        "week": "2026-W40",
+        "weekId": "2026-W40",
+        "launchOffsetWeek": 3,
+        "units": 791,
+        "forecastQty": 791
       },
       {
-        "week": "Launch +4",
-        "units": 261
+        "week": "2026-W41",
+        "weekId": "2026-W41",
+        "launchOffsetWeek": 4,
+        "units": 1500,
+        "forecastQty": 1500
       },
       {
-        "week": "Launch +5",
-        "units": 424
+        "week": "2026-W42",
+        "weekId": "2026-W42",
+        "launchOffsetWeek": 5,
+        "units": 2500,
+        "forecastQty": 2500
       },
       {
-        "week": "Launch +6",
-        "units": 625
+        "week": "2026-W43",
+        "weekId": "2026-W43",
+        "launchOffsetWeek": 6,
+        "units": 3703,
+        "forecastQty": 3703
       },
       {
-        "week": "Launch +7",
-        "units": 826
+        "week": "2026-W44",
+        "weekId": "2026-W44",
+        "launchOffsetWeek": 7,
+        "units": 5034,
+        "forecastQty": 5034
       },
       {
-        "week": "Launch +8",
-        "units": 989
+        "week": "2026-W45",
+        "weekId": "2026-W45",
+        "launchOffsetWeek": 8,
+        "units": 5992,
+        "forecastQty": 5992
       },
       {
-        "week": "Launch +9",
-        "units": 1101
+        "week": "2026-W46",
+        "weekId": "2026-W46",
+        "launchOffsetWeek": 9,
+        "units": 6712,
+        "forecastQty": 6712
       },
       {
-        "week": "Launch +10",
-        "units": 1169
+        "week": "2026-W47",
+        "weekId": "2026-W47",
+        "launchOffsetWeek": 10,
+        "units": 7048,
+        "forecastQty": 7048
       },
       {
-        "week": "Launch +11",
-        "units": 1207
+        "week": "2026-W48",
+        "weekId": "2026-W48",
+        "launchOffsetWeek": 11,
+        "units": 7374,
+        "forecastQty": 7374
       },
       {
-        "week": "Launch +12",
-        "units": 1228
+        "week": "2026-W49",
+        "weekId": "2026-W49",
+        "launchOffsetWeek": 12,
+        "units": 7435,
+        "forecastQty": 7435
       }
-    ]
+    ],
+    "channelProjection": [
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 24,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 19,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 15,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 22,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 10,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 17,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 13,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W38",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 9,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 66,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 55,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 43,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 57,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 32,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 49,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 37,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W39",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 25,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 146,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 126,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 93,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 123,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 69,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 106,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 75,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 53,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 282,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 232,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 179,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 250,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 121,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 194,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 145,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 97,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 443,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 382,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 309,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 409,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 210,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 320,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 251,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 176,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 681,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 560,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 429,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 599,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 322,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 468,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 386,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 258,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 926,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 798,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 592,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 784,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 400,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 674,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 526,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 334,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 1140,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 938,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 729,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 920,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 493,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 792,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 587,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 393,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 1184,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 1022,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 832,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 1104,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 566,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 863,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 671,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 470,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 1290,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 1060,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 820,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 1146,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 616,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 896,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 731,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 489,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 1358,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 1171,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 860,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 1161,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 642,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 979,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 712,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 491,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 1414,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 1163,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 896,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 1153,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 605,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 974,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 743,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 487,
+        "actualQty": null
+      }
+    ],
+    "actualHistory": []
   },
   {
-    "npiId": "NPI-BOAT-LUNAR-X",
-    "skuId": "SKU-BOAT-NPI-LX",
-    "skuName": "boAt Lunar X Pro",
-    "category": "Smartwatches",
-    "launchWeek": "2026-W42",
-    "curveTemplate": "HOCKEY_STICK",
-    "peakWeeklyUnits": 720,
-    "analogSkuId": "SKU-BOAT-LD100",
-    "cannibalizationRatePct": 8,
-    "readinessPct": 64,
+    "npiId": "NPI-BOAT-APEX-300",
+    "skuId": "SKU-BOAT-NPI-APEX300",
+    "skuName": "boAt Rockerz Apex 300",
+    "productName": "boAt Rockerz Apex 300",
+    "category": "Neckbands",
+    "subCategory": "Wireless Neckband",
+    "launchWeek": "2026-W40",
+    "rampWeeks": 10,
+    "rampCurve": "LINEAR",
+    "analogSkuIds": [
+      "SKU-BOAT-RZ255",
+      "SKU-BOAT-RZ330",
+      "SKU-BOAT-RZ245"
+    ],
+    "targetPeakWeeklyUnits": 4800,
+    "mrpPaise": 199900,
+    "plannedNetPricePaise": 139900,
+    "unitCostPaise": 69000,
+    "readinessRate": 0.625,
+    "cannibalizedSkuIds": [
+      "SKU-BOAT-RZ245"
+    ],
+    "cannibalizationRate": 0.09,
+    "curveTemplate": "LINEAR",
+    "analogSkuId": "SKU-BOAT-RZ255",
+    "peakWeeklyUnits": 6106,
+    "readinessPct": 63,
+    "cannibalizationRatePct": 9,
+    "currency": "INR",
+    "lifecycleStage": "NEW",
     "stage": "NPI",
-    "updatedAt": "2026-08-11T05:54:52.680Z",
+    "hasSalesHistory": false,
+    "forecastMethod": "NPI_RAMP",
+    "status": "PLANNED",
+    "ownerUserId": "npi.manager@boat.com",
+    "effectiveFromWeek": "2026-W33",
+    "effectiveToWeek": null,
+    "version": 1,
+    "createdAt": "2026-08-10T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
     "updatedBy": "system.seed",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701,
+    "analogWeeklyUnits": 8986,
     "projection": [
       {
-        "week": "Launch +1",
-        "units": 27
+        "week": "2026-W40",
+        "weekId": "2026-W40",
+        "launchOffsetWeek": 1,
+        "units": 533,
+        "forecastQty": 533
       },
       {
-        "week": "Launch +2",
-        "units": 54
+        "week": "2026-W41",
+        "weekId": "2026-W41",
+        "launchOffsetWeek": 2,
+        "units": 1062,
+        "forecastQty": 1062
       },
       {
-        "week": "Launch +3",
-        "units": 81
+        "week": "2026-W42",
+        "weekId": "2026-W42",
+        "launchOffsetWeek": 3,
+        "units": 1618,
+        "forecastQty": 1618
       },
       {
-        "week": "Launch +4",
-        "units": 108
+        "week": "2026-W43",
+        "weekId": "2026-W43",
+        "launchOffsetWeek": 4,
+        "units": 2126,
+        "forecastQty": 2126
       },
       {
-        "week": "Launch +5",
-        "units": 135
+        "week": "2026-W44",
+        "weekId": "2026-W44",
+        "launchOffsetWeek": 5,
+        "units": 2659,
+        "forecastQty": 2659
       },
       {
-        "week": "Launch +6",
-        "units": 162
+        "week": "2026-W45",
+        "weekId": "2026-W45",
+        "launchOffsetWeek": 6,
+        "units": 3184,
+        "forecastQty": 3184
       },
       {
-        "week": "Launch +7",
-        "units": 220
+        "week": "2026-W46",
+        "weekId": "2026-W46",
+        "launchOffsetWeek": 7,
+        "units": 3709,
+        "forecastQty": 3709
       },
       {
-        "week": "Launch +8",
-        "units": 320
+        "week": "2026-W47",
+        "weekId": "2026-W47",
+        "launchOffsetWeek": 8,
+        "units": 4251,
+        "forecastQty": 4251
       },
       {
-        "week": "Launch +9",
-        "units": 420
+        "week": "2026-W48",
+        "weekId": "2026-W48",
+        "launchOffsetWeek": 9,
+        "units": 4726,
+        "forecastQty": 4726
       },
       {
-        "week": "Launch +10",
-        "units": 520
-      },
-      {
-        "week": "Launch +11",
-        "units": 620
-      },
-      {
-        "week": "Launch +12",
-        "units": 720
+        "week": "2026-W49",
+        "weekId": "2026-W49",
+        "launchOffsetWeek": 10,
+        "units": 5308,
+        "forecastQty": 5308
       }
-    ]
+    ],
+    "channelProjection": [
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 97,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 84,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 62,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 85,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 45,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 72,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 52,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W40",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 36,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 189,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 172,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 122,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 174,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 87,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 133,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 111,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W41",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 74,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 304,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 239,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 197,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 268,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 140,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 204,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 163,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 103,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 396,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 326,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 257,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 332,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 183,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 278,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 213,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 141,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 486,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 417,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 313,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 423,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 222,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 359,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 257,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 182,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 570,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 512,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 367,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 519,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 260,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 400,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 333,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 223,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 645,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 554,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 462,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 623,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 326,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 478,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 379,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 242,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 796,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 649,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 516,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 660,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 364,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 559,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 423,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 284,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 863,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 747,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 567,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 772,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 398,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 588,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 469,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 322,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 936,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 850,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 615,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 878,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 431,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 669,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 562,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 367,
+        "actualQty": null
+      }
+    ],
+    "actualHistory": []
+  },
+  {
+    "npiId": "NPI-BOAT-IGNITE-750",
+    "skuId": "SKU-BOAT-NPI-STI750",
+    "skuName": "boAt Stone Ignite 750",
+    "productName": "boAt Stone Ignite 750",
+    "category": "Portable Speakers",
+    "subCategory": "Portable Bluetooth Speaker",
+    "launchWeek": "2026-W42",
+    "rampWeeks": 12,
+    "rampCurve": "HOCKEY_STICK",
+    "analogSkuIds": [
+      "SKU-BOAT-ST350",
+      "SKU-BOAT-ST1508",
+      "SKU-BOAT-PP20"
+    ],
+    "targetPeakWeeklyUnits": 2400,
+    "mrpPaise": 499900,
+    "plannedNetPricePaise": 349900,
+    "unitCostPaise": 168000,
+    "readinessRate": 0.5,
+    "cannibalizedSkuIds": [
+      "SKU-BOAT-PP20"
+    ],
+    "cannibalizationRate": 0.18,
+    "curveTemplate": "HOCKEY_STICK",
+    "analogSkuId": "SKU-BOAT-ST350",
+    "peakWeeklyUnits": 2400,
+    "readinessPct": 50,
+    "cannibalizationRatePct": 18,
+    "currency": "INR",
+    "lifecycleStage": "NEW",
+    "stage": "NPI",
+    "hasSalesHistory": false,
+    "forecastMethod": "NPI_RAMP",
+    "status": "PLANNED",
+    "ownerUserId": "npi.manager@boat.com",
+    "effectiveFromWeek": "2026-W33",
+    "effectiveToWeek": null,
+    "version": 1,
+    "createdAt": "2026-08-10T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "updatedBy": "system.seed",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701,
+    "analogWeeklyUnits": 1591,
+    "projection": [
+      {
+        "week": "2026-W42",
+        "weekId": "2026-W42",
+        "launchOffsetWeek": 1,
+        "units": 59,
+        "forecastQty": 59
+      },
+      {
+        "week": "2026-W43",
+        "weekId": "2026-W43",
+        "launchOffsetWeek": 2,
+        "units": 116,
+        "forecastQty": 116
+      },
+      {
+        "week": "2026-W44",
+        "weekId": "2026-W44",
+        "launchOffsetWeek": 3,
+        "units": 175,
+        "forecastQty": 175
+      },
+      {
+        "week": "2026-W45",
+        "weekId": "2026-W45",
+        "launchOffsetWeek": 4,
+        "units": 230,
+        "forecastQty": 230
+      },
+      {
+        "week": "2026-W46",
+        "weekId": "2026-W46",
+        "launchOffsetWeek": 5,
+        "units": 290,
+        "forecastQty": 290
+      },
+      {
+        "week": "2026-W47",
+        "weekId": "2026-W47",
+        "launchOffsetWeek": 6,
+        "units": 344,
+        "forecastQty": 344
+      },
+      {
+        "week": "2026-W48",
+        "weekId": "2026-W48",
+        "launchOffsetWeek": 7,
+        "units": 615,
+        "forecastQty": 615
+      },
+      {
+        "week": "2026-W49",
+        "weekId": "2026-W49",
+        "launchOffsetWeek": 8,
+        "units": 890,
+        "forecastQty": 890
+      },
+      {
+        "week": "2026-W50",
+        "weekId": "2026-W50",
+        "launchOffsetWeek": 9,
+        "units": 1147,
+        "forecastQty": 1147
+      },
+      {
+        "week": "2026-W51",
+        "weekId": "2026-W51",
+        "launchOffsetWeek": 10,
+        "units": 1442,
+        "forecastQty": 1442
+      },
+      {
+        "week": "2026-W52",
+        "weekId": "2026-W52",
+        "launchOffsetWeek": 11,
+        "units": 1715,
+        "forecastQty": 1715
+      },
+      {
+        "week": "2026-W53",
+        "weekId": "2026-W53",
+        "launchOffsetWeek": 12,
+        "units": 1944,
+        "forecastQty": 1944
+      }
+    ],
+    "channelProjection": [
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 11,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 9,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 7,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 9,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 5,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 8,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 6,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W42",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 4,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 22,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 17,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 14,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 18,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 10,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 15,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 12,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W43",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 8,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 33,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 28,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 21,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 29,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 14,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 22,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 17,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W44",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 11,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 41,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 36,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 28,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 38,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 19,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 29,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 23,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 16,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 53,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 44,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 33,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 46,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 25,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 39,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 30,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 20,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 65,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 51,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 41,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 53,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 30,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 45,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 36,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 23,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 108,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 99,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 74,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 102,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 51,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 80,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 61,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 40,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 159,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 139,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 109,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 144,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 75,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 112,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 90,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 62,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 203,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 172,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 137,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 183,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 101,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 153,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 121,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 77,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 270,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 217,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 165,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 232,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 122,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 193,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 146,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 97,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 312,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 265,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 212,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 284,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 141,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 212,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 170,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 119,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 353,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 314,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 240,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 305,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 160,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 252,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 192,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 128,
+        "actualQty": null
+      }
+    ],
+    "actualHistory": []
+  },
+  {
+    "npiId": "NPI-BOAT-VISTA-PRO",
+    "skuId": "SKU-BOAT-NPI-LVP",
+    "skuName": "boAt Lunar Vista Pro",
+    "productName": "boAt Lunar Vista Pro",
+    "category": "Smartwatches",
+    "subCategory": "Bluetooth Calling Smartwatch",
+    "launchWeek": "2026-W45",
+    "rampWeeks": 12,
+    "rampCurve": "S_CURVE",
+    "analogSkuIds": [
+      "SKU-BOAT-WC100",
+      "SKU-BOAT-LD100",
+      "SKU-BOAT-XT200"
+    ],
+    "targetPeakWeeklyUnits": 3200,
+    "mrpPaise": 599900,
+    "plannedNetPricePaise": 399900,
+    "unitCostPaise": 184000,
+    "readinessRate": 0.875,
+    "cannibalizedSkuIds": [
+      "SKU-BOAT-XT200"
+    ],
+    "cannibalizationRate": 0.1,
+    "curveTemplate": "S_CURVE",
+    "analogSkuId": "SKU-BOAT-WC100",
+    "peakWeeklyUnits": 4112,
+    "readinessPct": 88,
+    "cannibalizationRatePct": 10,
+    "currency": "INR",
+    "lifecycleStage": "NEW",
+    "stage": "NPI",
+    "hasSalesHistory": false,
+    "forecastMethod": "NPI_RAMP",
+    "status": "PLANNED",
+    "ownerUserId": "npi.manager@boat.com",
+    "effectiveFromWeek": "2026-W33",
+    "effectiveToWeek": null,
+    "version": 1,
+    "createdAt": "2026-08-10T00:00:00.000Z",
+    "updatedAt": "2026-08-10T00:00:00.000Z",
+    "updatedBy": "system.seed",
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701,
+    "analogWeeklyUnits": 4731,
+    "projection": [
+      {
+        "week": "2026-W45",
+        "weekId": "2026-W45",
+        "launchOffsetWeek": 1,
+        "units": 68,
+        "forecastQty": 68
+      },
+      {
+        "week": "2026-W46",
+        "weekId": "2026-W46",
+        "launchOffsetWeek": 2,
+        "units": 190,
+        "forecastQty": 190
+      },
+      {
+        "week": "2026-W47",
+        "weekId": "2026-W47",
+        "launchOffsetWeek": 3,
+        "units": 420,
+        "forecastQty": 420
+      },
+      {
+        "week": "2026-W48",
+        "weekId": "2026-W48",
+        "launchOffsetWeek": 4,
+        "units": 779,
+        "forecastQty": 779
+      },
+      {
+        "week": "2026-W49",
+        "weekId": "2026-W49",
+        "launchOffsetWeek": 5,
+        "units": 1316,
+        "forecastQty": 1316
+      },
+      {
+        "week": "2026-W50",
+        "weekId": "2026-W50",
+        "launchOffsetWeek": 6,
+        "units": 1940,
+        "forecastQty": 1940
+      },
+      {
+        "week": "2026-W51",
+        "weekId": "2026-W51",
+        "launchOffsetWeek": 7,
+        "units": 2626,
+        "forecastQty": 2626
+      },
+      {
+        "week": "2026-W52",
+        "weekId": "2026-W52",
+        "launchOffsetWeek": 8,
+        "units": 3199,
+        "forecastQty": 3199
+      },
+      {
+        "week": "2026-W53",
+        "weekId": "2026-W53",
+        "launchOffsetWeek": 9,
+        "units": 3518,
+        "forecastQty": 3518
+      },
+      {
+        "week": "2027-W02",
+        "weekId": "2027-W02",
+        "launchOffsetWeek": 10,
+        "units": 3783,
+        "forecastQty": 3783
+      },
+      {
+        "week": "2027-W03",
+        "weekId": "2027-W03",
+        "launchOffsetWeek": 11,
+        "units": 3835,
+        "forecastQty": 3835
+      },
+      {
+        "week": "2027-W04",
+        "weekId": "2027-W04",
+        "launchOffsetWeek": 12,
+        "units": 3942,
+        "forecastQty": 3942
+      }
+    ],
+    "channelProjection": [
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 12,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 11,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 8,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 11,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 6,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 9,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 7,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W45",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 4,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 36,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 30,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 23,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 30,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 15,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 25,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 19,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W46",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 12,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 79,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 63,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 50,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 70,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 34,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 53,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 42,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W47",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 29,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 138,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 126,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 96,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 129,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 66,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 97,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 75,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W48",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 52,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 239,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 207,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 150,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 213,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 114,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 177,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 130,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W49",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 86,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 343,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 298,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 231,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 333,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 161,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 245,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 192,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W50",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 137,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 493,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 408,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 301,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 412,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 232,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 335,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 276,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W51",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 169,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 580,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 504,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 389,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 508,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 272,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 415,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 323,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W52",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 208,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 632,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 521,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 424,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 580,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 297,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 474,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 352,
+        "actualQty": null
+      },
+      {
+        "weekId": "2026-W53",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 238,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 649,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 598,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 460,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 634,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 323,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 478,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 380,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W02",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 261,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 725,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 572,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 464,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 608,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 326,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 506,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 384,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W03",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 250,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-001",
+        "channelShare": 0.1826,
+        "forecastQty": 717,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-002",
+        "channelShare": 0.1545,
+        "forecastQty": 603,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-003",
+        "channelShare": 0.1194,
+        "forecastQty": 461,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-004",
+        "channelShare": 0.1615,
+        "forecastQty": 631,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-005",
+        "channelShare": 0.0843,
+        "forecastQty": 325,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-006",
+        "channelShare": 0.1292,
+        "forecastQty": 526,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-007",
+        "channelShare": 0.1011,
+        "forecastQty": 417,
+        "actualQty": null
+      },
+      {
+        "weekId": "2027-W04",
+        "distributorId": "DST-008",
+        "channelShare": 0.0674,
+        "forecastQty": 262,
+        "actualQty": null
+      }
+    ],
+    "actualHistory": []
   }
 ]

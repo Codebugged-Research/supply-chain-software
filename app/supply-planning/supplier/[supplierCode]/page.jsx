@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 
 export default function SupplierDetailPage({ params }) {
-  const supplierCode = params?.supplierCode || 'SUP-DIXON-NOIDA'
+  const supplierCode = params?.supplierCode
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -39,6 +39,10 @@ export default function SupplierDetailPage({ params }) {
   const master = data?.master || {}
   const mappings = data?.mappings || []
   const pos = data?.pos || []
+  const reliability = data?.reliabilityHistory || []
+  const adherence = data?.poAdherenceObservations || []
+  const reliability13 = reliability.find((row) => Number(row.windowWeeks) === 13)
+  const adherence13 = adherence.find((row) => Number(row.windowWeeks) === 13)
 
   return (
     <SupplyChainLayout activeTitle={`Supplier 360° Detail: ${supplierCode}`}>
@@ -53,10 +57,10 @@ export default function SupplierDetailPage({ params }) {
         <div>
           <div className="flex items-center space-x-2">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">{master.supplierName || supplierCode}</h2>
-            <StatusBadge status={master.status || 'APPROVED'} />
+            <StatusBadge status={master.status || 'UNKNOWN'} />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-            Supplier Code: {supplierCode} | Location: {master.city}, {master.country} | Contact: {master.contactPerson || 'Rajesh Sharma'}
+            Supplier Code: {supplierCode} | Location: {master.city || '—'}, {master.country || '—'} | Contact: {master.contactPerson || '—'}
           </p>
         </div>
       </div>
@@ -65,28 +69,41 @@ export default function SupplierDetailPage({ params }) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KpiCard
           title="Quality Score"
-          value={`${master.qualityScore || 98.0}%`}
-          subtitle="Defect Rate <500 PPM"
-          badgeText="High Quality"
-          badgeType="success"
+          value={master.qualityScore == null ? '—' : `${master.qualityScore}%`}
+          subtitle={reliability13 ? `13-week canonical observation · ${reliability13.eligiblePoCount} eligible POs` : 'Supplier master fallback; no reliability observation'}
+          badgeText={master.qualityScore == null ? 'No Data' : master.qualityScore >= 95 ? 'High Quality' : 'Quality Watch'}
+          badgeType={master.qualityScore != null && master.qualityScore >= 95 ? 'success' : 'warning'}
           loading={loading}
         />
         <KpiCard
           title="On-Time Delivery Rate (OTD)"
-          value={`${master.onTimeDelivery || 95.0}%`}
-          subtitle="Target threshold: 95.0%"
-          badgeText="Reliable Vendor"
-          badgeType="success"
+          value={master.onTimeDelivery == null ? '—' : `${master.onTimeDelivery}%`}
+          subtitle={adherence13 ? `13-week PO adherence · ${adherence13.eligiblePoCount} eligible POs` : 'Supplier master fallback; no adherence observation'}
+          badgeText={master.onTimeDelivery == null ? 'No Data' : master.onTimeDelivery >= 95 ? 'On Target' : 'Below Target'}
+          badgeType={master.onTimeDelivery != null && master.onTimeDelivery >= 95 ? 'success' : 'warning'}
           loading={loading}
         />
         <KpiCard
           title="Standard Lead Time"
-          value={`${master.defaultLeadTimeDays || 14} Days`}
+          value={master.defaultLeadTimeDays == null ? '—' : `${master.defaultLeadTimeDays} Days`}
           subtitle="Contractual lead time allowance"
           badgeText="Standard Lead Time"
           badgeType="info"
           loading={loading}
         />
+      </div>
+
+      <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white">Canonical Supplier Performance History</h3>
+          <p className="text-xs text-slate-500 mt-1">Direct 4/13/52-week observations from supplier_reliability_history and po_adherence_observations.</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-left">
+            <thead className="bg-slate-50 dark:bg-slate-950 text-slate-500 uppercase"><tr><th className="px-4 py-3">Window</th><th className="px-4 py-3">PO Adherence</th><th className="px-4 py-3">Reliability</th><th className="px-4 py-3">Lead Time</th><th className="px-4 py-3">Quality</th></tr></thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">{[4, 13, 52].map((window) => { const rel = reliability.find((row) => Number(row.windowWeeks) === window); const obs = adherence.find((row) => Number(row.windowWeeks) === window); return <tr key={window}><td className="px-4 py-3 font-semibold">{window} weeks</td><td className="px-4 py-3">{obs?.onTimeDeliveryRate == null ? '—' : `${(obs.onTimeDeliveryRate * 100).toFixed(1)}%`} ({obs?.onTimePoCount ?? '—'}/{obs?.eligiblePoCount ?? '—'})</td><td className="px-4 py-3">{rel?.reliabilityScore ?? '—'} · {rel?.reliabilityGrade ?? '—'}</td><td className="px-4 py-3">{rel?.quotedLeadTimeDays ?? '—'}d quoted / {rel?.actualAverageLeadTimeDays ?? '—'}d actual</td><td className="px-4 py-3">{rel?.qualityAcceptanceRate == null ? '—' : `${(rel.qualityAcceptanceRate * 100).toFixed(1)}%`}</td></tr> })}</tbody>
+          </table>
+        </div>
       </div>
 
       {/* Corporate Profile & Active POs */}
@@ -97,7 +114,7 @@ export default function SupplierDetailPage({ params }) {
             <span>Corporate Operational Profile</span>
           </h3>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-            {master.profile || `${master.supplierName} is a premier contract electronics manufacturing partner located in ${master.city}, maintaining an operational quality rating of ${master.rating}/5.`}
+            {master.profile || 'No supplier profile is stored for this partner.'}
           </p>
         </div>
 
@@ -126,4 +143,3 @@ export default function SupplierDetailPage({ params }) {
     </SupplyChainLayout>
   )
 }
-

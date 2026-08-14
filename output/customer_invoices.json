@@ -1,0 +1,292 @@
+[
+  {
+    "invoiceId": "INV-0001",
+    "distributorId": "DST-001",
+    "orderId": "PUR-2026-01000",
+    "invoiceDate": "2025-09-05",
+    "dueDate": "2025-10-20",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 488424000,
+    "discountPaise": 14652720,
+    "taxPaise": 85278830,
+    "netAmountPaise": 559050110,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-1",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-1-1",
+        "skuId": "SKU-BOAT-AD141",
+        "quantity": 4000,
+        "unitNetPricePaise": 122106,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 488424000,
+        "asnLineId": "ASNL-1-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0002",
+    "distributorId": "DST-002",
+    "orderId": "PUR-2026-01001",
+    "invoiceDate": "2026-02-25",
+    "dueDate": "2026-04-11",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 422577000,
+    "discountPaise": 12677310,
+    "taxPaise": 73781944,
+    "netAmountPaise": 483681634,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-2",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-2-1",
+        "skuId": "SKU-BOAT-RZ245",
+        "quantity": 4500,
+        "unitNetPricePaise": 93906,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 422577000,
+        "asnLineId": "ASNL-2-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0003",
+    "distributorId": "DST-003",
+    "orderId": "PUR-2026-01002",
+    "invoiceDate": "2026-05-24",
+    "dueDate": "2026-06-23",
+    "paymentTermsDays": 30,
+    "grossAmountPaise": 638880400,
+    "discountPaise": 19166412,
+    "taxPaise": 111548518,
+    "netAmountPaise": 731262506,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-3",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-3-1",
+        "skuId": "SKU-BOAT-AD161P",
+        "quantity": 3400,
+        "unitNetPricePaise": 187906,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 638880400,
+        "asnLineId": "ASNL-3-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0004",
+    "distributorId": "DST-004",
+    "orderId": "PUR-2026-01003",
+    "invoiceDate": "2026-06-29",
+    "dueDate": "2026-08-13",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 329686200,
+    "discountPaise": 9890586,
+    "taxPaise": 57563211,
+    "netAmountPaise": 377358825,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-4",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-4-1",
+        "skuId": "SKU-BOAT-RZ255",
+        "quantity": 2700,
+        "unitNetPricePaise": 122106,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 329686200,
+        "asnLineId": "ASNL-4-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0005",
+    "distributorId": "DST-005",
+    "orderId": "PUR-2026-01004",
+    "invoiceDate": "2026-07-25",
+    "dueDate": "2026-08-15",
+    "paymentTermsDays": 21,
+    "grossAmountPaise": 422830800,
+    "discountPaise": 12684924,
+    "taxPaise": 73826258,
+    "netAmountPaise": 483972134,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-5",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-5-1",
+        "skuId": "SKU-BOAT-NI100",
+        "quantity": 1800,
+        "unitNetPricePaise": 234906,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 422830800,
+        "asnLineId": "ASNL-5-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0006",
+    "distributorId": "DST-006",
+    "orderId": "PUR-2026-01008",
+    "invoiceDate": "2025-09-11",
+    "dueDate": "2025-10-26",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 388943800,
+    "discountPaise": 11668314,
+    "taxPaise": 67909587,
+    "netAmountPaise": 445185073,
+    "currency": "INR",
+    "status": "PAID",
+    "sourceRunId": "RUN-ASN-6",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-6-1",
+        "skuId": "SKU-BOAT-WC100",
+        "quantity": 2300,
+        "unitNetPricePaise": 169106,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 388943800,
+        "asnLineId": "ASNL-6-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0007",
+    "distributorId": "DST-007",
+    "orderId": "PUR-2026-01009",
+    "invoiceDate": "2026-02-27",
+    "dueDate": "2026-03-29",
+    "paymentTermsDays": 30,
+    "grossAmountPaise": 610530000,
+    "discountPaise": 18315900,
+    "taxPaise": 106598538,
+    "netAmountPaise": 698812638,
+    "currency": "INR",
+    "status": "OPEN",
+    "sourceRunId": "RUN-ASN-7",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-7-1",
+        "skuId": "SKU-BOAT-AD131",
+        "quantity": 5000,
+        "unitNetPricePaise": 122106,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 610530000,
+        "asnLineId": "ASNL-7-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0008",
+    "distributorId": "DST-008",
+    "orderId": "PUR-2026-01010",
+    "invoiceDate": "2026-05-29",
+    "dueDate": "2026-06-28",
+    "paymentTermsDays": 30,
+    "grossAmountPaise": 217074200,
+    "discountPaise": 6512226,
+    "taxPaise": 37901155,
+    "netAmountPaise": 248463129,
+    "currency": "INR",
+    "status": "OPEN",
+    "sourceRunId": "RUN-ASN-8",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-8-1",
+        "skuId": "SKU-BOAT-XT200",
+        "quantity": 700,
+        "unitNetPricePaise": 310106,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 217074200,
+        "asnLineId": "ASNL-8-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0009",
+    "distributorId": "DST-001",
+    "orderId": "PUR-2026-01011",
+    "invoiceDate": "2026-06-30",
+    "dueDate": "2026-08-14",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 375924800,
+    "discountPaise": 11277744,
+    "taxPaise": 65636470,
+    "netAmountPaise": 430283526,
+    "currency": "INR",
+    "status": "OPEN",
+    "sourceRunId": "RUN-ASN-9",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-9-1",
+        "skuId": "SKU-BOAT-LE100",
+        "quantity": 800,
+        "unitNetPricePaise": 469906,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 375924800,
+        "asnLineId": "ASNL-9-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  },
+  {
+    "invoiceId": "INV-0010",
+    "distributorId": "DST-002",
+    "orderId": "PUR-2026-01012",
+    "invoiceDate": "2026-07-31",
+    "dueDate": "2026-09-14",
+    "paymentTermsDays": 45,
+    "grossAmountPaise": 469812000,
+    "discountPaise": 14094360,
+    "taxPaise": 82029175,
+    "netAmountPaise": 537746815,
+    "currency": "INR",
+    "status": "OPEN",
+    "sourceRunId": "RUN-ASN-10",
+    "lines": [
+      {
+        "invoiceLineId": "INVL-10-1",
+        "skuId": "SKU-BOAT-NI100",
+        "quantity": 2000,
+        "unitNetPricePaise": 234906,
+        "schemeId": "SCH-EVT-2026-REPUBLIC",
+        "lineNetAmountPaise": 469812000,
+        "asnLineId": "ASNL-10-1"
+      }
+    ],
+    "source": "SEED",
+    "dataVersion": "DM-2026-W33-V1",
+    "generationSeed": 20250701
+  }
+]

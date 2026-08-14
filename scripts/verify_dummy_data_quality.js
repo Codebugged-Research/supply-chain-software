@@ -89,21 +89,41 @@ async function main() {
     const allCollections = Object.fromEntries(await Promise.all(collectionNames.map(async (name) => [name, await db.collection(name).find({}).toArray()])))
 
     const explicitCounts = {
-      sop_regions: 3,
-      sop_distributors: 5,
-      sop_skus: 15,
+      sop_regions: 6,
+      sop_distributors: 8,
+      sop_skus: 21,
       sop_weeks: 26,
-      sop_weekly: 15 * 5 * 26,
-      demand_channel_integrations: 5,
-      demand_listings: 15 * 5,
-      demand_lifecycle: 15,
-      demand_npi_forecasts: 2,
-      demand_events: 3,
-      demand_inventory_norms: 15 * 5,
+      sop_planning_weeks: 157,
+      sop_weekly: 21 * 8 * 26,
+      demand_channel_integrations: 8,
+      demand_listings: 21 * 8,
+      demand_lifecycle: 21,
+      demand_npi_forecasts: 4,
+      demand_npi_readiness_items: 32,
+      demand_event_templates: 10,
+      demand_events: 10,
+      channel_inventory_norms: 21 * 8,
+      manufacturing_partners: 4,
+      manufacturing_partner_lines: 10,
+      supplier_master: 4,
+      supplier_product_mapping: 38,
+      purchase_orders: 32,
+      po_exclusions: 2,
+      po_revisions: 31,
+      po_adherence_observations: 12,
+      po_adherence_history: 3,
+      goods_receipt_inspections: 20,
+      supplier_reliability_history: 12,
+      forecast_vintages: 21 * 8 * 52 * 6,
+      forecast_accuracy_history: 21 * 8 * 52 * 6,
       demand_consensus_workflows: 5,
-      inventory_policies: 15,
-      order_suggestions: 5,
-      dealer_activation_gaps: 5,
+      consensus_production_plans: 1,
+      workflow_instances: 8,
+      workflow_steps: 30,
+      entity_audit_events: 25,
+      inventory_policies: 21,
+      order_suggestions: 8,
+      dealer_activation_gaps: 8,
     }
     const countChecks = Object.entries(explicitCounts).map(([collection, expected]) => ({
       collection,
@@ -122,9 +142,35 @@ async function main() {
     })
 
     const structuralChecks = [
-      { name: 'sop_weekly unique SKU-distributor-week keys', expected: 1950, actual: new Set((allCollections.sop_weekly || []).map((row) => `${row.skuId}|${row.distributorId}|${row.weekId}`)).size },
-      { name: 'order suggestion nested SKU lines', expected: 75, actual: (allCollections.order_suggestions || []).reduce((sum, row) => sum + (row.lines?.length || 0), 0) },
-      { name: 'dealer activation nested SKU rows', expected: 75, actual: (allCollections.dealer_activation_gaps || []).reduce((sum, row) => sum + (row.rows?.length || 0), 0) },
+      { name: 'sop_weekly unique SKU-distributor-week keys', expected: 4368, actual: new Set((allCollections.sop_weekly || []).map((row) => `${row.skuId}|${row.distributorId}|${row.weekId}`)).size },
+      { name: 'planning calendar unique version-week keys', expected: 157, actual: new Set((allCollections.sop_planning_weeks || []).map((row) => `${row.calendarVersionId}|${row.weekId}`)).size },
+      { name: 'channel inventory norm unique SKU-distributor keys', expected: 168, actual: new Set((allCollections.channel_inventory_norms || []).map((row) => `${row.skuId}|${row.distributorId}`)).size },
+      { name: 'NPI products have no historical actual rows', expected: 0, actual: (allCollections.sop_weekly || []).filter((row) => String(row.skuId).includes('-NPI-')).length },
+      { name: 'forecast accuracy unique forecast-actual keys', expected: 52416, actual: new Set((allCollections.forecast_accuracy_history || []).map((row) => `${row.forecastId}|${row.actualVersionId}`)).size },
+      { name: 'all workflow subjects reference a shared instance', expected: 6, actual: [...(allCollections.demand_consensus_workflows || []), ...(allCollections.consensus_production_plans || [])].filter((row) => (allCollections.workflow_instances || []).some((workflow) => workflow.workflowId === row.workflowId)).length },
+      { name: 'shared workflow steps have unique workflow-sequence keys', expected: 30, actual: new Set((allCollections.workflow_steps || []).map((row) => `${row.workflowId}|${row.stepSequence}`)).size },
+      { name: 'audit events use the shared schema for both workflow types', expected: 2, actual: new Set((allCollections.entity_audit_events || []).map((row) => row.workflowType)).size },
+      { name: 'purchase orders with invalid planned/actual handover state', expected: 0, actual: (allCollections.purchase_orders || []).filter((row) => (row.status === 'CLOSED' && !row.actualHandoverDate) || (row.status !== 'CLOSED' && row.actualHandoverDate)).length },
+      { name: 'partner capacity reconciliation failures', expected: 0, actual: (allCollections.manufacturing_partners || []).filter((row) => row.contractedCapacityUnitsPerWeek + row.spotCapacityUnitsPerWeek !== row.totalCapacityUnitsPerWeek).length },
+      { name: 'order suggestion nested SKU lines', expected: 168, actual: (allCollections.order_suggestions || []).reduce((sum, row) => sum + (row.lines?.length || 0), 0) },
+      { name: 'dealer activation nested SKU rows', expected: 168, actual: (allCollections.dealer_activation_gaps || []).reduce((sum, row) => sum + (row.rows?.length || 0), 0) },
+      { name: 'nationwide distributor regions represented', expected: 6, actual: new Set((allCollections.sop_distributors || []).map((row) => row.region)).size },
+      { name: 'distributors missing geographic tags', expected: 0, actual: (allCollections.sop_distributors || []).filter((row) => !row.regionId || !row.headquartersCity || !Array.isArray(row.primaryStates) || !row.primaryStates.length).length },
+      { name: 'core category price ladders with multiple price points', expected: 4, actual: ['TWS Earbuds', 'Smartwatches', 'Wireless Headphones', 'Portable Speakers'].filter((category) => new Set((allCollections.sop_skus || []).filter((row) => row.category === category).map((row) => row.price)).size >= 2).length },
+      { name: 'seasonal event timing mismatches', expected: 0, actual: Object.entries({
+        'EVT-2026-REPUBLIC': ['2026-W03', '2026-W04'],
+        'EVT-2026-HOLI': ['2026-W09', '2026-W10'],
+        'EVT-2026-IPL': ['2026-W13', '2026-W22'],
+        'EVT-2026-SUMMER': ['2026-W19', '2026-W20'],
+        'EVT-2026-PRIME': ['2026-W27', '2026-W28'],
+        'EVT-2026-INDEPENDENCE': ['2026-W32', '2026-W33'],
+        'EVT-2026-NAVRATRI': ['2026-W42', '2026-W44'],
+        'EVT-2026-DIWALI': ['2026-W45', '2026-W47'],
+        'EVT-2026-YEAREND': ['2026-W51', '2026-W52'],
+      }).filter(([eventId, [startWeek, endWeek]]) => {
+        const event = (allCollections.demand_events || []).find((row) => row.eventId === eventId)
+        return !event || event.startWeek !== startWeek || event.endWeek !== endWeek
+      }).length },
     ].map((check) => ({ ...check, pass: check.actual === check.expected }))
 
     const impossible = []
@@ -162,6 +208,17 @@ async function main() {
       const pass = ['A', 'B', 'C'].includes(row.abcClass) && ['X', 'Y', 'Z'].includes(row.xyzClass) && Number.isFinite(row.demandCv) && row.demandCv >= 0 && row.abcClass === expectedAbc && row.xyzClass === expectedXyz
       return { skuId: row.skuId, abcClass: row.abcClass, expectedAbc, xyzClass: row.xyzClass, expectedXyz, demandCv: row.demandCv, cumulativePct: Number(cumulativePct.toFixed(3)), pass }
     })
+    const xyzMix = Object.fromEntries(['X', 'Y', 'Z'].map((xyzClass) => [xyzClass, policies.filter((row) => row.xyzClass === xyzClass).length]))
+    classificationChecks.push({
+      skuId: 'PORTFOLIO_XYZ_SPREAD',
+      abcClass: '-',
+      expectedAbc: '-',
+      xyzClass: `${xyzMix.X}/${xyzMix.Y}/${xyzMix.Z}`,
+      expectedXyz: 'all classes populated',
+      demandCv: null,
+      cumulativePct: 100,
+      pass: xyzMix.X > 0 && xyzMix.Y > 0 && xyzMix.Z > 0,
+    })
 
     const first = loadFreshDummyDataModule()
     const second = loadFreshDummyDataModule()
@@ -180,6 +237,48 @@ async function main() {
       skus: second.SKUS,
       weeks: secondDataset.weeks,
       weekly: secondDataset.weekly,
+    }
+    const generatedPlanning = {
+      planningWeeks: firstDataset.planningWeeks,
+      lifecycle: firstDataset.lifecycle,
+      npiForecasts: firstDataset.npiForecasts,
+      npiReadinessItems: firstDataset.npiReadinessItems,
+      eventTemplates: firstDataset.eventTemplates,
+      demandEvents: firstDataset.demandEvents,
+      inventoryNorms: firstDataset.inventoryNorms,
+      manufacturingPartners: firstDataset.manufacturingPartners,
+      manufacturingPartnerLines: firstDataset.manufacturingPartnerLines,
+      supplierMaster: firstDataset.supplierMaster,
+      supplierProductMapping: firstDataset.supplierProductMapping,
+      purchaseOrders: firstDataset.purchaseOrders,
+      poExclusions: firstDataset.poExclusions,
+      poRevisions: firstDataset.poRevisions,
+      poAdherenceObservations: firstDataset.poAdherenceObservations,
+      goodsReceiptInspections: firstDataset.goodsReceiptInspections,
+      supplierReliabilityHistory: firstDataset.supplierReliabilityHistory,
+      forecastVintages: firstDataset.forecastVintages,
+      forecastAccuracyHistory: firstDataset.forecastAccuracyHistory,
+    }
+    const regeneratedPlanning = {
+      planningWeeks: secondDataset.planningWeeks,
+      lifecycle: secondDataset.lifecycle,
+      npiForecasts: secondDataset.npiForecasts,
+      npiReadinessItems: secondDataset.npiReadinessItems,
+      eventTemplates: secondDataset.eventTemplates,
+      demandEvents: secondDataset.demandEvents,
+      inventoryNorms: secondDataset.inventoryNorms,
+      manufacturingPartners: secondDataset.manufacturingPartners,
+      manufacturingPartnerLines: secondDataset.manufacturingPartnerLines,
+      supplierMaster: secondDataset.supplierMaster,
+      supplierProductMapping: secondDataset.supplierProductMapping,
+      purchaseOrders: secondDataset.purchaseOrders,
+      poExclusions: secondDataset.poExclusions,
+      poRevisions: secondDataset.poRevisions,
+      poAdherenceObservations: secondDataset.poAdherenceObservations,
+      goodsReceiptInspections: secondDataset.goodsReceiptInspections,
+      supplierReliabilityHistory: secondDataset.supplierReliabilityHistory,
+      forecastVintages: secondDataset.forecastVintages,
+      forecastAccuracyHistory: secondDataset.forecastAccuracyHistory,
     }
     const storedBase = {
       regions: withoutIds(allCollections.sop_regions || []),
@@ -206,6 +305,7 @@ async function main() {
     const determinismChecks = [
       exactComparison('full getDataset run 1 vs run 2 (includes metadata)', firstDataset, secondDataset),
       exactComparison('fresh generator run 1 vs fresh generator run 2 (base)', generatedBase, secondBase),
+      exactComparison('fresh generator run 1 vs fresh generator run 2 (planning entities)', generatedPlanning, regeneratedPlanning),
       exactComparison('fresh generator base vs Mongo sop_* collections', generatedBase, storedBase),
       exactComparison('fresh order suggestions run 1 vs run 2', generatedSuggestions, regeneratedSuggestions),
       exactComparison('fresh order suggestions vs Mongo', generatedSuggestions, withoutIds(allCollections.order_suggestions || [])),

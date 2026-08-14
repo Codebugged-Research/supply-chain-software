@@ -1,10 +1,10 @@
 # Scenario Planning Module — Architecture Inventory
 
 > **Module nav id:** `scenario`
-> **Status:** Partially built — interactive live scenario simulation functional; saved scenarios table is hardcoded mock data; no persistence
+> **Status:** Functional canonical scenario reads and publication; interactive slider simulation remains a local unsaved preview
 > **Source:** `app/page.js` → `ScenarioPage` component (lines ~2954–3093)
-> **API endpoints:** `/api/data/kpis` (via `useSopData()`)
-> **Last audited:** 2026-08-11
+> **API endpoints:** `/api/data/kpis`, `GET /api/scenarios`, `POST /api/scenarios/publish` (plus Supply Studio compatibility actions)
+> **Last audited:** 2026-08-13
 
 ---
 
@@ -22,9 +22,9 @@ Models what-if scenarios against the consensus plan at a quarterly revenue / gro
 |---|---|---|
 | 3× slider inputs | Functional | Demand Uplift (−20→+30%), Input Cost Shift (−10→+25%), Capacity Change (−15→+20%) |
 | Scenario vs Baseline BarChart | Functional | Live computation from `kpis.totalRevenue` and `kpis.totalGm` split into quarterly baseline, then scaled by slider values |
-| Saved Scenarios table | **Hardcoded mock** | 4 rows: Aggressive Growth Q4, Supplier Cost Spike, New Line Launch Q3, Recession Downside — all with hardcoded revenue/GM delta strings |
+| Saved Scenarios table | **Canonical** | Reads `scenario_versions`, `scenario_assumption_sets`, and exact aggregates of `scenario_output_lines` |
 | "New Scenario" button | Stub | `<Button>` with no onClick handler |
-| Cross-module scenario publish | **Not built** | No mechanism to publish a scenario to Supply Planning Studio or Demand Planning |
+| Cross-module scenario publish | **Functional** | A built REVIEW/APPROVED version can be published; one version becomes active, its outputs materialize into a new consensus plan version/lines, and Dashboard/Demand Planning read the same selected version |
 
 ---
 
@@ -34,7 +34,19 @@ Models what-if scenarios against the consensus plan at a quarterly revenue / gro
 |---|---|---|
 | `/api/data/kpis` → `kpis{}` | `totalRevenue`, `totalGm` | Quarterly baseline computation — `quarterlyBaseline = totalRevenue / 2` (6-month data split to 1 quarter) |
 
-**Writes:** None — all slider state is local React state, not persisted.
+**Writes:** `POST /api/scenarios/publish` changes the selected version to `PUBLISHED`, archives any prior published selection, writes `consensus_plan_versions.sourceScenarioVersionId` plus aggregated `consensus_plan_lines`, and appends an `entity_audit_events` publication event. Slider state remains a local preview.
+
+### Publication contract
+
+Publication is allowed only when `runAt` and canonical `scenario_output_lines` exist. `DRAFT` and `RUNNING` versions cannot be published; an archived immutable version may be selected again. Repeat publication of the active version is idempotent.
+
+The selected scenario is the latest `scenario_versions` row with `status=PUBLISHED`. Its outputs are pushed to `CPV-<scenarioVersionId>-PUBLISHED`, whose `sourceScenarioVersionId` points back to the immutable scenario. Output rows are aggregated from SKU × channel × location × week to canonical consensus-plan SKU × week grain without reconstructing scenario quantities.
+
+| Consumer | Active-scenario behavior |
+|---|---|
+| Dashboard | `/api/dashboard/plan-balance` uses published demand, supply, inventory, unmet-demand, and capacity output values with scenario lineage |
+| Demand Planning | Forecast Overview resolves published `scenarioDemandQty` at SKU × channel × week and labels the selected scenario |
+| Supply/consensus consumers | Read the approved/published consensus-plan version and lines selected through `sourceScenarioVersionId` |
 
 **Quarterly scenario formula:**
 ```
@@ -57,7 +69,7 @@ The shared `buildWhatIfScenarioComparison()` calculation now applies capacity as
 | Input Cost Shift `Slider` | −10% to +25%, step 1% — scales quarterly gross margin |
 | Capacity Change `Slider` | −15% to +20%, step 1% — constrains deliverable scenario revenue through the shared scenario calculation |
 | `BarChart` (3-bar grouped, Recharts) | Q1–Q4: Baseline (grey) / Scenario (blue) / GM (green) — ₹M |
-| Saved Scenarios `DataTable` | 4 hardcoded rows: name, owner, Revenue Δ, GM Δ, updated timestamp, status badge |
+| Saved Scenarios `DataTable` | Canonical version rows with stored outcome aggregates, lifecycle status, active marker, and Publish action |
 | "New Scenario" button | UI stub — no action |
 
 ---
@@ -67,8 +79,8 @@ The shared `buildWhatIfScenarioComparison()` calculation now applies capacity as
 | Module | Relationship |
 |---|---|
 | **Financial Planning** | Both have demand uplift and cost shift sliders for P&L what-if modeling. Financial Planning is finer-grained (weekly, 5 sliders, full P&L bridge, per-SKU profitability). Scenario Planning is coarser (quarterly, 3 sliders, revenue + GM only). These overlap in purpose and should eventually share a scenario state object — define a scenario, propagate its assumptions to Financial Planning for detail review before saving. |
-| **Supply Planning → Scenario Studio** | The Supply Planning Studio (`/supply-planning/scenarios`) has a more complete scenario comparison view (6 metrics × 3 named scenarios side-by-side, publish to S&OP plan). This S&OP Suite Scenario Planning tab is a lighter-weight counterpart. The Supply Planning Studio is in a separate Next.js route with its own service layer; there is no data link between the two. |
-| **Demand Planning** | The "Consensus Plan" locked by the Demand Consensus Workflow would be the input baseline for scenarios. Currently, the scenario baseline is `kpis.totalRevenue` (actual revenue), not a consensus forecast. |
+| **Supply Planning → Scenario Studio** | Both scenario surfaces read the same canonical catalog and call the same publication service; no parallel publish state exists. |
+| **Demand Planning** | Locked consensus remains the scenario baseline; once published, canonical output becomes the selected forecast view while retaining its baseline-plan reference. |
 
 ---
 
@@ -76,12 +88,12 @@ The shared `buildWhatIfScenarioComparison()` calculation now applies capacity as
 
 | BOAT Requirement | Coverage Status | Mapping / Implementation Notes |
 |---|---|---|
-| **S&OP Portal #4: What If Scenario comparison** | **Partially Covered** | Models quarterly demand, cost, and capacity scenarios against baseline. Dashboard reuses the same calculation for named review-meeting comparisons; scenario persistence remains missing. |
-| **Supply Planning #6: Consensus Production Planning Signoff** | **Analytical Precursor** | Planners review scenarios before locking a plan, but no scenario publish mechanism exists to push to consensus signoff. |
+| **S&OP Portal #4: What If Scenario comparison** | **Implemented** | Canonical versions, assumptions, and outputs drive saved comparisons; the published selection is shared with Dashboard and Demand Planning. |
+| **Supply Planning #6: Consensus Production Planning Signoff** | **Implemented precursor** | Publication creates an approved downstream consensus-plan version and lines with exact scenario lineage; locking remains the existing signoff workflow's responsibility. |
 
 ---
 
 ## 7. Key Bugs / Issues
 
 1. **Quarterly baseline is halved from 6-month data** — `quarterlyBaseline = kpis.totalRevenue / 2` is correct only if the underlying data covers exactly 6 months; if the dataset changes, the baseline denominator is not recalculated.
-2. **Saved Scenarios are hardcoded** — No API for scenario CRUD. To be connected to a scenario persistence API when building the scenario save/load workflow.
+2. **Slider preview is not a scenario builder** — Publication operates on already-built canonical versions. Persisting slider changes as a new version/assumption set and executing the output engine remains separate authoring work.
