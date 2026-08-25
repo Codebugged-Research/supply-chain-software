@@ -16,7 +16,7 @@ import {
   SKUS,
   XYZ_CV_THRESHOLDS,
 } from '@/lib/dummyData'
-import { getDb, getOrdersCollection } from '@/lib/mongodb'
+import { getDb, getOrdersCollection, handleMongoError } from '@/lib/mongodb'
 import { getOverviewMetrics, getCapacityGapAnalysis, getPurchaseOrdersWorkbench, getOdmEmsMaster } from '@/lib/supplyChainService'
 import { WORKFLOW_TYPES, demandAuditTrail, persistWorkflowSnapshot } from '@/lib/workflowAudit'
 import { getCanonicalChannelInventoryNorms, saveCanonicalChannelInventoryNorm } from '@/lib/channelInventoryNorms'
@@ -59,6 +59,19 @@ const DEMAND_COLLECTIONS = {
   consensusWorkflows: 'demand_consensus_workflows',
 }
 
+const collectionCache = new Map()
+const CACHE_TTL_MS = 15000 // 15s TTL
+let lastHydratedAt = 0
+
+function invalidateRouteCache(collectionName) {
+  if (collectionName) {
+    collectionCache.delete(collectionName)
+  } else {
+    collectionCache.clear()
+  }
+  lastHydratedAt = 0
+}
+
 function readRouteJson(collectionName) {
   try {
     const file = pathModule.resolve(process.cwd(), 'output', `${collectionName}.json`)
@@ -69,17 +82,33 @@ function readRouteJson(collectionName) {
 }
 
 async function readPersistedCollection(collectionName) {
+  const cached = collectionCache.get(collectionName)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data
+  }
+
+  let data = null
   try {
     const db = await getDb()
     const rows = await db.collection(collectionName).find({}).project({ _id: 0 }).toArray()
-    if (rows.length) return rows
+    if (rows.length) data = rows
   } catch (error) {
-    console.warn(`MongoDB query failed for ${collectionName}; using persistence fallback:`, error.message)
+    handleMongoError(error)
   }
-  return readRouteJson(collectionName)
+
+  if (!data) {
+    data = readRouteJson(collectionName)
+  }
+
+  collectionCache.set(collectionName, { data, timestamp: Date.now() })
+  return data
 }
 
-async function hydratePersistedState() {
+async function hydratePersistedState(force = false) {
+  if (!force && lastHydratedAt > 0 && Date.now() - lastHydratedAt < CACHE_TTL_MS) {
+    return
+  }
+
   const [regions, distributors, skus, weeks, weekly] = await Promise.all([
     readPersistedCollection('sop_regions'),
     readPersistedCollection('sop_distributors'),
@@ -104,13 +133,21 @@ async function hydratePersistedState() {
     chatSessions.clear()
     storedSessions.forEach((session) => chatSessions.set(session.sessionId, session))
   }
+
+  lastHydratedAt = Date.now()
 }
 
 async function replacePersisted(collectionName, filter, value) {
-  const db = await getDb()
-  const persisted = { ...value }
-  delete persisted._id
-  await db.collection(collectionName).replaceOne(filter, persisted, { upsert: true })
+  invalidateRouteCache(collectionName)
+  try {
+    const db = await getDb()
+    const persisted = { ...value }
+    delete persisted._id
+    await db.collection(collectionName).replaceOne(filter, persisted, { upsert: true })
+  } catch (error) {
+    handleMongoError(error)
+    console.warn(`MongoDB replace failed for ${collectionName}:`, error.message)
+  }
 }
 
 async function syncDispatchRecords(orderId, distributorId, lines) {
@@ -1274,7 +1311,19 @@ export async function GET(request, { params }) {
   }
 
   if (path === 'dashboard/alerts') {
-    return NextResponse.json({ rows: await readPersistedCollection('dashboard_alerts') })
+    const jsonAlerts = readRouteJson('dashboard_alerts')
+    try {
+      const db = await getDb()
+      if (jsonAlerts.length) {
+        for (const alert of jsonAlerts) {
+          await db.collection('dashboard_alerts').replaceOne({ alertId: alert.alertId }, alert, { upsert: true })
+        }
+      }
+      const rows = await db.collection('dashboard_alerts').find({}).project({ _id: 0 }).sort({ occurredAt: -1 }).toArray()
+      return NextResponse.json({ rows })
+    } catch {
+      return NextResponse.json({ rows: jsonAlerts })
+    }
   }
 
   if (path === 'scenarios') {

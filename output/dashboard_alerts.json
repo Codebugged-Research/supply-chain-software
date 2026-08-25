@@ -1,8 +1,26 @@
 [
   {
+    "alertId": "EW-CAP-NOIDA-W36",
+    "severity": "high",
+    "title": "ODM Noida Plant-A utilization projected at 108% (14,200 units deficit on Airdopes 141)",
+    "occurredAt": "2026-08-14T08:30:00.000Z"
+  },
+  {
+    "alertId": "EW-SUP-DIXON-W37",
+    "severity": "medium",
+    "title": "Supplier Dixon Tech component delay: 4,500 battery cells delayed for W37 assembly",
+    "occurredAt": "2026-08-12T14:15:00.000Z"
+  },
+  {
+    "alertId": "EW-INV-DELHI-W34",
+    "severity": "high",
+    "title": "Safety stock deficit: WH-NORTH-DELHI inventory below safety threshold for Wave 300",
+    "occurredAt": "2026-08-10T16:45:00.000Z"
+  },
+  {
     "alertId": "EW-CAPACITY-1",
     "severity": "high",
     "title": "Festive demand surge capacity bottleneck of 1200 units in week 2026-W41 at WH-NORTH-DELHI",
-    "occurredAt": "2026-07-29T11:36:22.952711Z"
+    "occurredAt": "2026-07-29T11:36:22.952Z"
   }
 ]

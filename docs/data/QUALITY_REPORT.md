@@ -1,106 +1,96 @@
 # Dummy Data Realism Quality Report
 
-Audited on **2026-08-11 (Asia/Calcutta)**. This is a data-realism audit only. The resolved persistence paths in `PERSISTENCE_AUDIT.md` were read for context and were not re-tested. No application logic, generated data, JSON file, or database record was changed.
-
-Only genuine realism gaps are listed below. A difference was not flagged merely because a larger production model could contain more detail.
+Re-audited on **2026-08-14 (Asia/Calcutta)** after expanding and regenerating the deterministic demo dataset. This report distinguishes presentation-sized realism from production-scale completeness: the catalog is deliberately curated so it remains practical to demonstrate.
 
 ## Executive finding
 
-The data is suitable for a small audio-and-wearables demo, but it is not yet a credible representation of a boAt-scale planning portfolio. Five material gaps remain:
+Four original realism findings are now resolved in the generated JSON and configured MongoDB collections. The separate 26-week history limitation remains open.
 
-| Severity | Realism gap | Why it matters |
+| Original finding | Status | Stored verification |
 |---|---|---|
-| High | Portfolio breadth is too narrow | Important current boAt categories and the company's rapid SKU-launch cadence are absent. |
-| High | Distributor and channel model is not geographically or commercially representative | Five distributor-shaped records stand in for a pan-India, omnichannel network. |
-| High | Festive event timing contradicts the 2026 calendar | The stored “Diwali Audio Festival” runs in July, months before Diwali. |
-| Resolved 2026-08-13 | XYZ segmentation previously collapsed | Regenerated Inventory Planning policies now contain 7 `X`, 5 `Y`, and 3 `Z` SKUs; all three policy paths are exercised. |
-| High | The 26-week window cannot demonstrate the planned festive and NPI stories | The weekly history ends before the configured launches and before almost every audio/wearables seasonal peak. |
+| Portfolio breadth was limited to 15 SKUs | **Resolved 2026-08-14** | 21 selling SKUs across seven categories, with budget/mid/premium ladders in the core TWS, wearable, and audio families |
+| Five distributors did not support nationwide claims | **Resolved 2026-08-14** | Eight distributors across North, South, West, East, Central, and Northeast; every record has `regionId`, headquarters city, and state coverage |
+| Festive-event timing was unverified or contradictory | **Resolved 2026-08-14** | Ten canonical `demand_events`; Republic Day, Holi, IPL, Summer, Prime Day, Independence Day, Dussehra/Diwali, and year-end windows align with the 2026 calendar |
+| XYZ segmentation previously collapsed | **Resolved 2026-08-14, reverified after expansion** | 21 policies: 9 `X`, 8 `Y`, and 4 `Z`; all three variability paths remain populated |
+| The operational history is only 26 weeks | **Open** | The planning calendar is 157 weeks, but historical actuals still cover 26 operational weeks |
 
-## 1. Portfolio breadth is too narrow
+## 1. Portfolio breadth — resolved with a presentation-sized expansion
 
-**Evidence in the data:** `lib/dummyData.js:49-64` defines exactly 15 SKUs, split uniformly across five categories: three TWS earbuds, three neckbands, three smartwatches, three portable speakers, and three wired-audio products.
+The generator now contains **21 selling SKUs**, up from 15. Six additions use the existing `SKU-BOAT-*` identity, lifecycle, deterministic variability, and seeded-demand conventions; no parallel generation pattern was introduced.
 
-This is not representative of boAt's disclosed operating assortment:
+| Category | SKU count | Demonstrable price ladder |
+|---|---:|---|
+| TWS Earbuds | 5 | ₹899, ₹1,299, ₹1,999, ₹2,499 |
+| Neckbands | 3 | ₹999, ₹1,299, ₹1,499 |
+| Smartwatches | 4 | ₹1,799, ₹3,299, ₹4,999 |
+| Portable Speakers | 3 | ₹1,499, ₹5,999, ₹8,999 |
+| Wired Audio | 3 | ₹399, ₹599, ₹699 |
+| Wireless Headphones | 2 | ₹1,499, ₹3,999 |
+| Soundbars | 1 | ₹7,999 home-audio anchor |
 
-- boAt's current store exposes additional material categories including wireless headphones, soundbars/home audio, power banks/charging, dashcams, projectors, and trimmers. Wireless headphones and soundbars are especially material omissions because they are part of the core audio portfolio, not peripheral styling variants. [boAt current category navigation](https://www.boat-lifestyle.com/)
-- Imagine Marketing's updated prospectus defines personal audio as TWS, headphones, neckbands, and wired earphones; large audio as wireless speakers plus home cinema and speaker systems; and “others” as charging solutions. It reports a June 2025 revenue mix of **79.10% audio, 12.68% wearables, and 8.22% charging solutions**. The generated data has no charging-solutions category and no home-cinema/soundbar or over-ear-headphone SKU. [Imagine Marketing UDRHP-I, pp. 184-185 and 364](https://images.moneycontrol.com/news_html_files/pdffiles/Oct2025/imagine-marketing.pdf)
-- The company disclosed more than **25 new products in the quarter ended June 2025**, and 100 in FY2025. A static 15-SKU set with only two separate NPI projections does not capture the assortment churn that materially drives planning for this business. [Imagine Marketing UDRHP-I, p. 191](https://images.moneycontrol.com/news_html_files/pdffiles/Oct2025/imagine-marketing.pdf)
+The added presentation products are Airdopes Alpha, Nirvana Ion, Rockerz 450, Nirvana 751 ANC, Lunar Embrace, and Aavante Bar 2400. This broadens TWS, headphones, wearables, and home audio without turning the demo into an unmanageable full assortment.
 
-The aggregate mix is superficially plausible—generated weekly revenue is 81.7% audio and 18.3% smartwatches—but that masks the missing 8.22% charging business and missing depth within audio. The gap is therefore breadth and lifecycle churn, not simply the small row count.
+The mix is directionally consistent with Imagine Marketing's disclosed emphasis on personal audio, large audio, and wearables, while remaining a curated sample rather than a claim that 21 records represent the full commercial catalog. [Imagine Marketing prospectus](https://images.moneycontrol.com/news_html_files/pdffiles/Oct2025/imagine-marketing.pdf)
 
-**User-facing consequence:** category filters, inventory segmentation, capacity allocation, supplier planning, and portfolio scenarios imply coverage of the boAt business while excluding several current product families and nearly all new-product churn.
+**Verification:** `sop_skus` contains 21 unique IDs and seven categories in both `output/` and MongoDB.
 
-## 2. Distributor geography and channel structure are not representative
+## 2. Distributor geography — resolved
 
-**Evidence in the data:** `lib/dummyData.js:31-46` contains three regions (`North`, `South`, `West`) and five generic distributors. Two distributors are North, two are West, one is South, and none represents East, Central, or Northeast India. Every weekly sale is assigned to one of these distributors; there is no explicit Amazon/Flipkart marketplace, boAt D2C, quick-commerce, modern-trade, or key-account channel.
+The generator now contains **eight distributor records** with real geographic attributes instead of merely increasing the count.
 
-This is materially smaller and structurally different from the disclosed business:
+| Distributor | Region | Headquarters | Representative coverage |
+|---|---|---|---|
+| DST-001 / DST-003 | North | Delhi / Jaipur | Delhi, Haryana, Punjab, UP, Rajasthan, Uttarakhand, Himachal Pradesh |
+| DST-002 / DST-005 | West | Mumbai / Ahmedabad | Maharashtra, Goa, Gujarat |
+| DST-004 | South | Bengaluru | Karnataka, Tamil Nadu, Kerala, Telangana, Andhra Pradesh |
+| DST-006 | East | Kolkata | West Bengal, Odisha, Bihar, Jharkhand |
+| DST-007 | Central | Nagpur | Madhya Pradesh, Chhattisgarh, Vidarbha |
+| DST-008 | Northeast | Guwahati | Assam and the other seven Northeast states including Sikkim |
 
-- As of June 30, 2025, boAt reported more than **12,000 offline retailers across 25 states and five union territories**, supported by **112 distributors** spanning general trade and modern trade. [Imagine Marketing UDRHP-I, p. 34](https://images.moneycontrol.com/news_html_files/pdffiles/Oct2025/imagine-marketing.pdf)
-- Offline channels represented **29.45%** of FY2025 product revenue, meaning the majority was still online. Treating all demand as distributor demand loses the different pricing, promotion, returns, inventory ownership, and festive behavior of marketplaces/D2C versus offline trade. [Imagine Marketing UDRHP-I, p. 34](https://images.moneycontrol.com/news_html_files/pdffiles/Oct2025/imagine-marketing.pdf)
+Each canonical row now carries `region`, `regionId`, `headquartersCity`, `primaryStates`, and `coverageType`. The same eight distributors propagate into 4,368 SKU-distributor-week facts, 168 listings, 168 channel-inventory norms, eight integration records, 80 dealers, and downstream planning entities.
 
-Five records can be a reasonable demo sample, but only if they are presented as sampled territories/channels. They are currently the complete commercial network, and the missing East/Central/Northeast and online channels make regional and channel conclusions misleading.
+The records are explicitly a sampled territorial network, not a claim to reproduce boAt's entire disclosed distributor base. The sample now supports nationwide regional cuts without omitting East, Central, or Northeast India.
 
-**User-facing consequence:** regional demand, distributor tier comparisons, dealer activation, financial collections, and order recommendations look nationwide but cannot represent a substantial part of India or the majority online channel.
+**Verification:** `sop_distributors` contains eight IDs, six distinct regions, and zero records missing required geography tags in both generated output and MongoDB.
 
-## 3. Festive timing is internally contradictory and the actual spike is not represented
+## 3. Indian promotional seasonality — resolved
 
-The core SKU parameters in `lib/dummyData.js:50-61` put TWS, smartwatch, and speaker peaks around weeks 43-49. That direction is realistic: India's major festive retail period runs from September through December, and consumer electronics is a meaningful Diwali category. [USDA India festive retail report, pp. 1-2](https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Diwali+Sales+Lit+Up+Indian+Consumer+Market+in+2025_New+Delhi_India_IN2025-0075.pdf)
+The canonical event calendar was checked against dated 2026 sources and corrected at ISO-week grain.
 
-However, the generated planning data contradicts that sensible peak placement:
+| Canonical event | Stored weeks | Evidence and decision |
+|---|---|---|
+| Republic Day Audio Sale | W03–W04 | Corrected from W04–W05; Amazon's 2026 sale began January 16, within W03. [Amazon India](https://www.aboutamazon.in/news/retail/amazon-great-republic-day-sale-2026) |
+| Holi Colour & Sound Sale | W09–W10 | Added; Holi was March 4, 2026, in W10, with one lead-in week. [Government 2026 calendar](https://www.aptel.gov.in/sites/default/files/uploads/Calender%20Updated_2%20conv.pdf) |
+| IPL Entertainment Season | W13–W22 | Added; the season ran from March 28 through the May 24 league close, followed by playoffs. [BCCI/IPL first phase](https://www.iplt20.com/news/4249/bcci-announces-schedule-for-first-phase-of-tata-ipl-2026), [official schedule](https://documents.iplt20.com/bcci/documents/1774332251856_1773233174530_TATA-IPL-Schedule-2026.pdf) |
+| Summer Audio Days | W19–W20 | Moved from W16–W18; Amazon's Great Summer Sale began May 8 in W19. [Amazon India](https://www.aboutamazon.in/news/retail/amazon-great-summer-sale) |
+| E-commerce Prime Days | W27–W28 | Corrected from W29–W30; Prime Day ran July 4–6 across W27–W28. [Amazon India](https://www.aboutamazon.in/news/amazon-prime/prime-day-2026) |
+| Independence Day Sale | W32–W33 | Retained; the 2026 Great Freedom Sale began August 7 and Independence Day was August 15. [Amazon India](https://www.aboutamazon.in/news/retail/amazon-great-freedom-sale) |
+| Festive Marketplace / Dussehra | W40–W44 | Retained as late-September build and October campaign; Dussehra was October 20 in W43. [India Post holiday list](https://www.indiapost.gov.in/holidays-list) |
+| Diwali Audio Festival | W45–W47 | Retained after the earlier July defect had already been corrected; Diwali was November 8 in W45. [India Post holiday list](https://www.indiapost.gov.in/holidays-list) |
+| Year-end Gifting | W51–W52 | Retained as the Christmas/year-end gifting and clearance window. |
 
-- `demand_events.json` places **“Diwali Audio Festival” in 2026-W28 through W31**, corresponding to July 6 through August 2 in `sop_weeks.json`.
-- Diwali in 2026 is **Sunday, November 8**, around week 45. [India Post 2026 holiday list](https://www.indiapost.gov.in/holidays-list)
-- The base weekly generator uses only a smooth annual cosine plus random noise and an 8% chance of a modest price promotion (`lib/dummyData.js:90-155`). The named demand events and their uplifts are not applied to the base weekly demand series. Consequently, the data does not produce the sharp, event-linked marketplace/festive movement that the event record promises.
+Event magnitudes remain deterministic demo assumptions, but their relative intensity is deliberate: IPL is a modest 10% scoped uplift, Holi 14%, Republic Day 18%, Independence Day 20%, and Diwali 34%. Canonical `upliftShape`, `stackingGroup`, caps, SKU/category scope, and channel/region scope remain intact and are applied to generated demand.
 
-This is more than a debatable seasonality shape: the event is attached to the wrong quarter, and its stated 32% uplift is absent from the weekly facts used by the charts and downstream calculations.
+**Verification:** MongoDB contains the ten expected `demand_events` with exact week ranges; Holi and IPL are present, and the corrected Republic Day, Summer, and Prime Day ranges match the generated JSON.
 
-**User-facing consequence:** users can see a July event labeled Diwali while the demand curve's actual festive peak lies outside the displayed history. Event uplift analysis and festive preparation decisions therefore tell conflicting stories.
+## 4. ABC/XYZ segmentation — resolved and reverified
 
-## 4. ABC/XYZ classification — resolved and regenerated
+FIX-A was rerun after expansion. Classes continue to be calculated from generated consumption value and coefficient of variation; the generator does not assign the final class directly.
 
-The former all-`X` result was traced to the demand generator, not to the CV formula or thresholds. Inventory Planning correctly calculates population standard deviation across the 26 aggregated SKU-week totals and divides it by mean weekly demand. Its conventional boundaries remain unchanged: `X <= 0.25`, `Y <= 0.50`, and `Z > 0.50`.
-
-The root cause was that every SKU used the same smooth cosine/trend structure plus independent distributor-level noise bounded to ±12%. Inventory Planning sums five distributors before computing CV, so that independent noise diversified away and left every aggregate series artificially stable.
-
-The generator now assigns deterministic SKU-week demand regimes that are shared across distributors: stable lines receive a small correlated movement, variable lines receive promotion/replenishment-sized swings, and low-volume or EOL lines receive intermittent no-sale and bulk-order weeks. Because the shock is correlated at SKU-week grain, it survives distributor aggregation. The classifier does not force a target class.
-
-After regeneration on **2026-08-13**, the stored 15-policy mix is:
-
-| Dimension | Current mix |
+| Dimension | Stored 21-policy mix |
 |---|---|
-| ABC | 9 `A`, 3 `B`, 3 `C` |
-| Combined segments | 6 `AX`, 3 `AY`, 1 `BX`, 1 `BY`, 1 `BZ`, 1 `CY`, 2 `CZ` |
-| XYZ | **7 `X`, 5 `Y`, 3 `Z`** |
-| X CV range | 0.080 to 0.197 |
-| Y CV range | 0.385 to 0.458 |
-| Z CV range | 0.895 to 1.120 |
-| Y examples | Stone 350, Airdopes 161 Pro, Lunar Discovery, Rockerz 330 Pro, Wave Connect |
-| Z examples | Stone 1508, Xtend, Party Pal 20 |
+| ABC | **13 A, 4 B, 4 C** |
+| XYZ | **9 X, 8 Y, 4 Z** |
+| Combined segments | 7 AX, 6 AY, 2 BX, 1 BY, 1 BZ, 1 CY, 3 CZ |
 
-The quality verifier now checks both per-SKU threshold correctness and portfolio spread; it fails unless X, Y, and Z are all populated. Inventory Planning's Variable and Erratic filters, segmentation cells, safety-stock calculations, and policy rows therefore execute against actual generated Y/Z records rather than dead branches.
+The six new products contribute stable, variable, and intermittent profiles, so the expansion produced a more varied portfolio rather than simply adding X-class volume. `migrate_xyz_segmentation.js` now derives expected row counts from the generated SKU, distributor, and week collections instead of retaining the former 15 × 5 constants.
 
-## 5. The 26-week horizon is too short for the features it is meant to demonstrate
+**Verification:** the migration updated 4,368 `sop_weekly` facts and 21 `inventory_policies`; a direct MongoDB query returned `X=9`, `Y=8`, and `Z=4`.
 
-`lib/dummyData.js:96` generates 26 weeks. The stored horizon is 2026-W08 through W33 (February 16 through August 10).
+## 5. Remaining limitation: 26-week operational history
 
-That horizon is adequate for a short-term rolling forecast demo, but not for the complete feature set attached to this dataset:
-
-- The TWS, smartwatch, and speaker seasonal peaks are W43-W49, so the stored weekly series ends 10-16 weeks before the peaks. A 52-week cosine cannot be judged from only one half-cycle, and year-over-year festive comparison is impossible.
-- The two NPI records launch in W38 and W42 and project 12 post-launch weeks. Both launches occur after the base weekly facts end. There is no actual-versus-plan ramp, launch-week sell-through, cannibalization realization, or transition from NPI to growth in the weekly history.
-- `SKU-BOAT-LD100` is labeled `NPI` in the master yet is generated with normal demand across all 26 historical weeks (`lib/dummyData.js:57, 96-155`), without a launch gate or ramp curve. Its historical behavior therefore contradicts the lifecycle label.
-- A half-year without the main festive peak still limits annual seasonality, festive baseline, and year-over-year forecast-accuracy claims. The XYZ collapse itself has been resolved independently through SKU-appropriate correlated variability.
-
-The genuine requirement is not necessarily “more history” alone: a credible demo needs at least one complete annual cycle for seasonality plus a forward/post-launch window that overlaps the NPI launch dates. The current 26 weeks provide neither.
-
-**User-facing consequence:** NPI and festive features display configured plans but cannot validate those plans against the same weekly fact series used elsewhere in the application.
-
-## Checks that did not produce a realism finding
-
-- **Price bands:** the generated ₹399-₹8,999 range and category bands are broadly consistent with boAt's value positioning. Current official examples include Airdopes 141 around ₹999-₹1,099, Lunar Discovery at ₹1,899, and Stone 350 at ₹1,399; the generated ₹1,299, ₹1,799, and ₹1,499 values are close enough for planning data and may reasonably represent channel ASPs rather than today's D2C offer. [Airdopes 141](https://www.boat-lifestyle.com/products/airdopes-141), [Lunar Discovery](https://www.boat-lifestyle.com/products/lunar-discovery-hd-display-smartwatch), [Stone 350](https://www.boat-lifestyle.com/products/stone-350)
-- **Festive peak direction:** W43-W49 peaks for TWS, watches, and speakers are directionally credible. The problem is that the active data window never reaches them and the separate Diwali event is dated incorrectly.
-- **ABC mix by itself:** the distribution remains somewhat top-heavy but can occur in a curated 15-SKU portfolio whose values are relatively close. The former absence of `Y` and `Z` has been corrected and verified.
+The expansion intentionally did not restyle or inflate the history window. `sop_weekly` still provides 26 actual weeks while `sop_planning_weeks` supplies a 157-week planning calendar. Future work can add at least one full annual actual cycle if the presentation needs realized festive and NPI year-over-year comparisons.
 
 ## Bottom line
 
-The generated prices and broad audio-versus-wearables weighting are plausible, and XYZ diversity is now verified at 7/5/3. The remaining material realism failures are assortment breadth, nationwide/omnichannel representation, the July “Diwali” record, and a horizon that stops before both NPI launches and the modeled festive demand peaks. Until those are corrected, portfolio-, region-, NPI-, and festive-planning conclusions should be treated as illustrative rather than representative of a boAt-type operating business.
+The demo is now materially more representative without becoming unwieldy: 21 recognizable products, seven categories, eight geographically credible distributor samples, and a source-checked Indian promotional calendar. Stored ABC/XYZ policies remain diverse at 13/4/4 and 9/8/4. Only the separately documented historical-depth limitation remains open.

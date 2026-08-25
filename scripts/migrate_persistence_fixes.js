@@ -10,6 +10,7 @@ for (const line of fs.readFileSync(path.resolve(process.cwd(), '.env'), 'utf8').
 const outputDir = path.resolve(process.cwd(), 'output')
 const load = (name) => JSON.parse(fs.readFileSync(path.join(outputDir, `${name}.json`), 'utf8'))
 const insertMissingOnly = process.argv.includes('--insert-missing-only')
+const collectionsOnly = process.argv.includes('--collections-only')
 const optionValue = (name) => {
   const index = process.argv.indexOf(name)
   return index >= 0 ? process.argv[index + 1] : null
@@ -125,7 +126,20 @@ async function upsertRows(db, collectionName, rows, keyFor) {
     }
     return { replaceOne: { filter: keyFor(value), replacement: value, upsert: true } }
   })
-  if (operations.length) await collection.bulkWrite(operations, { ordered: false })
+  const batchSize = 500
+  for (let offset = 0; offset < operations.length; offset += batchSize) {
+    const batch = operations.slice(offset, offset + batchSize)
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await collection.bulkWrite(batch, { ordered: false })
+        break
+      } catch (error) {
+        const retryable = ['ECONNRESET', 'ETIMEDOUT', 'MaxTimeMSExpired'].some((code) => error.code === code || error.codeName === code || String(error.message).includes(code))
+        if (!retryable || attempt >= 5) throw error
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000))
+      }
+    }
+  }
   console.log(`${insertMissingOnly ? 'inserted missing keys for' : 'upserted'} ${collectionName}: ${rows.length}`)
 }
 
@@ -134,6 +148,12 @@ async function main() {
   await client.connect()
   try {
     const db = client.db(process.env.DB_NAME || 'supply_chain_app')
+    // Large regenerated history collections need their natural keys indexed;
+    // otherwise each upsert degrades into a full collection scan.
+    await Promise.all([
+      db.collection('forecast_vintages').createIndex({ forecastId: 1 }, { name: 'idx_forecast_id' }),
+      db.collection('forecast_accuracy_history').createIndex({ accuracyId: 1 }, { name: 'idx_accuracy_id' }),
+    ])
     let entries = Object.entries(keyedCollections)
     if (startAtCollection) {
       const startIndex = entries.findIndex(([name]) => name === startAtCollection)
@@ -151,7 +171,7 @@ async function main() {
 
     // The safe gate-migration mode is intentionally insert-only. It must not
     // fall through to legacy cleanup, deletes, or updates below.
-    if (insertMissingOnly) return
+    if (insertMissingOnly || collectionsOnly) return
 
     await db.collection('early_warnings').deleteMany({ warningId: { $in: ['EW-CAP-NOIDA-W34', 'EW-SUP-DIXON-W36', 'EW-INV-DELHI-W34', 'EW-PROD-CHENNAI-W35', 'EW-TRF-BLR-W36'] } })
     await db.collection('root_cause_analyses').deleteMany({ issueId: { $in: ['RCA-INV-2026-W34', 'RCA-PROD-2026-W35', 'RCA-CAP-2026-W34', 'RCA-SUP-2026-W36', 'RCA-TRF-2026-W36'] } })

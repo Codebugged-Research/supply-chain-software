@@ -6,7 +6,7 @@ const { buildMasterEntities } = require('./master_entity_builder')
 function loadFreshGenerator() {
   let source = fs.readFileSync(path.resolve(process.cwd(), 'lib', 'dummyData.js'), 'utf8')
   source = source.replace(/^import\s+[^\n]+\n/m, '').replace(/\bexport\s+/g, '')
-  source += '\n;globalThis.__dummyDataExports = { getDataset, stableUnit01, XYZ_CV_THRESHOLDS };'
+  source += '\n;globalThis.__dummyDataExports = { getDataset, stableUnit01, XYZ_CV_THRESHOLDS, suggestOrders, buildDealerActivationGap };'
   const context = vm.createContext({ console, Date, Math, Set, Map, Object, Array, Number, String, Boolean, JSON })
   vm.runInContext(source, context, { filename: 'lib/dummyData.js' })
   return context.__dummyDataExports
@@ -28,7 +28,7 @@ function writeCollection(directory, name, rows) {
 function main() {
   const directory = outputDirectory()
   fs.mkdirSync(directory, { recursive: true })
-  const { getDataset, stableUnit01, XYZ_CV_THRESHOLDS } = loadFreshGenerator()
+  const { getDataset, stableUnit01, XYZ_CV_THRESHOLDS, suggestOrders, buildDealerActivationGap } = loadFreshGenerator()
   const dataset = getDataset()
   const master = buildMasterEntities(dataset, stableUnit01)
   const existingPoliciesFile = path.join(directory, 'inventory_policies.json')
@@ -85,11 +85,15 @@ function main() {
     sop_planning_weeks: dataset.planningWeeks,
     sop_weekly: dataset.weekly,
     demand_lifecycle: dataset.lifecycle,
+    demand_channel_integrations: dataset.demandChannelIntegrations,
+    demand_listings: dataset.demandListings,
     demand_npi_forecasts: dataset.npiForecasts,
     demand_npi_readiness_items: dataset.npiReadinessItems,
     demand_event_templates: dataset.eventTemplates,
     demand_events: dataset.demandEvents,
     inventory_policies: inventoryPolicies,
+    order_suggestions: dataset.distributors.map((distributor) => suggestOrders(distributor.id)),
+    dealer_activation_gaps: dataset.distributors.map((distributor) => buildDealerActivationGap(distributor.id)),
     manufacturing_partners: dataset.manufacturingPartners,
     manufacturing_partner_lines: dataset.manufacturingPartnerLines,
     supplier_master: dataset.supplierMaster,

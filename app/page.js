@@ -53,6 +53,7 @@ import {
   BrainCircuit,
   Rocket,
   CircleGauge,
+  Info,
 } from 'lucide-react'
 import {
   Dialog,
@@ -467,7 +468,7 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
         {canView('commercial') && <KpiCard title="Total Revenue" value={fmtMoney(k.totalRevenue)} change={`${k.demandWoW >= 0 ? '+' : ''}${k.demandWoW || 0}% WoW`} trend={k.demandWoW >= 0 ? 'up' : 'down'} subtitle={`${data.meta?.weekCount || 0}w window`} icon={IndianRupee} accent="green" />}
         {canView('finance') && <KpiCard title="Gross Margin" value={`${k.gmPct || 0}%`} change={fmtMoney(k.totalGm)} subtitle="value" icon={TrendingUp} accent="blue" />}
         {canView('demand') && <KpiCard title="Primary Sales" value={`${fmtNum((k.totalPrimary || 0) / 1000)}K`} subtitle="units shipped" icon={Package} accent="amber" />}
-        {canView('demand') && <KpiCard title="Tertiary Demand" value={`${fmtNum((k.totalDemand || 0) / 1000)}K`} subtitle="units sold-out" icon={Factory} accent="purple" />}
+        {canView('demand') && <KpiCard title="Secondary Demand" value={`${fmtNum((k.totalDemand || 0) / 1000)}K`} subtitle="units sold-out" icon={Factory} accent="purple" />}
       </div>
 
       <Card className="border-slate-200/70 shadow-sm mb-6">
@@ -479,8 +480,32 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-3"><div className="rounded-lg bg-blue-50 p-3"><p className="text-xs text-blue-700">Net Supply Coverage</p><p className="text-xl font-semibold text-blue-900">{planBalance.summary.coveragePct}%</p></div><div className="rounded-lg bg-rose-50 p-3"><p className="text-xs text-rose-700">Unmet Demand</p><p className="text-xl font-semibold text-rose-900">{fmtNum(planBalance.summary.deficitUnits)}</p></div><div className="rounded-lg bg-cyan-50 p-3"><p className="text-xs text-cyan-700">Current Inventory</p><p className="text-xl font-semibold text-cyan-900">{fmtNum(planBalance.summary.currentInventoryUnits)}</p></div><div className="rounded-lg bg-orange-50 p-3"><p className="text-xs text-orange-700">Ending Inventory</p><p className="text-xl font-semibold text-orange-900">{fmtNum(planBalance.summary.projectedEndingInventoryUnits)}</p></div>{canView('supply') && <div className="rounded-lg bg-amber-50 p-3"><p className="text-xs text-amber-700">Capacity Risk Weeks</p><p className="text-xl font-semibold text-amber-900">{planBalance.summary.capacityRiskWeeks}</p></div>}{(canView('supply') || canView('finance')) && <div className="rounded-lg bg-violet-50 p-3"><p className="text-xs text-violet-700">Open PO Pipeline</p><p className="text-xl font-semibold text-violet-900">{fmtNum(planBalance.summary.openPoUnits)}</p></div>}</div>
             <ResponsiveContainer width="100%" height={340}><LineChart data={planBalance.rows}><CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} /><XAxis dataKey="bucket" tick={{ fill: '#64748b', fontSize: 10 }} interval={1} /><YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} /><Tooltip formatter={(value) => `${Number(value).toLocaleString()} units`} /><Legend /><Line type="monotone" dataKey="forecastUnits" name="Current Demand Plan" stroke="#2563eb" strokeWidth={2.5} dot={false} /><Line type="monotone" dataKey="netSupplyUnits" name="Net Supply" stroke="#10b981" strokeWidth={2.5} dot={false} /><Line type="monotone" dataKey="operatingPlanUnits" name="Operating Plan" stroke="#8b5cf6" strokeWidth={2.5} strokeDasharray="6 4" dot={false} /><Line type="monotone" dataKey="projectedInventoryUnits" name="Projected Inventory" stroke="#f97316" strokeWidth={2.5} dot={false} /></LineChart></ResponsiveContainer>
             {canView('supply') && <DataTable columns={[{ key: 'bucket', label: 'Bucket / Horizon' }, { key: 'planningWeek', label: 'Supply Week' }, { key: 'forecastUnits', label: 'Demand Plan' }, { key: 'netSupplyUnits', label: 'Net Supply' }, { key: 'confirmedPoReceipts', label: 'Dated PO Receipts' }, { key: 'openingInventoryUnits', label: 'Opening Inventory' }, { key: 'projectedInventoryUnits', label: 'Projected Inventory' }, { key: 'unmetDemandUnits', label: 'Unmet Demand' }, { key: 'status', label: 'Status' }]} rows={planBalance.rows.filter((row) => row.status !== 'COVERED').slice(0, 10)} renderCell={(col, row) => { if (col.key === 'bucket') return <div><p>{row.bucket}</p><p className="text-[10px] text-slate-500">{row.horizon}</p></div>; if (['forecastUnits', 'netSupplyUnits', 'confirmedPoReceipts', 'openingInventoryUnits', 'projectedInventoryUnits', 'unmetDemandUnits'].includes(col.key)) return <span className={col.key === 'unmetDemandUnits' && row.unmetDemandUnits > 0 ? 'text-rose-600 font-medium' : ''}>{Number(row[col.key]).toLocaleString()}</span>; if (col.key === 'status') return <Badge className={['STOCKOUT', 'INVENTORY_RISK', 'DEFICIT'].includes(row.status) ? 'bg-rose-50 text-rose-700 hover:bg-rose-50' : 'bg-amber-50 text-amber-700 hover:bg-amber-50'}>{row.status.replaceAll('_', ' ')}</Badge>; return row[col.key] }} />}
-            <p className="text-xs text-slate-500">Forecast: {planBalance.sources.forecast} · Net supply: {planBalance.sources.netSupply} · Operating plan: {planBalance.sources.operatingPlan}</p>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"><p><span className="font-medium text-slate-800">Demand:</span> {planBalance.sources.forecast}</p><p><span className="font-medium text-slate-800">Supply:</span> {planBalance.sources.netSupply}</p><p><span className="font-medium text-slate-800">Inventory:</span> {planBalance.sources.inventory}</p><p className="mt-1 text-slate-500">Calculated {new Date(planBalance.freshness.generatedAt).toLocaleString()} · auto-refresh every {planBalance.freshness.refreshSeconds}s</p></div>
+            <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-xs space-y-2.5">
+              <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                  <Info className="h-3.5 w-3.5 text-slate-400" />
+                  Model Calculation Assumptions & Data Lineage
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Calculated {new Date(planBalance.freshness.generatedAt).toLocaleTimeString()} · Auto-refresh {planBalance.freshness.refreshSeconds}s
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                <div className="rounded border border-slate-200/60 bg-white p-2.5 shadow-2xs">
+                  <span className="font-semibold text-[11px] uppercase tracking-wider block mb-1 text-blue-600">Demand Baseline</span>
+                  <p className="text-slate-600 text-[11px] leading-snug">{planBalance.sources.forecast}</p>
+                </div>
+                <div className="rounded border border-slate-200/60 bg-white p-2.5 shadow-2xs">
+                  <span className="font-semibold text-[11px] uppercase tracking-wider block mb-1 text-emerald-600">Supply Constraints</span>
+                  <p className="text-slate-600 text-[11px] leading-snug">{planBalance.sources.netSupply}</p>
+                </div>
+                <div className="rounded border border-slate-200/60 bg-white p-2.5 shadow-2xs">
+                  <span className="font-semibold text-[11px] uppercase tracking-wider block mb-1 text-amber-600">Inventory Position</span>
+                  <p className="text-slate-600 text-[11px] leading-snug">{planBalance.sources.inventory}</p>
+                </div>
+              </div>
+            </div>
           </>}
         </CardContent>
       </Card>
@@ -590,22 +615,47 @@ function DashboardPage({ data, workspaceRole = 'S&OP' }) {
 
         <Card className="border-slate-200/70 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">Alerts & Exceptions</CardTitle>
-            <CardDescription>{alerts.length} active items</CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                Alerts & Exceptions
+              </CardTitle>
+              <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 text-xs">
+                {alerts.length} active items
+              </Badge>
+            </div>
+            <CardDescription className="text-xs text-slate-500">Live operational risk signals requiring review</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {alerts.map((a, i) => {
-              const sevMap = { high: 'bg-rose-500', medium: 'bg-amber-500', low: 'bg-blue-500' }
-              return (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50">
-                  <span className={`mt-1.5 h-2 w-2 rounded-full ${sevMap[a.sev]}`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-800 leading-snug">{a.title}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{a.time}</p>
+          <CardContent className="space-y-2.5">
+            {alerts.length === 0 ? (
+              <div className="py-6 text-center text-xs text-slate-400">No active exceptions detected.</div>
+            ) : (
+              alerts.map((a, i) => {
+                const sevMap = {
+                  high: { dot: 'bg-rose-500', bg: 'hover:bg-rose-50/40 border-slate-200/80', badge: 'bg-rose-50 text-rose-700 border-rose-200' },
+                  medium: { dot: 'bg-amber-500', bg: 'hover:bg-amber-50/40 border-slate-200/80', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+                  low: { dot: 'bg-blue-500', bg: 'hover:bg-blue-50/40 border-slate-200/80', badge: 'bg-blue-50 text-blue-700 border-blue-200' }
+                }
+                const currentSev = sevMap[a.sev?.toLowerCase()] || sevMap.high
+                return (
+                  <div key={i} className={`flex items-start gap-2.5 p-3 rounded-lg border bg-white transition-colors ${currentSev.bg}`}>
+                    <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${currentSev.dot}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-800 leading-snug">{a.title}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {a.time}
+                        </span>
+                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0 font-semibold uppercase ${currentSev.badge}`}>
+                          {a.sev || 'HIGH'}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })
+            )}
           </CardContent>
         </Card>
       </div>
@@ -1280,11 +1330,11 @@ function DemandPage({ data, activeRole = 'S&OP' }) {
         if (byWeek.has(row.weekId)) byWeek.get(row.weekId).actual += Number(row.tertiary || 0)
       })
     } else {
-    for (const r of rows) {
-      if (!byWeek.has(r.weekId)) byWeek.set(r.weekId, { label: r.weekLabel, actual: 0, forecast: 0 })
-      byWeek.get(r.weekId).actual += Number(r.tertiary || 0)
-      byWeek.get(r.weekId).forecast += Number(r.secondary || 0)
-    }
+      for (const r of rows) {
+        if (!byWeek.has(r.weekId)) byWeek.set(r.weekId, { label: r.weekLabel, actual: 0, forecast: 0 })
+        byWeek.get(r.weekId).actual += Number(r.tertiary || 0)
+        byWeek.get(r.weekId).forecast += Number(r.secondary || 0)
+      }
     }
     const arr = Array.from(byWeek.entries()).sort(([a], [b]) => (a > b ? 1 : -1))
     return arr.map(([, v]) => {
@@ -5139,25 +5189,22 @@ function NotificationCenter() {
         <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-slate-100">
           <button
             onClick={() => setFilter('all')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filter === 'all' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filter === 'all' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             All ({notifications.length})
           </button>
           <button
             onClick={() => setFilter('unread')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filter === 'unread' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filter === 'unread' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             Unread ({notifications.filter((n) => n.unread).length})
           </button>
           <button
             onClick={() => setFilter('alerts')}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filter === 'alerts' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filter === 'alerts' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
           >
             Alerts ({notifications.filter((n) => n.severity === 'high' || n.type === 'alert').length})
           </button>
@@ -5178,9 +5225,8 @@ function NotificationCenter() {
                 <div
                   key={item.id}
                   onClick={() => toggleRead(item.id)}
-                  className={`group relative p-3.5 flex items-start gap-3 cursor-pointer transition-colors ${
-                    item.unread ? 'bg-blue-50/40 hover:bg-blue-50/80' : 'hover:bg-slate-50'
-                  }`}
+                  className={`group relative p-3.5 flex items-start gap-3 cursor-pointer transition-colors ${item.unread ? 'bg-blue-50/40 hover:bg-blue-50/80' : 'hover:bg-slate-50'
+                    }`}
                 >
                   {/* Icon */}
                   <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${style.iconBg}`}>
